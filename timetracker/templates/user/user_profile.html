@@ -1,0 +1,252 @@
+{% extends '../base.html' %}
+          {% block content %}
+          {% load static %}
+          {% load crispy_forms_tags %}
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <!-- Required meta tags -->
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <title>User Profile</title>
+          </head>
+          <body>
+            <div class="container-scroller">
+              <!-- partial:partials/_navbar.html -->
+              <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+                <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                  <a class="navbar-brand brand-logo mr-5" href="{% url 'managerpage' %}"><img src="{% static "images/logo.svg" %}" class="mr-2" alt="logo"/></a>
+                  <a class="navbar-brand brand-logo-mini" href="{% url 'managerpage' %}"><img src="{% static "images/logo-mini.svg" %}" alt="logo"/></a>
+                </div>
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                  <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                    <span class="icon-menu"></span>
+                  </button>
+                  <ul class="navbar-nav mr-lg-2">
+                    <li class="nav-item nav-search d-none d-lg-block">
+                      <div class="input-group">
+                        <div class="input-group-prepend hover-cursor" id="navbar-search-icon">
+                          <span class="input-group-text" id="search">
+                            <i class="icon-search"></i>
+                          </span>
+                        </div>
+                        <input type="text" class="form-control" id="navbar-search-input" placeholder="Search now" aria-label="search" aria-describedby="search">
+                      </div>
+                    </li>
+                  </ul>
+                  <ul class="navbar-nav navbar-nav-right">
+                    <li class="nav-item nav-profile dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                        <img src="{% static "images/faces/face28.jpg" %}" alt="profile"/>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="{% url 'logout' %}">
+                          <i class="ti-power-off text-primary"></i>
+                          Logout
+                        </a>
+                      </div>
+                    </li>
+                    <li class="nav-item nav-settings d-none d-lg-flex">
+                      <a class="nav-link" href="#">
+                        <i class="icon-ellipsis"></i>
+                      </a>
+                    </li>
+                  </ul>
+                  <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                    <span class="icon-menu"></span>
+                  </button>
+                </div>
+              </nav>
+              <!-- partial -->
+              <div class="container-fluid page-body-wrapper">
+                <!-- partial:partials/_settings-panel.html -->
+                <div class="theme-setting-wrapper">
+                </div>
+                <div id="right-sidebar" class="settings-panel">
+                  <i class="settings-close ti-close"></i>
+                  <div class="tab-content" id="setting-content">
+                    <!-- To do section tab ends -->
+                    <!-- chat tab ends -->
+                  </div>
+                </div>
+                <!-- partial -->
+                <!-- partial:partials/_sidebar.html -->
+                {% if user.is_manager == True %}
+                <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                  <ul class="nav">
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'managerpage' %}">
+                        <i class="icon-grid menu-icon"></i>
+                        <span class="menu-title">Dashboard</span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                        <i class="icon-layout menu-icon"></i>
+                        <span class="menu-title">Projects</span>
+                        <i class="menu-arrow"></i>
+                      </a>
+                      <div class="collapse" id="ui-basic">
+                        <ul class="nav flex-column sub-menu">
+                          <li class="nav-item"> <a class="nav-link" href="{% url "addprojects" %}">Add Projects</a></li>
+                          <li class="nav-item"> <a class="nav-link" href="{% url "addprojectsmodules" %}">Add Modules</a></li>
+                          <li class="nav-item"> <a class="nav-link" href="{% url "addprojectstask" %}">Add Task</a></li>
+                          <li class="nav-item"> <a class="nav-link" href="{% url "addprojectsteam" %}">Create Team</a></li>
+                        </ul>
+                      </div>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url "projectlist" %}" aria-expanded="false" aria-controls="form-elements">
+                        <i class="icon-columns menu-icon"></i>
+                        <span class="menu-title">Project List</span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url "userprofile" %}" aria-expanded="false" aria-controls="auth">
+                        <i class="icon-head menu-icon"></i>
+                        <span class="menu-title">Profile</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+                {% endif %}
+                {% if user.is_developer == True %}
+                <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                  <ul class="nav">
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'developerpage' %}">
+                        <i class="icon-grid menu-icon"></i>
+                        <span class="menu-title">Dashboard</span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url "userprofile" %}" aria-expanded="false" aria-controls="auth">
+                        <i class="icon-head menu-icon"></i>
+                        <span class="menu-title">Profile</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+                {% endif %}
+                <!-- partial -->
+                <div class="main-panel">
+                  <div class="content-wrapper">
+                    <div class="row">
+                      <div class="col-12 grid-margin">
+                        <div class="card">
+                          <div class="card-body">
+                            <h4 class="card-title">Your Profile</h4>
+                            <form class="form-sample" method="POST" enctype ="multipart/form-data">
+                              {% csrf_token %}
+                              <p class="card-description">
+                                Personal info
+                              </p>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <div class="col-sm-9">
+                                      {{form.first_name|as_crispy_field}}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <div class="col-sm-9">
+                                      {{form.last_name|as_crispy_field}}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <div class="col-sm-9">
+                                      {{form.username|as_crispy_field}}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <div class="col-sm-9">
+                                      {{form.birthDate|as_crispy_field}}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <div class="col-sm-9">
+                                      {{form.gender|as_crispy_field}}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <div class="col-sm-4">
+                                      {{form.salary|as_crispy_field}}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <p class="card-description">
+                                Address
+                              </p>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <div class="col-sm-9">
+                                      {{form.address|as_crispy_field}}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <div class="col-sm-9">
+                                      {{form.state|as_crispy_field}}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <div class="col-sm-9">
+                                      {{form.landmark|as_crispy_field}}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <div class="col-sm-9">
+                                      {{form.city|as_crispy_field}}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <div class="col-sm-9">
+                                      {{form.profile_pic|as_crispy_field}}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <input type ="submit" class="btn btn-primary" value ="Submit" />
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- content-wrapper ends -->
+                </div>
+                <!-- main-panel ends -->
+              </div>
+              <!-- page-body-wrapper ends -->
+            </div>
+            <!-- container-scroller -->
+          </body>
+          </html>
+          {% endblock content %}

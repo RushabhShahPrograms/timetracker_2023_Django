@@ -1,0 +1,48 @@
+{% extends '../base.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Skydash Admin</title>
+</head>
+<body>
+  <div class="container-scroller">
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+      <div class="content-wrapper d-flex align-items-center auth px-0">
+        <div class="row w-100 mx-0">
+          <div class="col-lg-4 mx-auto">
+            <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+              <div class="brand-logo">
+                <img src="{% static 'images/logo.svg' %}" alt="logo">
+              </div>
+              <h4>Hello! let's get started</h4>
+              <h6 class="font-weight-light">Choose your Role.</h6>
+              <div class="mt-3">
+                <a href="{% url 'managerregister' %}"><button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">Manager</button></a>
+              </div>
+              <div class="mt-3">
+                <a href="{% url 'developerregister' %}"><button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">Developer</button></a>
+              </div>
+              <div class="mt-3">
+                <a href="{% url 'adminregister' %}"><button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">Admin</button></a>
+              </div>
+              <div class="text-center mt-4 font-weight-light">
+                Already have an account? <a href="{% url 'login' %}" class="text-primary">Login</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+</body>
+</html>
+{% endblock content %}

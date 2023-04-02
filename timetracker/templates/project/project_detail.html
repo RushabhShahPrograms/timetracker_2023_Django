@@ -1,0 +1,116 @@
+{% extends '../base.html' %}
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Detail View</title>
+  <style>
+      .highlight {
+        background-color: cyan;
+        border-radius: 15px;
+        padding: 4px;
+      }     
+  </style>
+</head>
+<body>
+  <div class="container-scroller">
+    {% include '../manager_navbar.html' %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Project Details of {{projectdetail.project_title}}</h4>
+                      <div class="form-group">
+                        <h4>Project Title:</h4> {{projectdetail.project_title}}
+                      </div>
+                      <div class="form-group">
+                        <h4>Project Description:</h4>{{projectdetail.project_decription}}
+                      </div>
+                      <div class="form-group">
+                        <h4>Project Technology:</h4><span class="highlight">{{projectdetail.project_technology}}</span>
+                      </div>
+                      <div class="form-group">
+                        <h4>Estimated Hours:</h4>{{projectdetail.project_estimated_hours}}&nbsp;hours
+                      </div>
+                      <div class="form-group">
+                        <h4>Start Date:</h4>{{projectdetail.project_start_date}}
+                      </div>
+                      <div class="form-group">
+                        <h4>Completion Date:</h4>{{projectdetail.project_completion_date}}
+                      </div>
+                      <div class="form-group">
+                        <h4>Project File(If Any):</h4>{{projectdetail.project_file}}
+                      </div>
+                      <div class="form-group">
+                        <h4>Status:</h4>
+                        {% if projectdetail.status == 'Completed' %}
+                          <div class="badge badge-success">Completed</div>
+                        {% elif projectdetail.status == 'Pending' %}
+                          <div class="badge badge-warning">Pending</div>
+                        {% else %}
+                          <div class="badge badge-danger">Danger</div>
+                        {% endif %}
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          {% for t in team|slice:":1" %}
+                          {% if t not in team %}<p>Team is not created!</p>{% endif %}
+                          {% if t in team %}
+                          <h3>Team Details</h3>
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>No.</th>
+                                <th>Username</th>
+                                <th>Status</th>
+                                <th>Badge</th>
+                              </tr>
+                            </thead>
+                            {% endif %}
+                            {% endfor %}
+                            <tbody><!--if-condition-team-details-->
+                              {% for t in team %}
+                              {% if t in team %}
+                              <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{t.user.username}}</td>
+                                <td>
+                                  {% if t.status == 'Completed' %}
+                                    <div class="badge badge-success">Completed</div>
+                                  {% elif t.status == 'Pending' %}
+                                    <dv class="badge badge-warning">Pending</div>
+                                  {% else %}
+                                    <div class="badge badge-danger">Cancelled</div>
+                                  {% endif %}
+                                </td>
+                                <td>{{t.badge}}</td>
+                              </tr>
+                            </tbody>
+                              {% endif %}
+                              {% endfor %}
+                          </table>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        </div>
+        <!-- content-wrapper ends -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+</body>
+</html>
+{% endblock content %}

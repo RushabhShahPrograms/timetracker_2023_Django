@@ -1,0 +1,141 @@
+{% extends '../base.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Developer Dashboard</title>
+</head>
+<body>
+    <div class="container-scroller">
+      {% include '../developer_navbar.html' %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Project Team</p>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="table-responsive">
+                        <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                          <div class="row">
+                            <!--Searching and sorting-->
+                            <div class="col-sm-12 col-md-6">
+                                <form method="get" action="{% url 'task_list' %}">
+                                  <div class="form-row align-items-center">
+                                      <div class="col-auto my-1">
+                                          <label class="mr-sm-2 sr-only" for="sort_by">Sort by</label>
+                                          <select class="custom-select mr-sm-2" id="sort_by" name="sort_by">
+                                              <option value="">Sort by</option>
+                                              <option value="name" {% if request.GET.sort_by == 'project' %}selected{% endif %}>Project</option>
+                                              <option value="start_date" {% if request.GET.sort_by == 'team_name' %}selected{% endif %}>Team Name</option>
+                                          </select>
+                                      </div>
+                                      <div class="col-auto my-1">
+                                          <label class="mr-sm-2 sr-only" for="search">Search</label>
+                                          <input type="text" class="form-control" id="search" name="search" placeholder="Search" value="{{ request.GET.search }}">
+                                      </div>
+                                      <div class="col-auto my-1">
+                                          <button type="submit" class="btn btn-primary">Submit</button>
+                                      </div>
+                                  </div>
+                                </form>
+                            </div>
+                            <!--Searching and sorting ends-->
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <table class="display expandable-table dataTable no-footer" style="width: 100%;" role="grid">
+                                <thead>
+                                  <tr role="row">
+                                      <th>No.</th>
+                                      <th>Team Name</th>
+                                      <th>Project Title</th>
+                                      <th>Badge</th>
+                                      <th>Status</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                        
+                                  {% for task in tasks %}
+                                  <tr class="table table-striped">
+                                      <td>{{forloop.counter}}</td>
+                                      <td>{{task.team_name}}</td>
+                                      <td><b>{{task.project}}</b></td>
+                                      <td>{{task.badge}}</td>
+                                      <td class="font-weight-medium">
+                                        {% if task.status == 'Completed' %}
+              
+                                          <div class="badge badge-success">Completed</div>
+                                        
+                                        {% elif task.status == 'Pending' %}
+              
+                                          <div class="badge badge-warning">Pending</div>
+                                        
+                                        {% else %}
+              
+                                          <div class="badge badge-danger">Cancelled</div>
+                                          
+                                        {% endif %}
+                                      </td>
+                                      <div class="font-weight-medium">
+                                      {% comment %} <td>
+                                        <a class="dropdown-item" href="{% url 'projectupdate' project.id %}"><i class="ti-pencil-alt"></i> Edit</a>
+                                        <a class="dropdown-item" href="{% url 'projectdelete' project.id %}"><i class="ti-trash"></i> Delete</a>
+                                        <a class="dropdown-item" href="{% url 'projectdetail' project.id %}"><i class="ti-notepad"></i> Detail</a>
+                                      </td> {% endcomment %}
+                                    </div>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                              <div class="pagination justify-content-center">
+                                <ul class="pagination">
+                                  {% if page_obj.has_previous %}
+                                  <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo; Previous</a>
+                                  </li>
+                                  {% endif %}
+                                  {% for num in page_obj.paginator.page_range %}
+                                  {% if page_obj.number == num %}
+                                  <li class="page-item active">
+                                    <a class="page-link" href="#">{{ num }} <span class="sr-only">(current)</span></a>
+                                  </li>
+                                  {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                  <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                  </li>
+                                  {% endif %}
+                                  {% endfor %}
+                                  {% if page_obj.has_next %}
+                                  <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
+                                  </li>
+                                  {% endif %}
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+  <!-- container-scroller -->
+</body>
+</html>
+{% endblock content %}

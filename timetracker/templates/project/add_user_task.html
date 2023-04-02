@@ -1,0 +1,54 @@
+{% extends "../base.html" %}
+
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add User Task</title>
+</head>
+<body>
+  <div class="container-scroller">
+      {% include '../manager_navbar.html' %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">Add User task</h4>
+                        <form class="forms-sample" method="POST">
+                          {% csrf_token %}
+                          <div class="form-group">
+                            {{form | crispy}}
+                          </div>
+                          <div class="form-group">
+                          <input class="btn btn-primary mr-2" type = "submit" value = "Submit">
+                          {% comment %} <button type="submit" class="btn btn-primary mr-2">Submit</button> {% endcomment %}
+                          <input class="btn btn-light" type="cancel" value="Cancel">
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+      </div>
+      <!-- content-wrapper ends -->
+      <!-- partial:partials/_footer.html -->
+      <footer class="footer">
+      </footer>
+      <!-- partial -->
+    </div>
+    <!-- main-panel ends -->
+  </div>
+  <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+</body>
+</html>
+{% endblock content %}
