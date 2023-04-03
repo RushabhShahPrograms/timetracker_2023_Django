@@ -69,9 +69,7 @@
                                {% for project in project_list %}
                                 <tr class="table table-striped">
                                     <td>{{forloop.counter}}</td>
-                                    <td><p>{{project.project_title}}</p>
-                                      <a class="dropdown-item" href="{% url 'modules' project.id %}" style="color:#4B49AC;"><i class="ti-bar-chart"></i> View Modules</a>
-                                    </td>
+                                    <td>{{project.project_title}}</td>
                                     <td><b>{{project.project_technology}}</b></td>
                                     <td>{{project.project_start_date}}</td>
                                     <td>{{project.project_completion_date}}</td> 
@@ -92,6 +90,7 @@
                                     </td>
                                     <div class="font-weight-medium">
                                     <td>
+                                      <a class="dropdown-item" href="{% url 'modules' project.id %}" style="color:#4B49AC;"><i class="ti-bar-chart"></i> View Modules</a>
                                       <a class="dropdown-item" href="{% url 'projectupdate' project.id %}" style="color:#4B49AC;"><i class="ti-pencil-alt"></i> Edit</a>
                                       <a class="dropdown-item" href="{% url 'projectdelete' project.id %}" style="color:#4B49AC;"><i class="ti-trash"></i> Delete</a>
                                       <a class="dropdown-item" href="{% url 'projectdetail' project.id %}" style="color:#4B49AC;"><i class="ti-notepad"></i> Detail</a>
