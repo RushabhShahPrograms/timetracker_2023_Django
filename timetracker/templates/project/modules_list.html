@@ -1,79 +1,140 @@
 {% extends '../base.html' %}
-{% block content %}
-{% load static %}
-{% load crispy_forms_tags %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
+    {% block content %}
+    {% load static %}
+    {% load crispy_forms_tags %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
       <!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Modules</title>
-<!-- Load Plotly CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.plot.ly/plotly-2.5.1.min.css">
-
-<!-- Load Plotly JS -->
-<script type="text/javascript" src="https://cdn.plot.ly/plotly-2.5.1.min.js"></script>
-</head>
-<body>
-    <div class="container-scroller">
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Modules List</title>
+    </head>
+    <body>
+      <div class="container-scroller">
         {% include '../manager_navbar.html' %}
           <!-- partial -->
-        <div class="main-panel">
+          <div class="main-panel">
             <div class="content-wrapper">
               <div class="row">
-                  <div class="col-md-12 grid-margin stretch-card">
-                    <div class="card">
-                      <div class="table-responsive">
-                      <div class="card-body">
-                        <div class="card-header">
-                          <h3 class="card-title">Project Modules</h3>
-                        </div>
-                        {% if modules %}
-                          <table class="table table-bordered table-hover">
-                            <thead>
-                              <tr>
-                                <th>Module Name</th>
-                                <th>Estimated Hours</th>
-                                <th>Start Date</th>
-                                <th>Completion Date</th>
-                                <th>User</th>
-                                <th>Status</th>
-                                {% comment %} <th>Description</th> {% endcomment %}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {% for module in modules %}
-                                <tr>
-                                  <td>{{ module.module_name }}</td>
-                                  <td>{{ module.module_estimated_hours }}</td>
-                                  <td>{{ module.module_start_date }}</td>
-                                  <td>{{ module.module_completion_date }}</td>
-                                  <td>{{ module.user.username }}</td>
-                                  <td>{{ module.status }}</td>
-                                  {% comment %} <td>{{ module.module_description }}</td> {% endcomment %}
+                <div class="col-md-12 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <p class="card-title">List of Modules</p>
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="table-responsive">
+                            <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                <div class="row">
+                                  <!--Searching and sorting-->
+                                  <div class="col-sm-12 col-md-6">
+                                      <form method="get" action="{% url 'projectlist' %}">
+                                        <div class="form-row align-items-center">
+                                            <div class="col-auto my-1">
+                                                <label class="mr-sm-2 sr-only" for="sort_by">Sort by</label>
+                                                <select class="custom-select mr-sm-2" id="sort_by" name="sort_by">
+                                                    <option value="">Sort by</option>
+                                                    <option value="name" {% if request.GET.sort_by == 'name' %}selected{% endif %}>Name</option>
+                                                    <option value="start_date" {% if request.GET.sort_by == 'start_date' %}selected{% endif %}>Starting Date</option>
+                                                    <option value="completion_date" {% if request.GET.sort_by == 'completion_date' %}selected{% endif %}>Completion Date</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-auto my-1">
+                                                <label class="mr-sm-2 sr-only" for="search">Search</label>
+                                                <input type="text" class="form-control" id="search" name="search" placeholder="Search" value="{{ request.GET.search }}">
+                                            </div>
+                                            <div class="col-auto my-1">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </div>
+                                      </form>
+                                  </div>
+                                  <!--Searching and sorting ends-->
+                                </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="display expandable-table dataTable no-footer" style="width: 100%;" role="grid">
+                              <thead>
+                                <tr role="row">
+                                    <th>No.</th>
+                                    <th>Title</th>
+                                    <th>Technolgy</th>
+                                    <th>Starting Date</th>
+                                    <th>Completion Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
-                              {% endfor %}
-                            </tbody>
-                          </table>
-                        {% else %}
-                          <p>No modules added for this project.<br></p> <a href="{% url 'addprojectsmodules' %}" class="btn btn-primary">Add Now</a>
-                        {% endif %}
-
-                        <!-- Add this div tag to display the Gantt chart -->
-                        {{ chart_div|safe }}
-
-                      </div>
+                              </thead>
+                              <tbody>
+                               {% for project in project_list %}
+                                <tr class="table table-striped">
+                                    <td>{{forloop.counter}}</td>
+                                    <td><p>{{project.project_title}}</p>
+                                      <a class="dropdown-item" href="{% url 'modules' project.id %}" style="color:#4B49AC;"><i class="ti-bar-chart"></i> View Modules</a>
+                                    </td>
+                                    <td><b>{{project.project_technology}}</b></td>
+                                    <td>{{project.project_start_date}}</td>
+                                    <td>{{project.project_completion_date}}</td> 
+                                    <td class="font-weight-medium">
+                                      {% if project.status == 'Completed' %}
+            
+                                        <div class="badge badge-success">Completed</div>
+                                      
+                                      {% elif project.status == 'Pending' %}
+            
+                                        <div class="badge badge-warning">Pending</div>
+                                      
+                                      {% else %}
+            
+                                        <div class="badge badge-danger">Cancelled</div>
+                                        
+                                      {% endif %}
+                                    </td>
+                                    <div class="font-weight-medium">
+                                    <td>
+                                      <a class="dropdown-item" href="{% url 'projectupdate' project.id %}" style="color:#4B49AC;"><i class="ti-pencil-alt"></i> Edit</a>
+                                      <a class="dropdown-item" href="{% url 'projectdelete' project.id %}" style="color:#4B49AC;"><i class="ti-trash"></i> Delete</a>
+                                      <a class="dropdown-item" href="{% url 'projectdetail' project.id %}" style="color:#4B49AC;"><i class="ti-notepad"></i> Detail</a>
+                                    </td>
+                                  </div>
+                                </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                            <div class="pagination justify-content-center">
+                              <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo; Previous</a>
+                                </li>
+                                {% endif %}
+                                {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                  <a class="page-link" href="#">{{ num }} <span class="sr-only">(current)</span></a>
+                                </li>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
+                                </li>
+                                {% endif %}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
                     </div>
-                    </div>
-                  </div>
-              </div>
-            </div>
-            <!-- content-wrapper ends -->
-        </div>
+                </div>
           <!-- main-panel ends -->
-    </div>
+        </div>
         <!-- page-body-wrapper ends -->
-</body>
-</html>
-{% endblock content %}
+      </div>
+      <!-- container-scroller -->
+    </body>
+    </html>
+    {% endblock content %}

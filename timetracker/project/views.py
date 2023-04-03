@@ -119,10 +119,10 @@ class ProjectDeleteView(DeleteView):
 
 
 @method_decorator(login_required(login_url='/user/login'), name='dispatch')
-class TaskListView(ListView):
+class UserProjectTeamListView(ListView):
     paginate_by=5
     model = Project_Team
-    template_name = 'project/task_list.html'
+    template_name = 'project/user_project_team_list.html'
     context_object_name = 'tasks'
     
     def get_queryset(self):
@@ -142,7 +142,7 @@ class TaskListView(ListView):
 
 class ProjectModuleGanttView(DetailView):
     model = Project
-    template_name = 'project/modules_list.html'
+    template_name = 'project/modules_chart_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -167,3 +167,55 @@ class ProjectModuleGanttView(DetailView):
             context['modules'] = []
 
         return context
+    
+
+
+@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+class ModulesListView(ListView):
+    paginate_by=5
+    model = Project_Module
+    template_name = 'project/modules_list.html'
+    context_object_name = 'modules_list'
+    
+    def get_queryset(self):
+        sort_by = self.request.GET.get('sort_by', None)
+        search = self.request.GET.get('search', None)
+        queryset = super().get_queryset()
+        
+        if search:
+            queryset = queryset.filter(Q(module_name__icontains=search) | Q(user__icontains=search))
+        
+        if sort_by == 'name':
+            queryset = queryset.order_by('module_name')
+        elif sort_by == 'start_date':
+            queryset = queryset.order_by('module_start_date')
+        elif sort_by == 'completion_date':
+            queryset = queryset.order_by('module_completion_date')
+        
+        return queryset
+
+@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+class ModulesUpdateView(UpdateView):
+    model = Project_Module
+    form_class = ProjectModulesForm
+    template_name = 'project/add_projects_modules.html'
+    success_url = '/project/moduleslist/'
+
+@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+class ModulesDetailView(DetailView):
+    model = Project
+    template_name = 'project/module_detail.html'
+    context_object_name = 'modulesdetail'
+    
+    def get(self, request, *args, **kwargs):
+        team = Project_Team.objects.filter(project_id=self.kwargs['pk'])
+        return render(request, self.template_name, {'modulesdetail': self.get_object(),'team':team})
+    
+      
+@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+class ModulesDeleteView(DeleteView):
+    model = Project_Module
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+    
+    success_url = '/project/moduleslist/'

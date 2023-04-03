@@ -1,0 +1,79 @@
+{% extends '../base.html' %}
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Modules</title>
+<!-- Load Plotly CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.plot.ly/plotly-2.5.1.min.css">
+
+<!-- Load Plotly JS -->
+<script type="text/javascript" src="https://cdn.plot.ly/plotly-2.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container-scroller">
+        {% include '../manager_navbar.html' %}
+          <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+              <div class="row">
+                  <div class="col-md-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="table-responsive">
+                      <div class="card-body">
+                        <div class="card-header">
+                          <h3 class="card-title">Project Modules</h3>
+                        </div>
+                        {% if modules %}
+                          <table class="table table-bordered table-hover">
+                            <thead>
+                              <tr>
+                                <th>Module Name</th>
+                                <th>Estimated Hours</th>
+                                <th>Start Date</th>
+                                <th>Completion Date</th>
+                                <th>User</th>
+                                <th>Status</th>
+                                {% comment %} <th>Description</th> {% endcomment %}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for module in modules %}
+                                <tr>
+                                  <td>{{ module.module_name }}</td>
+                                  <td>{{ module.module_estimated_hours }}</td>
+                                  <td>{{ module.module_start_date }}</td>
+                                  <td>{{ module.module_completion_date }}</td>
+                                  <td>{{ module.user.username }}</td>
+                                  <td>{{ module.status }}</td>
+                                  {% comment %} <td>{{ module.module_description }}</td> {% endcomment %}
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                        {% else %}
+                          <p>No modules added for this project.<br></p> <a href="{% url 'addprojectsmodules' %}" class="btn btn-primary">Add Now</a>
+                        {% endif %}
+
+                        <!-- Add this div tag to display the Gantt chart -->
+                        {{ chart_div|safe }}
+
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <!-- content-wrapper ends -->
+        </div>
+          <!-- main-panel ends -->
+    </div>
+        <!-- page-body-wrapper ends -->
+</body>
+</html>
+{% endblock content %}
