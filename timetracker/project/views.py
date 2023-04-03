@@ -203,7 +203,7 @@ class ModulesUpdateView(UpdateView):
 
 @method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
 class ModulesDetailView(DetailView):
-    model = Project
+    model = Project_Module
     template_name = 'project/module_detail.html'
     context_object_name = 'modulesdetail'
     
