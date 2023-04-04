@@ -118,7 +118,7 @@ class ProjectDeleteView(DeleteView):
     success_url = '/project/projectlist/'    
 
 
-@method_decorator(login_required(login_url='/user/login'), name='dispatch')
+@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
 class UserProjectTeamListView(ListView):
     paginate_by=5
     model = Project_Team
@@ -137,6 +137,54 @@ class UserProjectTeamListView(ListView):
             queryset = queryset.order_by('team_name')
         elif sort_by == 'project':
             queryset = queryset.order_by('project')
+        
+        return queryset
+    
+@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
+class UserTaskListView(ListView):
+    paginate_by=5
+    model = Project_Task
+    template_name = 'project/user_task_list.html'
+    context_object_name = 'task_list'
+    
+    def get_queryset(self):
+        sort_by = self.request.GET.get('sort_by', None)
+        search = self.request.GET.get('search', None)
+        queryset = super().get_queryset().filter(user__username=self.request.user.username)
+        
+        if search:
+            queryset = queryset.filter(Q(task_title__icontains=search) | Q(priority__icontains=search))
+        
+        if sort_by == 'name':
+            queryset = queryset.order_by('task_title')
+        elif sort_by == 'priority':
+            queryset = queryset.order_by('priority')
+        elif sort_by == 'status':
+            queryset = queryset.order_by('status')
+        
+        return queryset
+
+@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
+class UserModulesListView(ListView):
+    paginate_by=5
+    model = Project_Module
+    template_name = 'project/user_modules_list.html'
+    context_object_name = 'modules_list'
+    
+    def get_queryset(self):
+        sort_by = self.request.GET.get('sort_by', None)
+        search = self.request.GET.get('search', None)
+        queryset = super().get_queryset().filter(user__username=self.request.user.username)
+        
+        if search:
+            queryset = queryset.filter(Q(module_name__icontains=search) | Q(user__icontains=search))
+        
+        if sort_by == 'name':
+            queryset = queryset.order_by('module_name')
+        elif sort_by == 'start_date':
+            queryset = queryset.order_by('module_start_date')
+        elif sort_by == 'completion_date':
+            queryset = queryset.order_by('module_completion_date')
         
         return queryset
 
@@ -194,14 +242,14 @@ class ModulesListView(ListView):
         
         return queryset
 
-@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+@method_decorator([login_required(login_url="/user/login"),manager_or_developer_required],name='dispatch')
 class ModulesUpdateView(UpdateView):
     model = Project_Module
     form_class = ProjectModulesForm
     template_name = 'project/add_projects_modules.html'
     success_url = '/project/moduleslist/'
 
-@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+@method_decorator([login_required(login_url="/user/login"),manager_or_developer_required],name='dispatch')
 class ModulesDetailView(DetailView):
     model = Project_Module
     template_name = 'project/module_detail.html'
@@ -245,14 +293,14 @@ class TaskListView(ListView):
         
         return queryset
 
-@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+@method_decorator([login_required(login_url="/user/login"),manager_or_developer_required],name='dispatch')
 class TaskUpdateView(UpdateView):
     model = Project_Task
     form_class = ProjectTaskForm
     template_name = 'project/add_projects_task.html'
     success_url = '/project/tasklist/'
 
-@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+@method_decorator([login_required(login_url="/user/login"),manager_or_developer_required],name='dispatch')
 class TaskDetailView(DetailView):
     model = Project_Task
     template_name = 'project/task_detail.html'
