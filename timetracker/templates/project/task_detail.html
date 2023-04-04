@@ -1,0 +1,67 @@
+{% extends '../base.html' %}
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Task Detail View</title>
+    </head>
+    <body>
+        <div class="container-scroller">
+            {% include '../manager_navbar.html' %}
+                <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Task Details of {{tasksdetail.task_title}}</h4>
+                                    <div class="form-group">
+                                        <h4>Task Title:</h4> {{tasksdetail.task_title}}
+                                    </div>
+                                    <div class="form-group">
+                                        <h4>Task Description:</h4>{{tasksdetail.task_description}}
+                                    </div>
+                                    <div class="form-group">
+                                        <h4>Project:</h4><span class="highlight">{{tasksdetail.project}}</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <h4>Module:</h4><span class="highlight">{{tasksdetail.module}}</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <h4>Estimated Hours:</h4>{{tasksdetail.task_estimated_hours}}&nbsp;hours
+                                    </div>
+                                    <div class="form-group">
+                                        <h4>Util Minutes:</h4>{{tasksdetail.task_util_minutes}}
+                                    </div>
+                                    <div class="form-group">
+                                        <h4>User:</h4>{{tasksdetail.user}}
+                                    </div>
+                                    <div class="form-group">
+                                        <h4>Priority:</h4>{{tasksdetail.priority}}
+                                    </div>
+                                    <div class="form-group">
+                                        <h4>Status:</h4>
+                                        {% if tasksdetail.status == 'Completed' %}
+                                        <div class="badge badge-success">Completed</div>
+                                        {% elif tasksdetail.status == 'Pending' %}
+                                        <div class="badge badge-warning">Pending</div>
+                                        {% else %}
+                                        <div class="badge badge-danger">Danger</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+{% endblock content %}
