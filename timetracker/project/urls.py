@@ -18,4 +18,8 @@ urlpatterns = [
  path('modulesdelete/<int:pk>',ModulesDeleteView.as_view(),name='modulesdelete'),
  path('modulesupdate/<int:pk>',ModulesUpdateView.as_view(),name='modulesupdate'),
  path('modulesdetail/<int:pk>',ModulesDetailView.as_view(),name='modulesdetail'),
+ path('taskslist/',TaskListView.as_view(),name="taskslist"),
+ path('tasksdelete/<int:pk>',TaskDeleteView.as_view(),name='tasksdelete'),
+ path('tasksupdate/<int:pk>',TaskUpdateView.as_view(),name='tasksupdate'),
+ path('tasksdetail/<int:pk>',TaskDetailView.as_view(),name='tasksdetail'),
 ]

@@ -219,3 +219,54 @@ class ModulesDeleteView(DeleteView):
         return self.delete(request, *args, **kwargs)
     
     success_url = '/project/moduleslist/'
+
+
+@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+class TaskListView(ListView):
+    paginate_by=5
+    model = Project_Task
+    template_name = 'project/task_list.html'
+    context_object_name = 'task_list'
+    
+    def get_queryset(self):
+        sort_by = self.request.GET.get('sort_by', None)
+        search = self.request.GET.get('search', None)
+        queryset = super().get_queryset()
+        
+        if search:
+            queryset = queryset.filter(Q(task_title__icontains=search) | Q(priority__icontains=search))
+        
+        if sort_by == 'name':
+            queryset = queryset.order_by('task_title')
+        elif sort_by == 'priority':
+            queryset = queryset.order_by('priority')
+        elif sort_by == 'status':
+            queryset = queryset.order_by('status')
+        
+        return queryset
+
+@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+class TaskUpdateView(UpdateView):
+    model = Project_Task
+    form_class = ProjectTaskForm
+    template_name = 'project/add_projects_task.html'
+    success_url = '/project/tasklist/'
+
+@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+class TaskDetailView(DetailView):
+    model = Project_Task
+    template_name = 'project/task_detail.html'
+    context_object_name = 'tasksdetail'
+    
+    def get(self, request, *args, **kwargs):
+        team = Project_Team.objects.filter(project_id=self.kwargs['pk'])
+        return render(request, self.template_name, {'tasksdetail': self.get_object(),'team':team})
+    
+      
+@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+class TaskDeleteView(DeleteView):
+    model = Project_Task
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+    
+    success_url = '/project/taskslist/'

@@ -85,6 +85,29 @@
                   <p class="card-title">Project Achievement</p>
                   <p class="font-weight-500">Achievement of the total hours achieved by completed the projects</p>
                   {{ chart|safe }}
+                  {% comment %} <script>
+                    var config = {
+                      type: 'pie',
+                      data: {
+                        datasets: [{
+                          data: {{ data|safe }},
+                          backgroundColor: [
+                            '#696969', '#808080', '#A9A9A9'
+                          ],
+                        }],
+                        labels: {{ labels|safe }}
+                      },
+                      options: {
+                        responsive: true
+                      }
+                    };
+                
+                    window.onload = function() {
+                      var ctx = document.getElementById('pie-chart').getContext('2d');
+                      window.myPie = new Chart(ctx, config);
+                    };
+                
+                  </script> {% endcomment %}
                 </div>
               </div>
             </div>
@@ -188,7 +211,7 @@
                             <tr>
                               <td class="font-weight-bold">Task</td>
                               <td>{{tasks|length}}</td>
-                              <td><a class="btn btn-info" href="{% url 'moduleslist' %}">View all</a></td>
+                              <td><a class="btn btn-info" href="{% url 'taskslist' %}">View all</a></td>
                             </tr>
                           </tbody>
                         </table>

@@ -122,6 +122,8 @@ class ManagerPage(ListView):
         team = Project_Team.objects.all().values()
         module = Project_Module.objects.all().values()
         task = Project_Task.objects.all().values()
+
+        # Bar Chart
         completedproject = Project.objects.filter(status="Completed")
         pendingproject = Project.objects.filter(status="Pending")
         chs = Project.objects.annotate(month=ExtractMonth('project_start_date')) \
@@ -129,6 +131,26 @@ class ManagerPage(ListView):
                                   .annotate(total_projects=Count('id')) \
                                   .order_by('month')
         
+
+        # labels = []
+        # data = []
+
+        # # Get the count of projects for each status
+        # completed_count = Project.objects.filter(status='Completed').count()
+        # pending_count = Project.objects.filter(status='Pending').count()
+        # cancelled_count = Project.objects.filter(status='Cancelled').count()
+
+        # # Append the status names to the labels list
+        # labels.append('Completed')
+        # labels.append('Pending')
+        # labels.append('Cancelled')
+
+        # # Append the project counts to the data list
+        # data.append(completed_count)
+        # data.append(pending_count)
+        # data.append(cancelled_count)
+
+        # Pie Chart
         completed_projects = Project.objects.filter(status="Completed")
         pending_projects = Project.objects.filter(status="Pending")
         cancelled_projects = Project.objects.filter(status="Cancelled")
@@ -138,7 +160,7 @@ class ManagerPage(ListView):
             cancelled=Coalesce(Count('id', filter=Q(status="Cancelled")), 0)
         )
 
-        # Pie Chart
+        
         labels = ['Completed', 'Pending', 'Cancelled']
         values = [total_projects['completed'], total_projects['pending'], total_projects['cancelled']]
         colors = ['#B2A4FF', '#57C5B6', '#D864A9']
@@ -167,6 +189,7 @@ class ManagerPage(ListView):
                        'pending_projects': pending_projects,
                        'cancelled_projects': cancelled_projects,
                        'chart': chart,
+                    #    'labels':labels,'data':data
                        })
 
     template_name="user/manager_page.html"
