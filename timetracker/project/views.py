@@ -123,7 +123,7 @@ class UserProjectTeamListView(ListView):
     paginate_by=5
     model = Project_Team
     template_name = 'project/user_project_team_list.html'
-    context_object_name = 'tasks'
+    context_object_name = 'projectteam'
     
     def get_queryset(self):
         sort_by = self.request.GET.get('sort_by', None)
@@ -145,7 +145,7 @@ class UserTaskListView(ListView):
     paginate_by=5
     model = Project_Task
     template_name = 'project/user_task_list.html'
-    context_object_name = 'task_list'
+    context_object_name = 'user_tasks'
     
     def get_queryset(self):
         sort_by = self.request.GET.get('sort_by', None)
@@ -169,7 +169,7 @@ class UserModulesListView(ListView):
     paginate_by=5
     model = Project_Module
     template_name = 'project/user_modules_list.html'
-    context_object_name = 'modules_list'
+    context_object_name = 'usermodules'
     
     def get_queryset(self):
         sort_by = self.request.GET.get('sort_by', None)

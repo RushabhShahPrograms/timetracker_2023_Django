@@ -12,7 +12,7 @@
     </head>
     <body>
       <div class="container-scroller">
-        {% include '../manager_navbar.html' %}
+        {% include '../developer_navbar.html' %}
           <!-- partial -->
           <div class="main-panel">
             <div class="content-wrapper">
@@ -66,7 +66,7 @@
                                 </tr>
                               </thead>
                               <tbody>
-                               {% for task in task_list %}
+                               {% for task in user_tasks %}
                                 <tr class="table table-striped">
                                     <td>{{forloop.counter}}</td>
                                     <td>{{task.task_title}}</td>
