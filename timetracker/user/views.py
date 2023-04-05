@@ -22,6 +22,9 @@ from django.db.models.functions import Coalesce
 from plotly.offline import plot
 from django.db.models import Q
 
+# from gencal import CalendarView
+
+
 class AdminRegisterView(CreateView):
     model = User
     form_class = AdminRegisterForm
@@ -208,6 +211,16 @@ class DeveloperPage(ListView):
                        })
 
     template_name="user/developer_page.html"
+
+
+
+class CalendarView(TemplateView):
+    template_name = 'user/developer_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['calendar'] = CalendarView()
+        return context
 
 
 class UserProfileView(CreateView):

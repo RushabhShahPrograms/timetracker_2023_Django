@@ -1,8 +1,10 @@
 from . import views
 from django.urls import path,include
 from .views import *
+# import schedule
 #from django.contrib.auth.views import LogoutView
-
+# from schedule.views import CalendarView
+# from schedule.models import Calendar
 
 urlpatterns = [
  

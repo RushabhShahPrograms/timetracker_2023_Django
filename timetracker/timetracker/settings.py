@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'project',
     'crispy_forms',
     'crispy_bootstrap5',
+    # 'schedule',
+    #'calendarium',
+    # 'easy_thumbnails',
+    #'gencal',
    # 'django_chartjs',
     #'chartjs',
 ]
