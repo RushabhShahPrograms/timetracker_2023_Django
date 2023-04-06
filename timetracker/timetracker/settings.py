@@ -42,13 +42,6 @@ INSTALLED_APPS = [
     'project',
     'crispy_forms',
     'crispy_bootstrap5',
-    # 'calendar',
-    # 'scheduler',
-    # 'calendarium',
-    # 'easy_thumbnails',
-    #'gencal',
-   # 'django_chartjs',
-    #'chartjs',
 ]
 
 MIDDLEWARE = [
