@@ -109,11 +109,12 @@
                     <p class="card-title mb-0">To Do</p>
                       <div class="list-wrapper pt-1">
                         {% for task in tasks %}
-                        {% if task.status == "Pending" %}
-                        <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
-                                <li>{{task.task_title}}</li>
-                        </ul>
-                        {% endif %}
+                        {% comment %} {% if task.status == "Pending" %} {% endcomment %}
+                                <div class="border border-secondary">
+                                  <a href ="#"><b>{{task.task_title}}</b></a><br>
+                                  {{task.priority}}
+                                </div>
+                        {% comment %} {% endif %} {% endcomment %}
                         {% endfor %}
                       </div>
                   </div>
