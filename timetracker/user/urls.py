@@ -17,7 +17,7 @@ urlpatterns = [
  path('managerpage/',ManagerPage.as_view(),name="managerpage"),
  path('developerpage/',DeveloperPage.as_view(),name="developerpage"),
  path('adminpage/',AdminPage.as_view(),name="adminpage"),
- path('userprofile/',UserProfileView.as_view(),name="userprofile"),
- path('userprofileupdate/<int:pk>',UserProfileUpdateView.as_view(),name="userprofileupdate"),
+#  path('userprofile/',UserProfileView.as_view(),name="userprofile"),
+#  path('userprofileupdate/<int:pk>',UserProfileUpdateView.as_view(),name="userprofileupdate"),
  
 ]

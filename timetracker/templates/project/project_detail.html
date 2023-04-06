@@ -46,9 +46,28 @@
                       <div class="form-group">
                         <h4>Completion Date:</h4>{{projectdetail.project_completion_date}}
                       </div>
-                      <div class="form-group">
-                        <h4>Project File(If Any):</h4>{{projectdetail.project_file}}
-                      </div>
+                        <div class="form-group">
+                          <h4>Project File(If Any):</h4>
+                          {% if projectdetail.project_file %}
+                              {% with projectdetail.project_file.name|slice:'-3:' as file_ext %}
+                                  {% if file_ext|lower == 'jpg' or file_ext|lower == 'png' or file_ext|lower == 'jpeg' %}
+                                      <img src="{{ projectdetail.project_file.url }}" alt="{{ projectdetail.project_file.name }}" style="max-width:100%; height:auto;">
+                                  {% else %}
+                                      <a href="{{ projectdetail.project_file.url }}" target="_blank" rel="noopener noreferrer">{{ projectdetail.project_file.name }}</a>
+                                  {% endif %}
+                                  <br>
+                                  <a href="{{ projectdetail.project_file.url }}" download>Download</a>
+                              {% endwith %}
+                              {% if projectdetail.project_file %}
+                              {% if projectdetail.project_file.name|lower|slice:".pdf" %}
+                                <embed src="{{ projectdetail.project_file.url }}" type="application/pdf" width="100%" height="600px" />
+                              {% endif %}
+                            {% endif %}
+                            
+                          {% else %}
+                              None
+                          {% endif %}
+                        </div>
                       <div class="form-group">
                         <h4>Status:</h4>
                         {% if projectdetail.status == 'Completed' %}

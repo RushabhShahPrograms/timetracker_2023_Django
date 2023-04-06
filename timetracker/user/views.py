@@ -214,40 +214,40 @@ class DeveloperPage(ListView):
 
 
 
-class CalendarView(TemplateView):
-    template_name = 'user/developer_page.html'
+# class CalendarView(TemplateView):
+#     template_name = 'user/developer_page.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['calendar'] = CalendarView()
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['calendar'] = CalendarView()
+#         return context
 
 
-class UserProfileView(CreateView):
-    model=User
-    form_class=UserProfileForm
-    template_name = 'user/user_profile.html'
-    # success_url = '/'
+# class UserProfileView(CreateView):
+#     model=User
+#     form_class=UserProfileForm
+#     template_name = 'user/user_profile.html'
+#     # success_url = '/'
 
-    def form_valid(self, form):
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         return super().form_valid(form)
 
-    def get_redirect_url(self):
-         if self.request.user.is_authenticated:
-             if self.request.user.is_manager:
-                 return '/user/managerpage/'
-             else:
-                 return '/user/developerpage/'
+#     def get_redirect_url(self):
+#          if self.request.user.is_authenticated:
+#              if self.request.user.is_manager:
+#                  return '/user/managerpage/'
+#              else:
+#                  return '/user/developerpage/'
              
-class UserProfileUpdateView(UpdateView):
-    model = User
-    form_class = UserProfileForm
-    template_name = 'project/user_profile.html'
-    # success_url = '/'
+# class UserProfileUpdateView(UpdateView):
+#     model = User
+#     form_class = UserProfileForm
+#     template_name = 'project/user_profile.html'
+#     # success_url = '/'
 
-    def get_redirect_url(self):
-         if self.request.user.is_authenticated:
-             if self.request.user.is_manager:
-                 return '/user/managerpage/'
-             else:
-                 return '/user/developerpage/'
+#     def get_redirect_url(self):
+#          if self.request.user.is_authenticated:
+#              if self.request.user.is_manager:
+#                  return '/user/managerpage/'
+#              else:
+#                  return '/user/developerpage/'
