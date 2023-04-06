@@ -58,11 +58,11 @@
                                 <tr role="row">
                                     <th>No.</th>
                                     <th>Title</th>
+                                    <th>Description</th>
                                     <th>Modules</th>
                                     <th>Project</th>
                                     <th>Priority</th>
                                     <th>Status</th>
-                                    <th>Actions</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -70,9 +70,20 @@
                                 <tr class="table table-striped">
                                     <td>{{forloop.counter}}</td>
                                     <td>{{task.task_title}}</td>
+                                    <td>{{task.task_description}}</td>
                                     <td><b>{{task.module}}</b></td>
                                     <td>{{task.project}}</td>
-                                    <td>{{task.priority}}</td> 
+                                    <td class="font-weight-medium">
+                                      {% if task.priority == 'Less' %}
+            
+                                        <div class="badge badge-warning">Less</div>
+                                      
+                                      {% else %}
+            
+                                        <div class="badge badge-danger">High</div>
+                                        
+                                      {% endif %}
+                                    </td>
                                     <td class="font-weight-medium">
                                       {% if task.status == 'Completed' %}
             
@@ -88,13 +99,6 @@
                                         
                                       {% endif %}
                                     </td>
-                                    <div class="font-weight-medium">
-                                    <td>
-                                      <a class="dropdown-item" href="{% url 'tasksupdate' task.id %}" style="color:#4B49AC;"><i class="ti-pencil-alt"></i> Edit</a>
-                                      <a class="dropdown-item" href="{% url 'tasksdelete' task.id %}" style="color:#4B49AC;"><i class="ti-trash"></i> Delete</a>
-                                      <a class="dropdown-item" href="{% url 'tasksdetail' task.id %}" style="color:#4B49AC;"><i class="ti-notepad"></i> Detail</a>
-                                    </td>
-                                  </div>
                                 </tr>
                                 {% endfor %}
                               </tbody>

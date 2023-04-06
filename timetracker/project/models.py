@@ -1,4 +1,5 @@
 #Project Models
+from datetime import timezone
 from django.db import models
 from user.models import User
 
@@ -63,6 +64,7 @@ class Project_Module(models.Model):
 # Project Task Class
 status_choice = (("Completed","Completed"),
                  ("Pending","Pending"),
+                 ("In Progress","In Progress"),
                  ("Cancelled","Cancelled"))
 priorityChoice=(
    ('High','High Priority'),
@@ -77,7 +79,9 @@ class Project_Task(models.Model):
    user= models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
    task_estimated_hours = models.IntegerField()
    task_util_minutes = models.IntegerField()
-   status = models.CharField(choices=status_choice,max_length=100)
+   status = models.CharField(choices=status_choice,max_length=100, default='Pending')
+   start_time = models.DateTimeField(null=True, blank=True)
+   end_time = models.DateTimeField(null=True, blank=True)
 
    class Meta:
        db_table='project_task'
@@ -89,10 +93,10 @@ class Project_Task(models.Model):
 # Badge Class
 
 badgeChoice=(
-   ('IN','InProgress'),
-   ('QF','QuickFinisher'),
-   ('LL','LazyLoader'),
-   ('SU','SilentUser')
+   ('InProgress','InProgress'),
+   ('QuickFinisher','QuickFinisher'),
+   ('LazyLoader','LazyLoader'),
+   ('SilentUser','SilentUser')
 )
 class Badge(models.Model):
    badge = models.CharField(choices=badgeChoice,max_length=25)
