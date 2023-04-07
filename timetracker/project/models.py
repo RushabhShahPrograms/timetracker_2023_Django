@@ -80,8 +80,8 @@ class Project_Task(models.Model):
    task_estimated_hours = models.IntegerField()
    task_util_minutes = models.IntegerField()
    status = models.CharField(choices=status_choice,max_length=100, default='Pending')
-   start_time = models.DateTimeField(null=True, blank=True)
-   end_time = models.DateTimeField(null=True, blank=True)
+   start_time = models.DateField(null=True, blank=True)
+   end_time = models.DateField(null=True, blank=True)
 
    class Meta:
        db_table='project_task'

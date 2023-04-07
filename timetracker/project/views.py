@@ -298,7 +298,7 @@ class TaskUpdateView(UpdateView):
     model = Project_Task
     form_class = ProjectTaskForm
     template_name = 'project/add_projects_task.html'
-    success_url = '/project/tasklist/'
+    success_url = '/project/taskslist/'
 
 @method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
 class TaskDetailView(DetailView):
