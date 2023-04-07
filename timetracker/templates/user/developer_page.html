@@ -109,12 +109,47 @@
                     <p class="card-title mb-0">To Do</p>
                       <div class="list-wrapper pt-1">
                         {% for task in tasks %}
-                        {% comment %} {% if task.status == "Pending" %} {% endcomment %}
+                        {% if task.status == "Pending" %}
                                 <div class="border border-secondary">
-                                  <a href ="#"><b>{{task.task_title}}</b></a><br>
-                                  {{task.priority}}
+                                  <b>{{task.task_title}}</b> ➡️ <a href ="#" data-toggle="modal" data-target="#exampleModalLong{{ task.id }}"> Details </a> <br>
+                                    {% if task.priority == 'Less' %}
+                                      <div class="badge badge-warning">Less</div>
+                                    {% else %}
+                                      <div class="badge badge-danger">High</div>                                      
+                                    {% endif %}
+                                    |
+                                    {% if task.status == 'Completed' %}
+                                      <div class="badge badge-success">Completed</div>
+                                    {% elif task.status == 'Pending' %}
+                                      <div class="badge badge-warning">Pending</div>
+                                    {% else %}
+                                      <div class="badge badge-danger">Cancelled</div>
+                                    {% endif %}
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModalLong{{ task.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">{{tasks.task_title}}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                          <div class="modal-body">
+                                            <p>Task ID: {{ task.id }}</p>
+                                            <p>Task Description: {{ task.description }}</p>
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
                                 </div>
-                        {% comment %} {% endif %} {% endcomment %}
+                        {% endif %}
                         {% endfor %}
                       </div>
                   </div>
@@ -127,9 +162,22 @@
                       <div class="list-wrapper pt-1">
                         {% for task in tasks %}
                         {% if task.status == "In Progress" %}
-                        <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
-                                <li>{{task.task_title}}</li>
-                        </ul>
+                        <div class="border border-secondary">
+                          <a href ="#"><b>{{task.task_title}}</b></a><br>
+                            {% if task.priority == 'Less' %}
+                              <div class="badge badge-warning">Less</div>
+                            {% else %}
+                              <div class="badge badge-danger">High</div>                                      
+                            {% endif %}
+                            |
+                            {% if task.status == 'Completed' %}
+                              <div class="badge badge-success">Completed</div>
+                            {% elif task.status == 'Pending' %}
+                              <div class="badge badge-warning">Pending</div>
+                            {% else %}
+                              <div class="badge badge-danger">Cancelled</div>
+                            {% endif %}
+                        </div>
                         {% endif %}
                         {% endfor %}
                       </div>
@@ -143,9 +191,22 @@
                       <div class="list-wrapper pt-1">
                         {% for task in tasks %}
                         {% if task.status == "Completed" %}
-                        <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
-                                <li>{{task.task_title}}</li>
-                        </ul>
+                        <div class="border border-secondary">
+                          <a href ="#"><b>{{task.task_title}}</b></a><br>
+                            {% if task.priority == 'Less' %}
+                              <div class="badge badge-warning">Less</div>
+                            {% else %}
+                              <div class="badge badge-danger">High</div>                                      
+                            {% endif %}
+                            |
+                            {% if task.status == 'Completed' %}
+                              <div class="badge badge-success">Completed</div>
+                            {% elif task.status == 'Pending' %}
+                              <div class="badge badge-warning">Pending</div>
+                            {% else %}
+                              <div class="badge badge-danger">Cancelled</div>
+                            {% endif %}
+                        </div>
                         {% endif %}
                         {% endfor %}
                       </div>

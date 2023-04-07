@@ -242,14 +242,14 @@ class ModulesListView(ListView):
         
         return queryset
 
-@method_decorator([login_required(login_url="/user/login"),manager_or_developer_required],name='dispatch')
+@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
 class ModulesUpdateView(UpdateView):
     model = Project_Module
     form_class = ProjectModulesForm
     template_name = 'project/add_projects_modules.html'
     success_url = '/project/moduleslist/'
 
-@method_decorator([login_required(login_url="/user/login"),manager_or_developer_required],name='dispatch')
+@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
 class ModulesDetailView(DetailView):
     model = Project_Module
     template_name = 'project/module_detail.html'
@@ -293,14 +293,14 @@ class TaskListView(ListView):
         
         return queryset
 
-@method_decorator([login_required(login_url="/user/login"),manager_or_developer_required],name='dispatch')
+@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
 class TaskUpdateView(UpdateView):
     model = Project_Task
     form_class = ProjectTaskForm
     template_name = 'project/add_projects_task.html'
     success_url = '/project/tasklist/'
 
-@method_decorator([login_required(login_url="/user/login"),manager_or_developer_required],name='dispatch')
+@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
 class TaskDetailView(DetailView):
     model = Project_Task
     template_name = 'project/task_detail.html'
@@ -318,3 +318,13 @@ class TaskDeleteView(DeleteView):
         return self.delete(request, *args, **kwargs)
     
     success_url = '/project/taskslist/'
+
+@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
+class UserTaskDetailView(DetailView):
+    model = Project_Task
+    template_name = 'project/user_task_detail.html'
+    context_object_name = 'usertasksdetail'
+    
+    def get(self, request, *args, **kwargs):
+        team = Project_Team.objects.filter(project_id=self.kwargs['pk'])
+        return render(request, self.template_name, {'usertasksdetail': self.get_object(),'team':team})
