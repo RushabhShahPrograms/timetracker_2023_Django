@@ -1,3 +1,4 @@
+import json
 import queue
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -251,3 +252,77 @@ class DeveloperPage(ListView):
 #                  return '/user/managerpage/'
 #              else:
 #                  return '/user/developerpage/'
+
+# from django.shortcuts import redirect
+# from google.oauth2.credentials import Credentials
+# from google_auth_oauthlib.flow import Flow
+
+# def google_authenticate(request):
+#     flow = Flow.from_client_secrets_file(
+#         'path/to/client_secret.json',
+#         scopes=['https://www.googleapis.com/auth/calendar'],
+#         redirect_uri='http://localhost:8000/google-auth-callback/',
+#     )
+
+#     authorization_url, state = flow.authorization_url(
+#         access_type='offline',
+#         include_granted_scopes='true',
+#     )
+
+#     request.session['google_auth_state'] = state
+#     return redirect(authorization_url)
+
+
+# def google_authenticate_callback(request):
+#     state = request.session.get('google_auth_state', None)
+#     flow = Flow.from_client_secrets_file(
+#         'path/to/client_secret.json',
+#         scopes=['https://www.googleapis.com/auth/calendar'],
+#         state=state,
+#         redirect_uri='http://localhost:8000/google-auth-callback/',
+#     )
+
+#     flow.fetch_token(authorization_response=request.get_full_path())
+#     credentials = flow.credentials
+#     request.session['google_auth_credentials'] = credentials.to_json()
+#     return redirect('my-calendar-page')
+
+
+# from googleapiclient.discovery import build
+
+# def my_calendar_page(request):
+#     try:
+#         credentials = Credentials.from_authorized_user_info(
+#         info = json.loads(request.session.get('google_auth_credentials', '{}')))
+#     except json.JSONDecodeError:
+#             credentials = Credentials.from_authorized_user_info(info = {})
+#     service = build('calendar', 'v3', credentials=credentials)
+#     events = service.events().list(calendarId='primary').execute()
+
+#     return render(request, 'user/my-calendar-page.html', {'events': events})
+
+
+# from django.shortcuts import redirect
+# from google.oauth2 import service_account
+# from google_auth_oauthlib.flow import InstalledAppFlow
+# from google.auth.transport.requests import Request
+
+# def google_authenticate(request):
+#     SCOPES = ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']
+#     SERVICE_ACCOUNT_FILE = '/path/to/service_account.json'
+
+#     credentials = None
+#     if 'credentials' in request.session:
+#         credentials = service_account.Credentials.from_authorized_user_info(request.session['credentials'], scopes=SCOPES)
+
+#     if not credentials or not credentials.valid:
+#         if credentials and credentials.expired and credentials.refresh_token:
+#             credentials.refresh(Request())
+#         else:
+#             flow = InstalledAppFlow.from_client_secrets_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+#             credentials = flow.run_local_server(port=0)
+
+#         # Save the credentials for the next request
+#         request.session['credentials'] = credentials.to_authorized_user_info()
+
+#     return redirect('my-calendar-page')

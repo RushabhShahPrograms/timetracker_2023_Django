@@ -19,5 +19,7 @@ urlpatterns = [
  path('adminpage/',AdminPage.as_view(),name="adminpage"),
 #  path('userprofile/',UserProfileView.as_view(),name="userprofile"),
 #  path('userprofileupdate/<int:pk>',UserProfileUpdateView.as_view(),name="userprofileupdate"),
- 
+#  path('google-auth/', google_authenticate, name='google-auth'),
+#  path('google-auth-callback/', google_authenticate_callback, name='google-auth-callback'),
+#  path('my-calendar-page/', my_calendar_page, name='my-calendar-page'),
 ]
