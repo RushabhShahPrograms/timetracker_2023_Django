@@ -8,6 +8,7 @@ from user.decorators import *
 from django.shortcuts import render, get_object_or_404
 import plotly.express as px
 from django.db.models import Q
+from django.contrib import messages
 
 class IndexView(TemplateView):
     template_name = "project/index.html"
@@ -325,4 +326,16 @@ class UserTaskDetailView(DetailView):
     def get(self, request, *args, **kwargs):
         team = Project_Team.objects.filter(project_id=self.kwargs['pk'])
         return render(request, self.template_name, {'usertasksdetail': self.get_object(),'team':team})
+    
+
+class DeveloperSubmitView(CreateView):
+    form_class = DeveloperSubmitForm
+    model = Developer_Submit
+    template_name = 'user/developer_page.html'
+    success_url = '/user/developer_page/'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Your report has been submitted successfully!')
+        return response
     

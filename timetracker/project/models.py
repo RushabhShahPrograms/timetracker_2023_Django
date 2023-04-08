@@ -159,3 +159,25 @@ class Task_Badge(models.Model):
     
     def __str__(self):
        return self.badge
+    
+# Developer Submission Class
+class Developer_Submit(models.Model):
+    task = models.ForeignKey(Project_Task, on_delete=models.CASCADE,null=True,blank=True)
+    submit_title = models.CharField(max_length=200)
+    submit_description = models.TextField()
+    code_snippets = models.TextField(blank=True, null=True)
+    submit_screenshots = models.ImageField(upload_to='developer_task_screenshots/', blank=True, null=True)
+    submit_file = models.FileField(upload_to='developer_task_files/',blank=True,null=True)
+    status = models.CharField(max_length=50, default='In progress')
+    #submit_time_spent = models.DurationField(blank=True, null=True)
+    submit_submit_date = models.DateTimeField(auto_now_add=True)
+    submit_developer_name = models.CharField(max_length=100)
+    submit_manager_name = models.CharField(max_length=100)
+    comments = models.TextField(blank=True, null=True)
+    submit_url = models.URLField(blank=True, null=True)
+
+    class Meta:
+       db_table='developer_submit'
+
+    def __str__(self):
+        return f"{self.title} ({self.developer_name}, {self.submit_date.strftime('%Y-%m-%d %H:%M:%S')})"

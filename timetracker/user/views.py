@@ -182,10 +182,12 @@ class DeveloperPage(ListView):
         modules = Project_Module.objects.filter(user__username=self.request.user.username)
         projects = Project_Team.objects.filter(user__username=self.request.user.username)
         tasks = Project_Task.objects.filter(user__username=self.request.user.username)
+        submit_task = Developer_Submit.objects.filter(task__user__username=self.request.user.username)
         return render(request, 'user/developer_page.html',
                       {'modules':modules,
                        'projects':projects,
-                       'tasks':tasks
+                       'tasks':tasks,
+                       'submit_task':submit_task
                        })
 
     template_name="user/developer_page.html"
