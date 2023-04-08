@@ -150,3 +150,8 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587 
 EMAIL_HOST_USER = 'bloggerrushabhshah@gmail.com'
 EMAIL_HOST_PASSWORD = 'lvxdmtrldtllcsog'
+
+#Google Calendar
+GOOGLE_CLIENT_ID = '313070833773-aig4of2jcuvcos386cqdsi7ag12ichao.apps.googleusercontent.com'
+GOOGLE_CLIENT_SECRET = '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'
+GOOGLE_API_KEY = 'AIzaSyAucBluG5QMd9LmsUirkev7qLbvnGnZHnY'

@@ -328,3 +328,4 @@ class UserTaskDetailView(DetailView):
     def get(self, request, *args, **kwargs):
         team = Project_Team.objects.filter(project_id=self.kwargs['pk'])
         return render(request, self.template_name, {'usertasksdetail': self.get_object(),'team':team})
+    
