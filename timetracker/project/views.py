@@ -5,11 +5,8 @@ from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from user.decorators import *
-from plotly.offline import plot
-import plotly.graph_objs as go
 from django.shortcuts import render, get_object_or_404
 import plotly.express as px
-from django.core.paginator import Paginator
 from django.db.models import Q
 
 class IndexView(TemplateView):

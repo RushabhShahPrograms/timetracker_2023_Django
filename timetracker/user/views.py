@@ -1,5 +1,3 @@
-import json
-import queue
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic.edit import CreateView
@@ -22,8 +20,6 @@ from django.db.models.functions import ExtractMonth
 from django.db.models.functions import Coalesce
 from plotly.offline import plot
 from django.db.models import Q
-
-# from gencal import CalendarView
 
 
 class AdminRegisterView(CreateView):
@@ -136,24 +132,6 @@ class ManagerPage(ListView):
                                   .order_by('month')
         
 
-        # labels = []
-        # data = []
-
-        # # Get the count of projects for each status
-        # completed_count = Project.objects.filter(status='Completed').count()
-        # pending_count = Project.objects.filter(status='Pending').count()
-        # cancelled_count = Project.objects.filter(status='Cancelled').count()
-
-        # # Append the status names to the labels list
-        # labels.append('Completed')
-        # labels.append('Pending')
-        # labels.append('Cancelled')
-
-        # # Append the project counts to the data list
-        # data.append(completed_count)
-        # data.append(pending_count)
-        # data.append(cancelled_count)
-
         # Pie Chart
         completed_projects = Project.objects.filter(status="Completed")
         pending_projects = Project.objects.filter(status="Pending")
@@ -193,7 +171,6 @@ class ManagerPage(ListView):
                        'pending_projects': pending_projects,
                        'cancelled_projects': cancelled_projects,
                        'chart': chart,
-                    #    'labels':labels,'data':data
                        })
 
     template_name="user/manager_page.html"
@@ -212,117 +189,3 @@ class DeveloperPage(ListView):
                        })
 
     template_name="user/developer_page.html"
-
-
-
-# class CalendarView(TemplateView):
-#     template_name = 'user/developer_page.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['calendar'] = CalendarView()
-#         return context
-
-
-# class UserProfileView(CreateView):
-#     model=User
-#     form_class=UserProfileForm
-#     template_name = 'user/user_profile.html'
-#     # success_url = '/'
-
-#     def form_valid(self, form):
-#         return super().form_valid(form)
-
-#     def get_redirect_url(self):
-#          if self.request.user.is_authenticated:
-#              if self.request.user.is_manager:
-#                  return '/user/managerpage/'
-#              else:
-#                  return '/user/developerpage/'
-             
-# class UserProfileUpdateView(UpdateView):
-#     model = User
-#     form_class = UserProfileForm
-#     template_name = 'project/user_profile.html'
-#     # success_url = '/'
-
-#     def get_redirect_url(self):
-#          if self.request.user.is_authenticated:
-#              if self.request.user.is_manager:
-#                  return '/user/managerpage/'
-#              else:
-#                  return '/user/developerpage/'
-
-# from django.shortcuts import redirect
-# from google.oauth2.credentials import Credentials
-# from google_auth_oauthlib.flow import Flow
-
-# def google_authenticate(request):
-#     flow = Flow.from_client_secrets_file(
-#         'path/to/client_secret.json',
-#         scopes=['https://www.googleapis.com/auth/calendar'],
-#         redirect_uri='http://localhost:8000/google-auth-callback/',
-#     )
-
-#     authorization_url, state = flow.authorization_url(
-#         access_type='offline',
-#         include_granted_scopes='true',
-#     )
-
-#     request.session['google_auth_state'] = state
-#     return redirect(authorization_url)
-
-
-# def google_authenticate_callback(request):
-#     state = request.session.get('google_auth_state', None)
-#     flow = Flow.from_client_secrets_file(
-#         'path/to/client_secret.json',
-#         scopes=['https://www.googleapis.com/auth/calendar'],
-#         state=state,
-#         redirect_uri='http://localhost:8000/google-auth-callback/',
-#     )
-
-#     flow.fetch_token(authorization_response=request.get_full_path())
-#     credentials = flow.credentials
-#     request.session['google_auth_credentials'] = credentials.to_json()
-#     return redirect('my-calendar-page')
-
-
-# from googleapiclient.discovery import build
-
-# def my_calendar_page(request):
-#     try:
-#         credentials = Credentials.from_authorized_user_info(
-#         info = json.loads(request.session.get('google_auth_credentials', '{}')))
-#     except json.JSONDecodeError:
-#             credentials = Credentials.from_authorized_user_info(info = {})
-#     service = build('calendar', 'v3', credentials=credentials)
-#     events = service.events().list(calendarId='primary').execute()
-
-#     return render(request, 'user/my-calendar-page.html', {'events': events})
-
-
-# from django.shortcuts import redirect
-# from google.oauth2 import service_account
-# from google_auth_oauthlib.flow import InstalledAppFlow
-# from google.auth.transport.requests import Request
-
-# def google_authenticate(request):
-#     SCOPES = ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']
-#     SERVICE_ACCOUNT_FILE = '/path/to/service_account.json'
-
-#     credentials = None
-#     if 'credentials' in request.session:
-#         credentials = service_account.Credentials.from_authorized_user_info(request.session['credentials'], scopes=SCOPES)
-
-#     if not credentials or not credentials.valid:
-#         if credentials and credentials.expired and credentials.refresh_token:
-#             credentials.refresh(Request())
-#         else:
-#             flow = InstalledAppFlow.from_client_secrets_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-#             credentials = flow.run_local_server(port=0)
-
-#         # Save the credentials for the next request
-#         request.session['credentials'] = credentials.to_authorized_user_info()
-
-#     return redirect('my-calendar-page')
