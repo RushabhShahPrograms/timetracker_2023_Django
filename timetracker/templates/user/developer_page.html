@@ -148,16 +148,6 @@
                                             <p><b>User: {{task.user}}</b></p>
                                             <p>Start Time: {{task.start_time}}</p>
                                             <p>End Time: {{task.end_time}}</p>
-                                            <form class="forms-sample" method="POST" enctype ="multipart/form-data">
-                                              {% csrf_token %}
-                                              <div class="form-group">
-                                                {{form | crispy}}
-                                              </div>
-                                              <div class="form-group">
-                                                <input class="btn btn-primary mr-2" type = "submit" value = "Submit">
-                                                <input class="btn btn-light" type="cancel" value="Cancel">
-                                              </div>               
-                                            </form>
                                           </div>
                                           <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
