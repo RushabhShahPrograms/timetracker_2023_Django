@@ -11,23 +11,193 @@
   <title>User Profile</title>
     </head>
     <body>
-        <div class="container-scroller">
-            {% include '../manager_navbar.html' %}
-                <!-- partial -->
-            <div class="main-panel">
-                <div class="content-wrapper">
+      <div class="container-scroller">
+        {% include '../manager_navbar.html' %}
+
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
                     <div class="row">
-                        <div class="col-12 grid-margin stretch-card">
-                            <div class="card">
-                              <div class="card-body">
-                                {{page_user}}
-                              </div>
+                      <div class="col-lg-12">
+                        <div class="border-bottom text-center pb-4">
+                          {% if page_user.profile_pic %}
+                            <img src="{{page_user.profile_pic.url}}" alt="profile" class="img-lg rounded-circle mb-3">
+                          {% else %}
+                            <img src="{% static 'images/faces/face15.jpg' %}" alt="profile" class="img-lg rounded-circle mb-3">
+                          {% endif %}
+                            <div class="mb-3">
+                            <h3>{{page_user}}</h3>
+                            <div class="d-flex align-items-center justify-content-center">
+                              <h5 class="mb-0 me-2 text-muted">{{page_user.city}}, {{page_user.state}}</h5>
                             </div>
+                          </div>
+                          <p class="w-75 mx-auto mb-3">Bureau Oberhaeuser is a design bureau focused on Information- and Interface Design. </p>
                         </div>
+                        <div class="border-bottom py-4">
+                          <h4>Your Role</h4>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Manager
+                            </span>
+                            <span class="float-right text-muted">
+                              {% if page_user.is_manager %}✅{% else %}❌{% endif %}
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Developer
+                            </span>
+                            <span class="float-right text-muted">
+                              {% if page_user.is_developer %}✅{% else %}❌{% endif %}
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Date Joined
+                            </span>
+                            <span class="float-right text-muted">
+                              {{page_user.date_joined}}
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Job Role
+                            </span>
+                            <span class="float-right text-muted">
+                              Mention role
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Salary
+                            </span>
+                            <span class="float-right text-muted">
+                              {{page_user.salary}}
+                            </span>
+                          </p>                          
+                        </div>
+                        <div class="border-bottom py-4">
+                          <h4>Skills</h4>
+                          <div>
+                            <label class="badge badge-outline-dark">Chalk</label>
+                            <label class="badge badge-outline-dark">Hand lettering</label>
+                            <label class="badge badge-outline-dark">Information Design</label>
+                            <label class="badge badge-outline-dark">Graphic Design</label>
+                            <label class="badge badge-outline-dark">Web Design</label>  
+                          </div>                                                               
+                        </div>
+                        <div class="py-4">
+                          <h4>Personal Detail</h4>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Status
+                            </span>
+                            <span class="float-right text-muted">
+                              {% if page_user.is_active %}Active{% else %}Inactive{% endif %}
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Phone
+                            </span>
+                            <span class="float-right text-muted">
+                              006 3435 22
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Birth Date
+                            </span>
+                            <span class="float-right text-muted">
+                              {{page_user.birthDate}}
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Gender
+                            </span>
+                            <span class="float-right text-muted">
+                              {{page_user.gender}}
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Mail
+                            </span>
+                            <span class="float-right text-muted">
+                              {{page_user.email}}
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Address
+                            </span>
+                            <span class="float-right text-muted">
+                              {{page_user.address}}
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Landmark
+                            </span>
+                            <span class="float-right text-muted">
+                              {{page_user.landmark}}
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              City
+                            </span>
+                            <span class="float-right text-muted">
+                              {{page_user.city}}
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              State
+                            </span>
+                            <span class="float-right text-muted">
+                              {{page_user.state}}
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Facebook
+                            </span>
+                            <span class="float-right text-muted">
+                              <a href="#">David Grey</a>
+                            </span>
+                          </p>
+                          <p class="clearfix">
+                            <span class="float-left">
+                              Twitter
+                            </span>
+                            <span class="float-right text-muted">
+                              <a href="#">@davidgrey</a>
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-lg-8">
+                        <div class="d-block d-md-flex justify-content-between mt-4 mt-md-0">
+                          <div class="text-center mt-4 mt-md-0">
+                            <button class="btn btn-outline-primary">Edit Profile</button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
+          <!-- content-wrapper ends -->
         </div>
+
+      </div>
     </body>
 </html>
 {% endblock content %}
