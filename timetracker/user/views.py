@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from .models import User
 from .forms import *
@@ -215,3 +216,11 @@ class ShowProfilePageView(DetailView):
         page_user = get_object_or_404(User,id=self.kwargs['pk'])
         context["page_user"] = page_user
         return context
+
+class EditProfilePageView(UpdateView):
+    model = User
+    form_class = EditUserProfileForm
+    template_name = "user/edit_user_profile.html"
+    
+    def get_success_url(self):
+        return reverse_lazy('user_profile', kwargs={'pk': self.kwargs['pk']})

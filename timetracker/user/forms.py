@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+import django.forms as form
+from django.contrib.auth.forms import *
 from django.db import transaction
 from .models import User
 
@@ -42,11 +43,11 @@ class DeveloperRegistrationForm(UserCreationForm):
         return user
     
 
-class UserProfileForm(forms.ModelForm):
-    class Meta:
+class EditUserProfileForm(UserChangeForm):
+    class Meta(UserChangeForm.Meta):
         model = User
         fields = '__all__'
-
+    
     @transaction.atomic
     def save(self):
         user = super().save(commit=False)

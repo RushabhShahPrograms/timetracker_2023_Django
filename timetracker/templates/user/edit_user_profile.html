@@ -1,0 +1,274 @@
+{% extends '../base.html' %}
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Edit Profile</title>
+</head>
+<body>
+  <div class="container-scroller">
+    {% include '../manager_navbar.html' %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Edit Your Profile</h4>
+                    <form class="form-sample" method="POST" enctype ="multipart/form-data">
+                        {% csrf_token %}
+                      <p class="card-description">
+                        Personal info
+                      </p>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.first_name|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.last_name|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.contact_number|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.alternate_contact_number|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.gender|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.birthDate|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.username|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                                {{form.email|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.alternate_email|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                              <div class="col-sm-9">
+                                  {{form.profile_pic|as_crispy_field}}
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                      <p class="card-description">
+                        Address
+                      </p>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.address|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.state|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.landmark|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.city|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="card-description">
+                        Job Info
+                      </p>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.jobRole|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.skills|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.date_joined|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.salary|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {{form.bio|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="card-description">
+                        Social Media Handles
+                      </p>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                                <i class="ti-rss-alt"></i>{{form.website_url|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                                <i class="ti-linkedin"></i>{{form.linkedin_url|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                                <i class="ti-github"></i>{{form.github_url|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                                <i class="ti-twitter-alt"></i>{{form.twitter_url|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                                <i class="ti-instagram"></i>{{form.instagram_url|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                                <i class="ti-facebook"></i>{{form.facebook_url|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                                <i class="ti-youtube"></i>{{form.youtube_url|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                                <i class="ti-sharethis"></i>{{form.other_url|as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <input class="btn btn-primary mr-2" type = "submit" value = "Submit">
+                        <input class="btn btn-light" type="cancel" value="Cancel">
+                      </div>    
+                    </form>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+</body>
+</html>
+{% endblock content %}

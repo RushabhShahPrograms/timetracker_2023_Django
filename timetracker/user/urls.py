@@ -33,4 +33,5 @@ urlpatterns = [
 
 # userprofileURLS
 path('userprofile/<int:pk>/',ShowProfilePageView.as_view(),name="userprofile"),
+path('edituserprofile/<int:pk>/',EditProfilePageView.as_view(),name="edituserprofile"),
 ]
