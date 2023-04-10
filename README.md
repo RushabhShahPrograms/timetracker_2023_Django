@@ -19,5 +19,7 @@ Login Page
 ![login-page](https://user-images.githubusercontent.com/90546286/229265603-74adf226-5ce2-4e9a-89d9-e25576ab4595.png)
 Manager Page
 ![manager-page](https://user-images.githubusercontent.com/90546286/229265602-a2bb0f1a-4e82-43a3-96fe-5e25f0a4d0af.jpeg)
+User Profile Page
+![userprofilepage](https://user-images.githubusercontent.com/90546286/230821281-ed1dde2d-1784-4d17-aa0c-64da7ae21c56.jpeg)
 Project List
 ![project-list](https://user-images.githubusercontent.com/90546286/229265607-5f144abf-e4c0-4e74-9212-b9299de57513.jpeg)
