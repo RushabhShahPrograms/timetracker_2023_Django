@@ -212,8 +212,13 @@ class ShowProfilePageView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         users = User.objects.all()
+        user = self.request.user
         context = super(ShowProfilePageView, self).get_context_data(*args, **kwargs)
         page_user = get_object_or_404(User,id=self.kwargs['pk'])
+        if user.is_developer:
+            context['navbar_template'] = 'developer_navbar.html'
+        else:
+            context['navbar_template'] = 'manager_navbar.html'
         context["page_user"] = page_user
         return context
 
@@ -221,6 +226,15 @@ class EditProfilePageView(UpdateView):
     model = User
     form_class = EditUserProfileForm
     template_name = "user/edit_user_profile.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        if user.is_developer:
+            context['navbar_template'] = 'developer_navbar.html'
+        else:
+            context['navbar_template'] = 'manager_navbar.html'
+        return context
     
     def get_success_url(self):
         return reverse_lazy('userprofile', kwargs={'pk': self.kwargs['pk']})
