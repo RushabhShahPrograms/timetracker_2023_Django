@@ -223,4 +223,4 @@ class EditProfilePageView(UpdateView):
     template_name = "user/edit_user_profile.html"
     
     def get_success_url(self):
-        return reverse_lazy('user_profile', kwargs={'pk': self.kwargs['pk']})
+        return reverse_lazy('userprofile', kwargs={'pk': self.kwargs['pk']})
