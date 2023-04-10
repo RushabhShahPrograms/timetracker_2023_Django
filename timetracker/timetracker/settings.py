@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'phonenumber_field',
+    'schedule',
 ]
 
 MIDDLEWARE = [
@@ -156,3 +157,8 @@ EMAIL_HOST_PASSWORD = 'lvxdmtrldtllcsog'
 GOOGLE_CLIENT_ID = '313070833773-aig4of2jcuvcos386cqdsi7ag12ichao.apps.googleusercontent.com'
 GOOGLE_CLIENT_SECRET = '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'
 GOOGLE_API_KEY = 'AIzaSyAucBluG5QMd9LmsUirkev7qLbvnGnZHnY'
+
+#Calendar
+SCHEDULER_HOUR_FORMAT = '12'
+SCHEDULER_DEFAULT_VIEW = 'month'
+SCHEDULER_EVENTS_PER_DAY = 5

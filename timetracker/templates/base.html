@@ -43,8 +43,12 @@
     <!-- End custom js for this page-->
 </head>
 <body>
-    {% block content %}
-    
+    {% block content %}    
     {% endblock content %}
+
+    {% block calendar %}
+    {% include 'schedule/calendar.html' %}
+    {% load schedule_tags %}
+    {% endblock calendar %}
 </body>
 </html>

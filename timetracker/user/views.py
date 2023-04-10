@@ -21,6 +21,9 @@ from django.db.models.functions import ExtractMonth
 from django.db.models.functions import Coalesce
 from plotly.offline import plot
 from django.db.models import Q
+from django.views import View
+from schedule.models import Event
+from datetime import datetime, timedelta
 
 
 class AdminRegisterView(CreateView):
@@ -220,6 +223,7 @@ class ShowProfilePageView(DetailView):
         else:
             context['navbar_template'] = 'manager_navbar.html'
         context["page_user"] = page_user
+        context['skills'] = page_user.skills
         return context
 
 class EditProfilePageView(UpdateView):
