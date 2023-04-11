@@ -81,12 +81,10 @@
                         </div>
                         <div class="border-bottom py-4">
                           <h4>Skills</h4>
-                          {% if skills %}
+                          {% if page_user.skills %}
                           <div>
-                          {% for skill in page_user.get_skills_as_list %}
+                          {% for skill in page_user.get_my_field_as_list %}
                             <label class="badge badge-outline-dark">{{skill}}</label>
-                          {% empty %}
-                            <p>No skills retrieved from page_user.get_skills_as_list</p> 
                           {% endfor %}
                         </div>
                         {% else %} no skills currently    

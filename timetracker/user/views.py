@@ -86,7 +86,6 @@ class DeveloperRegisterView(CreateView):
 
 class UserLoginView(LoginView):
      template_name = 'user/login.html'
-     #success_url = "/"
     
      def get_redirect_url(self):
          if self.request.user.is_authenticated:

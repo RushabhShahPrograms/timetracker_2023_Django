@@ -163,6 +163,8 @@ class Task_Badge(models.Model):
 # Developer Submission Class
 class Developer_Submit(models.Model):
     task = models.ForeignKey(Project_Task, on_delete=models.CASCADE,null=True,blank=True)
+    module = models.ForeignKey(Project_Module, on_delete=models.CASCADE,null=True,blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE,null=True,blank=True)
     submit_title = models.CharField(max_length=200)
     submit_description = models.TextField()
     code_snippets = models.TextField(blank=True, null=True)

@@ -113,108 +113,7 @@ class ProjectDeleteView(DeleteView):
     def get(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)
     
-    success_url = '/project/projectlist/'    
-
-
-@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
-class UserProjectTeamListView(ListView):
-    paginate_by=5
-    model = Project_Team
-    template_name = 'project/user_project_team_list.html'
-    context_object_name = 'projectteam'
-    
-    def get_queryset(self):
-        sort_by = self.request.GET.get('sort_by', None)
-        search = self.request.GET.get('search', None)
-        queryset = super().get_queryset().filter(user__username=self.request.user.username)
-        
-        if search:
-            queryset = queryset.filter(Q(project__icontains=search) | Q(team_name__icontains=search) | Q(badge__icontains=search))
-        
-        if sort_by == 'team_name':
-            queryset = queryset.order_by('team_name')
-        elif sort_by == 'project':
-            queryset = queryset.order_by('project')
-        
-        return queryset
-    
-@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
-class UserTaskListView(ListView):
-    paginate_by=5
-    model = Project_Task
-    template_name = 'project/user_task_list.html'
-    context_object_name = 'user_tasks'
-    
-    def get_queryset(self):
-        sort_by = self.request.GET.get('sort_by', None)
-        search = self.request.GET.get('search', None)
-        queryset = super().get_queryset().filter(user__username=self.request.user.username)
-        
-        if search:
-            queryset = queryset.filter(Q(task_title__icontains=search) | Q(priority__icontains=search))
-        
-        if sort_by == 'name':
-            queryset = queryset.order_by('task_title')
-        elif sort_by == 'priority':
-            queryset = queryset.order_by('priority')
-        elif sort_by == 'status':
-            queryset = queryset.order_by('status')
-        
-        return queryset
-
-@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
-class UserModulesListView(ListView):
-    paginate_by=5
-    model = Project_Module
-    template_name = 'project/user_modules_list.html'
-    context_object_name = 'usermodules'
-    
-    def get_queryset(self):
-        sort_by = self.request.GET.get('sort_by', None)
-        search = self.request.GET.get('search', None)
-        queryset = super().get_queryset().filter(user__username=self.request.user.username)
-        
-        if search:
-            queryset = queryset.filter(Q(module_name__icontains=search) | Q(user__icontains=search))
-        
-        if sort_by == 'name':
-            queryset = queryset.order_by('module_name')
-        elif sort_by == 'start_date':
-            queryset = queryset.order_by('module_start_date')
-        elif sort_by == 'completion_date':
-            queryset = queryset.order_by('module_completion_date')
-        
-        return queryset
-
-class ProjectModuleGanttView(DetailView):
-    model = Project
-    template_name = 'project/modules_chart_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        project = self.object
-        modules = project.project_module_set.all()
-
-        if modules:
-            df = []
-            for module in modules:
-                df.append({
-                    'Task': module.module_name,
-                    'Start': module.module_start_date,
-                    'Finish': module.module_completion_date,
-                    'Developer': module.user.username if module.user else '',
-                })
-            fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task", color="Developer")
-            chart_div = fig.to_html(full_html=False)
-            context['chart_div'] = chart_div
-            context['modules'] = modules
-        else:
-            context['chart_div'] = ''
-            context['modules'] = []
-
-        return context
-    
-
+    success_url = '/project/projectlist/'
 
 @method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
 class ModulesListView(ListView):
@@ -315,8 +214,79 @@ class TaskDeleteView(DeleteView):
     def get(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)
     
-    success_url = '/project/taskslist/'
+    success_url = '/project/taskslist/'  
 
+
+@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
+class UserProjectTeamListView(ListView):
+    paginate_by=5
+    model = Project_Team
+    template_name = 'project/user_project_team_list.html'
+    context_object_name = 'projectteam'
+    
+    def get_queryset(self):
+        sort_by = self.request.GET.get('sort_by', None)
+        search = self.request.GET.get('search', None)
+        queryset = super().get_queryset().filter(user__username=self.request.user.username)
+        
+        if search:
+            queryset = queryset.filter(Q(project__icontains=search) | Q(team_name__icontains=search) | Q(badge__icontains=search))
+        
+        if sort_by == 'team_name':
+            queryset = queryset.order_by('team_name')
+        elif sort_by == 'project':
+            queryset = queryset.order_by('project')
+        
+        return queryset
+    
+@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
+class UserTaskListView(ListView):
+    paginate_by=5
+    model = Project_Task
+    template_name = 'project/user_task_list.html'
+    context_object_name = 'user_tasks'
+    
+    def get_queryset(self):
+        sort_by = self.request.GET.get('sort_by', None)
+        search = self.request.GET.get('search', None)
+        queryset = super().get_queryset().filter(user__username=self.request.user.username)
+        
+        if search:
+            queryset = queryset.filter(Q(task_title__icontains=search) | Q(priority__icontains=search))
+        
+        if sort_by == 'name':
+            queryset = queryset.order_by('task_title')
+        elif sort_by == 'priority':
+            queryset = queryset.order_by('priority')
+        elif sort_by == 'status':
+            queryset = queryset.order_by('status')
+        
+        return queryset
+
+@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
+class UserModulesListView(ListView):
+    paginate_by=5
+    model = Project_Module
+    template_name = 'project/user_modules_list.html'
+    context_object_name = 'usermodules'
+    
+    def get_queryset(self):
+        sort_by = self.request.GET.get('sort_by', None)
+        search = self.request.GET.get('search', None)
+        queryset = super().get_queryset().filter(user__username=self.request.user.username)
+        
+        if search:
+            queryset = queryset.filter(Q(module_name__icontains=search) | Q(user__icontains=search))
+        
+        if sort_by == 'name':
+            queryset = queryset.order_by('module_name')
+        elif sort_by == 'start_date':
+            queryset = queryset.order_by('module_start_date')
+        elif sort_by == 'completion_date':
+            queryset = queryset.order_by('module_completion_date')
+        
+        return queryset
+    
 @method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
 class UserTaskDetailView(DetailView):
     model = Project_Task
@@ -325,4 +295,32 @@ class UserTaskDetailView(DetailView):
     
     def get(self, request, *args, **kwargs):
         team = Project_Team.objects.filter(project_id=self.kwargs['pk'])
-        return render(request, self.template_name, {'usertasksdetail': self.get_object(),'team':team})    
+        return render(request, self.template_name, {'usertasksdetail': self.get_object(),'team':team})
+
+class ProjectModuleGanttView(DetailView):
+    model = Project
+    template_name = 'project/modules_chart_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = self.object
+        modules = project.project_module_set.all()
+
+        if modules:
+            df = []
+            for module in modules:
+                df.append({
+                    'Task': module.module_name,
+                    'Start': module.module_start_date,
+                    'Finish': module.module_completion_date,
+                    'Developer': module.user.username if module.user else '',
+                })
+            fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task", color="Developer")
+            chart_div = fig.to_html(full_html=False)
+            context['chart_div'] = chart_div
+            context['modules'] = modules
+        else:
+            context['chart_div'] = ''
+            context['modules'] = []
+
+        return context    
