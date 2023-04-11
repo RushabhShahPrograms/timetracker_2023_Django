@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'user',
     'project',
     'crispy_forms',
     'crispy_bootstrap5',
     'phonenumber_field',
     'schedule',
+    #'djangobower',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
 ]
 
 ROOT_URLCONF = 'timetracker.urls'
@@ -132,12 +135,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static'
-
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -162,3 +165,5 @@ GOOGLE_API_KEY = 'AIzaSyAucBluG5QMd9LmsUirkev7qLbvnGnZHnY'
 SCHEDULER_HOUR_FORMAT = '12'
 SCHEDULER_DEFAULT_VIEW = 'month'
 SCHEDULER_EVENTS_PER_DAY = 5
+
+SITE_ID = 1

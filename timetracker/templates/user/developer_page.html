@@ -2,8 +2,6 @@
 {% block content %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% include 'schedule/calendar.html' %}
-{% load scheduletags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,8 +88,9 @@
               <div class="card">
 								<div class="card-body">
 									<h4 class="card-title">Calendar</h4>
-                  {% calendar %}
-                  {% endblock %}
+                  {% load scheduletags %}
+                  {% include 'schedule/calendar.html' %}
+                  {% comment %} {% calendar %} {% endcomment %}
 									{% comment %} <div class="list-wrapper pt-1">
 										<ul class="d-flex flex-column-reverse todo-list todo-list-custom">
                       {% for modules in modules %}

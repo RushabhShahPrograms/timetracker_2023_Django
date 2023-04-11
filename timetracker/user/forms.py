@@ -53,3 +53,10 @@ class EditUserProfileForm(UserChangeForm):
         user = super().save(commit=False)
         user.save()
         return user
+    
+
+from schedule.models import Event
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['title', 'start', 'end', 'description']

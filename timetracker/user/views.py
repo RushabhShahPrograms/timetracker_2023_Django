@@ -22,7 +22,7 @@ from django.db.models.functions import Coalesce
 from plotly.offline import plot
 from django.db.models import Q
 from django.views import View
-from schedule.models import Event
+from schedule.models import Event,Calendar
 from datetime import datetime, timedelta
 
 
@@ -242,3 +242,32 @@ class EditProfilePageView(UpdateView):
     
     def get_success_url(self):
         return reverse_lazy('userprofile', kwargs={'pk': self.kwargs['pk']})
+    
+
+class CalendarView(TemplateView):
+    template_name = 'user/calendar.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # get all calendars
+        calendars = Calendar.objects.all()
+        # get events for the current month for all calendars
+        events = Event.objects.filter(calendar__in=calendars).filter(start__month=self.request.GET.get('month')).order_by('start')
+        context['calendars'] = calendars
+        context['events'] = events
+        return context
+
+
+class EventCreateView(CreateView):
+    model = Event
+    form_class = EventForm
+    template_name = 'user/event_form.html'
+    success_url = '/user/calendar/'
+
+    def form_valid(self, form):
+        # Set the calendar field to the default calendar
+        calendar = Calendar.objects.get(name='Default Calendar')
+        event = form.save(commit=False)
+        event.calendar = calendar
+        event.save()
+        return super().form_valid(form)

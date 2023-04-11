@@ -24,6 +24,7 @@ urlpatterns = [
     path('',IndexView.as_view(),name='index'),
     path('user/',include('user.urls')),
     path('project/',include('project.urls')),
+    path('schedule/', include('schedule.urls')),
 ]
 
 if settings.DEBUG:
