@@ -9,6 +9,7 @@ admin.site.register(Project_Task)
 admin.site.register(User_Task)
 admin.site.register(Badge)
 admin.site.register(Task_Badge)
+admin.site.register(Developer_Submit)
 
 
 #class NewsAdmin(admin.ModelAdmin):

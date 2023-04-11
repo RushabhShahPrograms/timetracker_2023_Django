@@ -180,4 +180,4 @@ class Developer_Submit(models.Model):
        db_table='developer_submit'
 
     def __str__(self):
-        return f"{self.title} ({self.developer_name}, {self.submit_date.strftime('%Y-%m-%d %H:%M:%S')})"
+        return f"{self.submit_title} ({self.submit_developer_name}, {self.submit_submit_date.strftime('%Y-%m-%d %H:%M:%S')})"

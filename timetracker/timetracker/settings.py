@@ -44,8 +44,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'phonenumber_field',
-    'schedule',
-    #'djangobower',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +54,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.sites.middleware.CurrentSiteMiddleware',
 ]
 
 ROOT_URLCONF = 'timetracker.urls'
@@ -155,15 +152,3 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587 
 EMAIL_HOST_USER = 'bloggerrushabhshah@gmail.com'
 EMAIL_HOST_PASSWORD = 'lvxdmtrldtllcsog'
-
-#Google Calendar
-GOOGLE_CLIENT_ID = '313070833773-aig4of2jcuvcos386cqdsi7ag12ichao.apps.googleusercontent.com'
-GOOGLE_CLIENT_SECRET = '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'
-GOOGLE_API_KEY = 'AIzaSyAucBluG5QMd9LmsUirkev7qLbvnGnZHnY'
-
-#Calendar
-SCHEDULER_HOUR_FORMAT = '12'
-SCHEDULER_DEFAULT_VIEW = 'month'
-SCHEDULER_EVENTS_PER_DAY = 5
-
-SITE_ID = 1

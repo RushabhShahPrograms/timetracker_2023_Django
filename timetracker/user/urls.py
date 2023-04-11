@@ -2,7 +2,6 @@ from . import views
 from django.urls import path,include
 from .views import *
 from django.contrib.auth import views as auth_views
-# from schedule.views import CreateEventView, CalendarView, EditEventView, DeleteEventView
 
 urlpatterns = [
  #registerURLS
@@ -39,13 +38,4 @@ urlpatterns = [
 # userprofileURLS
 path('userprofile/<int:pk>/',ShowProfilePageView.as_view(),name="userprofile"),
 path('edituserprofile/<int:pk>/',EditProfilePageView.as_view(),name="edituserprofile"),
-
-#schedularURLS
-# path('calendar/', CalendarView.as_view(), name='calendar_home'),
-# path('event/create/', CreateEventView.as_view(), name='calendar_create_event'),
-# path('event/update/<int:pk>/', EditEventView.as_view(), name='edit_event'),
-# path('event/delete/<int:pk>/', DeleteEventView.as_view(), name='delete_event'),
-
-path('calendar/', CalendarView.as_view(), name='calendar_home'),
-path('event/create/', EventCreateView.as_view(), name='calendar_create_event'),
 ]
