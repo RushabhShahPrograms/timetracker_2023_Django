@@ -34,7 +34,6 @@
                     <div class="card-body">
                       <p class="mb-4">Total Project</p>
                       <p class="fs-30 mb-2">{{projects|length}}</p>
-                      <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                   </div>
                 </div>
@@ -43,7 +42,6 @@
                     <div class="card-body">
                       <p class="mb-4">Total Modules</p>
                       <p class="fs-30 mb-2">{{modules|length}}</p>
-                      <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                   </div>
                 </div>
@@ -95,12 +93,6 @@
                     {% if task.status == "Pending" %}
                             <div>
                               <b>{{task.task_title}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ task.id }}"> Details </a><br>
-                                {% if task.priority == 'Less' %}
-                                  <div class="badge badge-info">Less</div>
-                                {% else %}
-                                  <div class="badge badge-danger">High</div>                                      
-                                {% endif %}
-                                |
                                   <div class="badge badge-warning">Pending</div>
 
                                 <!-- Modal -->
@@ -140,6 +132,43 @@
                             </div>
                     {% endif %}
                     {% endfor %}
+                    <br>
+                    {% for module in modules %}
+                    {% if module.status == "Pending" %}
+                            <div>
+                              <b>{{module.module_name}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ module.id }}"> Details </a><br>
+                                  <div class="badge badge-warning">Pending</div>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModalLong{{ module.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">{{module.module_name}}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <p>Task Title: {{ module.module_name }}</p>
+                                        <p>Task Description: {{ module.module_description }}</p>
+                                        <p><b>Project: {{module.project}}</b></p>
+                                        <p>Status: <p class="badge badge-warning">Pending</p></p>
+                                        <p>Estimated Hours: {{moudle.module_estimated_hours}}</p>
+                                        <p><b>User: {{module.user}}</b></p>
+                                        <p>Start Time: {{module.module_start_date}}</p>
+                                        <p>End Time: {{module.module_completion_date}}</p>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <a href="#" type="button" class="btn btn-primary" data-dismiss="modal">Submit Task</a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                    {% endif %}
+                    {% endfor %}
+                    <br>
                   </div>
 								</div>
 							</div>
@@ -184,13 +213,7 @@
                         {% if task.status == "Completed" %}
                         <div>
                           <b>{{task.task_title}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ task.id }}"> Details </a><br>
-                            {% if task.priority == 'Less' %}
-                              <div class="badge badge-info">Less</div>
-                            {% else %}
-                              <div class="badge badge-danger">High</div>                                      
-                            {% endif %}
-                            |
-                              <div class="badge badge-success">Completed</div>
+                            <div class="badge badge-success">Completed</div>
 
                             <!-- Modal -->
                             <div class="modal fade" id="exampleModalLong{{ task.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -229,6 +252,43 @@
                         </div>
                         {% endif %}
                         {% endfor %}
+                        <br>
+                        {% for module in modules %}
+                    {% if module.status == "Completed" %}
+                            <div>
+                              <b>{{module.module_name}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ module.id }}"> Details </a><br>
+                                  <div class="badge badge-success">Completed</div>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModalLong{{ module.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">{{module.module_name}}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <p>Task Title: {{ module.module_name }}</p>
+                                        <p>Task Description: {{ module.module_description }}</p>
+                                        <p><b>Project: {{module.project}}</b></p>
+                                        <p>Status: <p class="badge badge-succes">Completed</p></p>
+                                        <p>Estimated Hours: {{moudle.module_estimated_hours}}</p>
+                                        <p><b>User: {{module.user}}</b></p>
+                                        <p>Start Time: {{module.module_start_date}}</p>
+                                        <p>End Time: {{module.module_completion_date}}</p>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <a href="#" type="button" class="btn btn-primary" data-dismiss="modal">Submit Task</a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                    {% endif %}
+                    {% endfor %}
+                    <br>
                       </div>
                   </div>
                 </div>

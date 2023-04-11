@@ -57,6 +57,7 @@
                                       <th>No.</th>
                                       <th>Team Name</th>
                                       <th>Project Title</th>
+                                      <th>Developers</th>
                                       <th>Badge</th>
                                       <th>Status</th>
                                   </tr>
@@ -68,6 +69,7 @@
                                       <td>{{forloop.counter}}</td>
                                       <td>{{task.team_name}}</td>
                                       <td><b>{{task.project}}</b></td>
+                                      <td>{{task.user}}</td>
                                       <td>{{task.badge}}</td>
                                       <td class="font-weight-medium">
                                         {% if task.status == 'Completed' %}

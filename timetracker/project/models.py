@@ -171,7 +171,7 @@ class Developer_Submit(models.Model):
     submit_screenshots = models.ImageField(upload_to='developer_task_screenshots/', blank=True, null=True)
     submit_file = models.FileField(upload_to='developer_task_files/',blank=True,null=True)
     status = models.CharField(max_length=50, default='In progress')
-    #submit_time_spent = models.DurationField(blank=True, null=True)
+    submit_time_spent = models.DurationField(blank=True, null=True)
     submit_submit_date = models.DateTimeField(auto_now_add=True)
     submit_developer_name = models.CharField(max_length=100)
     submit_manager_name = models.CharField(max_length=100)
