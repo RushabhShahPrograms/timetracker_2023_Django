@@ -1,19 +1,61 @@
 {% extends '../base.html' %}
-{% load static %}
 {% block content %}
-  <h2>{{ scheduledetail.schedule_title }}</h2>
-  <p><strong>Description:</strong> {{ scheduledetail.schedule_description }}</p>
-  <p><strong>Meeting URL:</strong> <a href="{{ scheduledetail.schedule_meeting_url }}" target="_blank">{{ scheduledetail.schedule_meeting_url }}</a></p>
-  {% if scheduledetail.schedule_documents %}
-  <p><strong>Documents:</strong> <a href="{{ scheduledetail.schedule_documents.url }}" target="_blank">{{ scheduledetail.schedule_documents }}</a></p>
-{% endif %}
-  <p><strong>Created By:</strong> {{ scheduledetail.created_by.username }}</p>
-  <p><strong>Invited Users:</strong></p>
-  <ul>
-    {% for user in scheduledetail.users.all %}
-      <li>{{ user }}</li>
-    {% empty %}
-      <li>No users invited yet.</li>
-    {% endfor %}
-  </ul>
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Meetings Detail</title>
+</head>
+<body>
+  <div class="container-scroller">
+    {% include '../manager_navbar.html' %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">{{ scheduledetail.schedule_title }}</h4>
+                      <div class="form-group">
+                        <p><strong>Description:</strong> {{ scheduledetail.schedule_description }}</p>
+                      </div>
+                      <div class="form-group">
+                        <p><strong>Meeting URL:</strong> <a href="{{ scheduledetail.schedule_meeting_url }}" target="_blank">{{ scheduledetail.schedule_meeting_url }}</a></p>                      </div>
+                      <div class="form-group">
+                        {% if scheduledetail.schedule_documents %}
+                        <p><strong>Documents:</strong> <a href="{{ scheduledetail.schedule_documents.url }}" target="_blank">{{ scheduledetail.schedule_documents }}</a></p>
+                      {% endif %}
+                    </div>
+                      <div class="form-group">
+                        <p><strong>Created At:</strong> {{ scheduledetail.schedule_created_at }}</p>
+                      </div>
+                      <div class="form-group">
+                        <p><strong>Invited Users:</strong></p>
+                        <ul>
+                          {% for user in scheduledetail.users.all %}
+                            <li>{{ user }}</li>
+                          {% empty %}
+                            <li>No users invited yet.</li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        </div>
+        <!-- content-wrapper ends -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+</body>
+</html>
 {% endblock content %}
