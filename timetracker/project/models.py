@@ -22,6 +22,7 @@ class Status(models.Model):
 # Project Class
 status_choice = (("Completed","Completed"),
                  ("Pending","Pending"),
+                 ("In Progress","In Progress"),
                  ("Cancelled","Cancelled"))
 class Project(models.Model):
     project_title = models.CharField(max_length=100)
@@ -43,6 +44,7 @@ class Project(models.Model):
 # Project Module Class
 status_choice = (("Completed","Completed"),
                  ("Pending","Pending"),
+                 ("In Progress","In Progress"),
                  ("Cancelled","Cancelled"))
 class Project_Module(models.Model):
     project = models.ForeignKey(Project,on_delete=models.CASCADE)
@@ -161,6 +163,10 @@ class Task_Badge(models.Model):
        return self.badge
     
 # Developer Submission Class
+status_choice = (("Completed","Completed"),
+                 ("In Progress","In Progress"),
+                 ("Pending","Pending"),
+                 ("Cancelled","Cancelled"))
 class Developer_Submit(models.Model):
     task = models.ForeignKey(Project_Task, on_delete=models.CASCADE,null=True,blank=True)
     module = models.ForeignKey(Project_Module, on_delete=models.CASCADE,null=True,blank=True)
@@ -170,7 +176,7 @@ class Developer_Submit(models.Model):
     code_snippets = models.TextField(blank=True, null=True)
     submit_screenshots = models.ImageField(upload_to='developer_task_screenshots/', blank=True, null=True)
     submit_file = models.FileField(upload_to='developer_task_files/',blank=True,null=True)
-    status = models.CharField(max_length=50, default='In progress')
+    status = models.CharField(choices=status_choice,max_length=50, default='In Progress')
     submit_time_spent = models.DurationField(blank=True, null=True)
     submit_submit_date = models.DateTimeField(auto_now_add=True)
     submit_developer_name = models.CharField(max_length=100)

@@ -297,6 +297,17 @@ class UserTaskDetailView(DetailView):
         team = Project_Team.objects.filter(project_id=self.kwargs['pk'])
         return render(request, self.template_name, {'usertasksdetail': self.get_object(),'team':team})
 
+@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
+class DeveloperSubmitView(CreateView):
+    form_class = DeveloperSubmitForm
+    model = Developer_Submit
+    template_name = 'project/developer_submit.html'
+    success_url = '/user/developerpage/'
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+
 class ProjectModuleGanttView(DetailView):
     model = Project
     template_name = 'project/modules_chart_detail.html'
