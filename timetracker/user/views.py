@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
-from .models import User
+from .models import User,Schedule
 from .forms import *
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
@@ -224,3 +224,66 @@ class EditProfilePageView(UpdateView):
     
     def get_success_url(self):
         return reverse_lazy('userprofile', kwargs={'pk': self.kwargs['pk']})
+    
+
+from django.urls import reverse_lazy
+
+class ScheduleCreateView(CreateView):
+    model = Schedule
+    form_class = ScheduleForm
+    template_name = 'user/schedule_form.html'
+    success_url = reverse_lazy('schedulelist')
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        response = super().form_valid(form)
+
+        # Send email notifications to invited users
+        for user in form.cleaned_data['users']:
+            if user != self.request.user:
+                user.schedules.add(form.instance)
+
+                # Construct email message
+                subject = f'New Meeting: {form.instance.title}'
+                body = f'You have been invited to a new meeting: {form.instance.title}\n\n{form.instance.description}\n\nMeeting URL: {form.instance.meeting_url}'
+
+                # Send email using send_mail function
+                send_mail(
+                    subject=subject,
+                    message=body,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[user.email],
+                    fail_silently=False,
+                )
+        return response
+
+
+
+class ScheduleListView(ListView):
+    model = Schedule
+    template_name = 'user/schedule_list.html'
+    context_object_name = 'schedules'
+
+    def get_queryset(self):
+        return super().get_queryset()
+
+class ScheduleUpdateView(UpdateView):
+    model = Schedule
+    form_class = ScheduleForm
+    template_name = 'user/schedule_form.html'
+    success_url = '/user/schedulelist/'
+
+class ScheduleDetailView(DetailView):
+    model = Schedule
+    template_name = 'user/schedule_detail.html'
+    context_object_name = 'scheduledetail'
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'scheduledetail': self.get_object()})
+
+class ScheduleDeleteView(DeleteView):
+    model = Schedule
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+    
+    success_url = '/user/schedulelist/'

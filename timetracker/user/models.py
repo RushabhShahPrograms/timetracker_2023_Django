@@ -218,3 +218,18 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class Schedule(models.Model):
+    schedule_title = models.CharField(max_length=200)
+    schedule_description = models.TextField()
+    schedule_documents = models.FileField(upload_to='schedule_documents/',null=True,blank=True)
+    users = models.ManyToManyField(User, related_name='schedules')
+    schedule_meeting_url = models.URLField()
+    schedule_created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table='schedule'
+
+    def __str__(self):
+        return self.title

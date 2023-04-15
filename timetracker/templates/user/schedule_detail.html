@@ -1,0 +1,16 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block content %}
+  <h2>{{ schedule.title }}</h2>
+  <p><strong>Description:</strong> {{ schedule.description }}</p>
+  <p><strong>Meeting URL:</strong> {{ schedule.meeting_url }}</p>
+  <p><strong>Created By:</strong> {{ schedule.created_by }}</p>
+  <p><strong>Invited Users:</strong></p>
+  <ul>
+    {% for user in schedule.users.all %}
+      <li>{{ user }}</li>
+    {% empty %}
+      <li>No users invited yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock content %}

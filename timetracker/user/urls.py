@@ -38,4 +38,11 @@ urlpatterns = [
 # userprofileURLS
 path('userprofile/<int:pk>/',ShowProfilePageView.as_view(),name="userprofile"),
 path('edituserprofile/<int:pk>/',EditProfilePageView.as_view(),name="edituserprofile"),
+
+#scheduleURLS
+path('addschedule/',ScheduleCreateView.as_view(),name="addschedule"),
+ path('schedulelist/',ScheduleListView.as_view(),name="schedulelist"),
+ path('scheduledelete/<int:pk>',ScheduleDeleteView.as_view(),name='scheduledelete'),
+ path('scheduleupdate/<int:pk>',ScheduleUpdateView.as_view(),name='scheduleupdate'),
+ path('scheduledetail/<int:pk>',ScheduleDetailView.as_view(),name='scheduledetail'),
 ]

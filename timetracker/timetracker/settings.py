@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'project',
     'crispy_forms',
     'crispy_bootstrap5',
+    'widget_tweaks',
     'phonenumber_field',
 ]
 

@@ -2,7 +2,7 @@ from django import forms
 import django.forms as form
 from django.contrib.auth.forms import *
 from django.db import transaction
-from .models import User
+from .models import User,Schedule
 
 
 class AdminRegisterForm(UserCreationForm):
@@ -48,6 +48,23 @@ class EditUserProfileForm(UserChangeForm):
         model = User
         fields = '__all__'
     
+    @transaction.atomic
+    def save(self):
+        user = super().save(commit=False)
+        user.save()
+        return user
+    
+from django.forms.widgets import SelectMultiple
+
+class ScheduleForm(forms.ModelForm):
+    users = forms.ModelMultipleChoiceField(
+        queryset=User.objects.filter(is_developer=True),
+        widget=SelectMultiple(attrs={'class': 'chosen-select'})
+    )
+    class Meta:
+        model = Schedule
+        fields = '__all__'
+
     @transaction.atomic
     def save(self):
         user = super().save(commit=False)
