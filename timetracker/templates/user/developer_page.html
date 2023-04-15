@@ -93,7 +93,7 @@
                     {% if task.status == "Pending" %}
                             <div>
                               <b>{{task.task_title}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ task.id }}"> Details </a><br>
-                                  <div class="badge badge-warning">Pending</div>
+                                  <div class="badge badge-primary">Pending</div>
 
                                 <!-- Modal -->
                                 <div class="modal fade" id="exampleModalLong{{ task.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -117,7 +117,7 @@
                                             <div class="badge badge-danger">High</div>                                      
                                           {% endif %}
                                         </p>
-                                        <p>Status: <p class="badge badge-warning">Pending</p></p>
+                                        <p>Status: <p class="badge badge-primary">Pending</p></p>
                                         <p>Estimated Hours: {{task.task_estimated_hours}}</p>
                                         <p><b>User: {{task.user}}</b></p>
                                         <p>Start Time: {{task.start_time}}</p>
@@ -137,7 +137,7 @@
                     {% if module.status == "Pending" %}
                             <div>
                               <b>{{module.module_name}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ module.id }}"> Details </a><br>
-                                  <div class="badge badge-warning">Pending</div>
+                                  <div class="badge badge-primary">Pending</div>
 
                                 <!-- Modal -->
                                 <div class="modal fade" id="exampleModalLong{{ module.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -153,7 +153,7 @@
                                         <p>Task Title: {{ module.module_name }}</p>
                                         <p>Task Description: {{ module.module_description }}</p>
                                         <p><b>Project: {{module.project}}</b></p>
-                                        <p>Status: <p class="badge badge-warning">Pending</p></p>
+                                        <p>Status: <p class="badge badge-primary">Pending</p></p>
                                         <p>Estimated Hours: {{moudle.module_estimated_hours}}</p>
                                         <p><b>User: {{module.user}}</b></p>
                                         <p>Start Time: {{module.module_start_date}}</p>
@@ -184,19 +184,7 @@
                         {% if task.status == "In Progress" %}
                         <div>
                           <a href ="#"><b>{{task.task_title}}</b></a><br>
-                            {% if task.priority == 'Less' %}
-                              <div class="badge badge-warning">Less</div>
-                            {% else %}
-                              <div class="badge badge-danger">High</div>                                      
-                            {% endif %}
-                            |
-                            {% if task.status == 'Completed' %}
-                              <div class="badge badge-success">Completed</div>
-                            {% elif task.status == 'Pending' %}
-                              <div class="badge badge-warning">Pending</div>
-                            {% else %}
-                              <div class="badge badge-danger">Cancelled</div>
-                            {% endif %}
+                              <div class="badge badge-warning">In Progress</div>
                         </div>
                         {% endif %}
                         {% endfor %}
