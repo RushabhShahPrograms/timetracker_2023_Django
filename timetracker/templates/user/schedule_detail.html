@@ -1,13 +1,16 @@
 {% extends '../base.html' %}
 {% load static %}
 {% block content %}
-  <h2>{{ schedule.title }}</h2>
-  <p><strong>Description:</strong> {{ schedule.description }}</p>
-  <p><strong>Meeting URL:</strong> {{ schedule.meeting_url }}</p>
-  <p><strong>Created By:</strong> {{ schedule.created_by }}</p>
+  <h2>{{ scheduledetail.schedule_title }}</h2>
+  <p><strong>Description:</strong> {{ scheduledetail.schedule_description }}</p>
+  <p><strong>Meeting URL:</strong> <a href="{{ scheduledetail.schedule_meeting_url }}" target="_blank">{{ scheduledetail.schedule_meeting_url }}</a></p>
+  {% if scheduledetail.schedule_documents %}
+  <p><strong>Documents:</strong> <a href="{{ scheduledetail.schedule_documents.url }}" target="_blank">{{ scheduledetail.schedule_documents }}</a></p>
+{% endif %}
+  <p><strong>Created By:</strong> {{ scheduledetail.created_by.username }}</p>
   <p><strong>Invited Users:</strong></p>
   <ul>
-    {% for user in schedule.users.all %}
+    {% for user in scheduledetail.users.all %}
       <li>{{ user }}</li>
     {% empty %}
       <li>No users invited yet.</li>

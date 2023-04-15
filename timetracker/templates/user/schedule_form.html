@@ -4,7 +4,6 @@
 {% load widget_tweaks %}
 {% block content %}
 <h2>Create New Schedule</h2>
-<center>
 <form class="forms-sample" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">
@@ -16,7 +15,6 @@
     </div>
     <input class="btn btn-primary mr-2" type="submit" value="Submit">
 </form>
-</center>
 <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
 <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
 <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet">

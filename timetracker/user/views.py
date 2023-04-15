@@ -22,7 +22,7 @@ from django.db.models.functions import Coalesce
 from plotly.offline import plot
 from django.db.models import Q
 from django.views import View
-
+from django.core.mail import EmailMessage
 
 class AdminRegisterView(CreateView):
     model = User
@@ -226,13 +226,11 @@ class EditProfilePageView(UpdateView):
         return reverse_lazy('userprofile', kwargs={'pk': self.kwargs['pk']})
     
 
-from django.urls import reverse_lazy
-
 class ScheduleCreateView(CreateView):
     model = Schedule
     form_class = ScheduleForm
     template_name = 'user/schedule_form.html'
-    success_url = reverse_lazy('schedulelist')
+    success_url = '/user/schedulelist/'
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -244,18 +242,32 @@ class ScheduleCreateView(CreateView):
                 user.schedules.add(form.instance)
 
                 # Construct email message
-                subject = f'New Meeting: {form.instance.title}'
-                body = f'You have been invited to a new meeting: {form.instance.title}\n\n{form.instance.description}\n\nMeeting URL: {form.instance.meeting_url}'
+                subject = f'New Meeting:{form.instance.schedule_title}'
+                body = f'<b>You have been invited to a new meeting: {form.instance.schedule_title}</b>\n\n<b>Description:</b> {form.instance.schedule_description}\n\n<b>Meeting URL:</b> {form.instance.schedule_meeting_url}'
 
-                # Send email using send_mail function
-                send_mail(
-                    subject=subject,
-                    message=body,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[user.email],
-                    fail_silently=False,
-                )
+                # Attach the document if it was uploaded
+                if form.cleaned_data['schedule_documents']:
+                    attachment = form.cleaned_data['schedule_documents']
+                    email = EmailMessage(
+                        subject=subject,
+                        body=body,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        to=[user.email],
+                    )
+                    email.attach(attachment.name, attachment.read(), attachment.content_type)
+                    email.send(fail_silently=False)
+                else:
+                    # Send email without attachment
+                    send_mail(
+                        subject=subject,
+                        message=body,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[user.email],
+                        fail_silently=False,
+                    )
+
         return response
+
 
 
 

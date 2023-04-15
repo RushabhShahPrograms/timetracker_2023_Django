@@ -232,4 +232,4 @@ class Schedule(models.Model):
         db_table='schedule'
 
     def __str__(self):
-        return self.title
+        return self.schedule_title
