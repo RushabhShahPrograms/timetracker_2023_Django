@@ -60,6 +60,7 @@
                                       <th>Developers</th>
                                       <th>Badge</th>
                                       <th>Status</th>
+                                      {% comment %} <th>More</th> {% endcomment %}
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -86,13 +87,109 @@
                                           
                                         {% endif %}
                                       </td>
-                                      <div class="font-weight-medium">
                                       {% comment %} <td>
-                                        <a class="dropdown-item" href="{% url 'projectupdate' project.id %}"><i class="ti-pencil-alt"></i> Edit</a>
-                                        <a class="dropdown-item" href="{% url 'projectdelete' project.id %}"><i class="ti-trash"></i> Delete</a>
-                                        <a class="dropdown-item" href="{% url 'projectdetail' project.id %}"><i class="ti-notepad"></i> Detail</a>
+                                        <div class="dropdown show">
+                                          <a class="nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="ti-angle-down"></i>
+                                          </a>
+                                        
+                                          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <!--<a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>-->
+                                            <a class="dropdown-item" href="#">
+                                              <tr>
+                                                <td colspan="8">
+                                                  <table cellpadding="5" cellspacing="0" border="0" style="width:100%;">
+                                                    <tbody>
+                                                      <tr class="expanded-row">
+                                                        <td colspan="8" class="row-bg">
+                                                          <div>
+                                                            <div class="d-flex justify-content-between">
+                                                              <div class="cell-hilighted">
+                                                                <div class="d-flex mb-2">
+                                                                  <div class="me-2 min-width-cell">
+                                                                    <p>Policy start date</p>
+                                                                    <h6>25/04/2020</h6>
+                                                                  </div>
+                                                                  <div class="min-width-cell">
+                                                                    <p>Policy end date</p>
+                                                                    <h6>24/04/2021</h6>
+                                                                  </div>
+                                                                </div>
+                                                                <div class="d-flex">
+                                                                  <div class="me-2 min-width-cell">
+                                                                    <p>Sum insured</p>
+                                                                    <h5>$26,000</h5>
+                                                                  </div>
+                                                                  <div class="min-width-cell">
+                                                                    <p>Premium</p>
+                                                                    <h5>$1200</h5>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              <div class="expanded-table-normal-cell">
+                                                                <div class="me-2 mb-4">
+                                                                  <p>Quote no.</p>
+                                                                  <h6>Incs234</h6>
+                                                                </div>
+                                                                <div class="me-2">
+                                                                  <p>Vehicle Reg. No.</p>
+                                                                  <h6>KL-65-A-7004</h6>
+                                                                </div>
+                                                              </div>
+                                                              <div class="expanded-table-normal-cell">
+                                                                <div class="me-2 mb-4">
+                                                                  <p>Policy number</p>
+                                                                  <h6>Incsq123456</h6>
+                                                                </div>
+                                                                <div class="me-2">
+                                                                  <p>Policy number</p>
+                                                                  <h6>Incsq123456</h6>
+                                                                </div>
+                                                              </div>
+                                                              <div class="expanded-table-normal-cell">
+                                                                <div class="me-2 mb-3 d-flex">
+                                                                  <div class="highlighted-alpha">
+                                                                    A
+                                                                    </div>		
+                                                                    <div>
+                                                                      <p>Agent / Broker</p>
+                                                                      <h6>Abcd Enterprices</h6>
+                                                                    </div>
+                                                                  </div>
+                                                                  <div class="me-2 d-flex">
+                                                                    <img src="../../images/faces/face15.jpg" alt="profile">
+                                                                    <div>
+                                                                      <p>Policy holder Name &amp; ID Number</p>
+                                                                      <h6>Phillip Harris / 1234567</h6>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                                <div class="expanded-table-normal-cell">
+                                                                  <div class="me-2 mb-4">
+                                                                    <p>Branch</p>
+                                                                    <h6>Koramangala, Chicago</h6>
+                                                                  </div>
+                                                                </div>		
+                                                                <div class="expanded-table-normal-cell">
+                                                                  <div class="me-2 mb-4">
+                                                                    <p>Channel</p>
+                                                                    <h6>Online</h6>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                            </div>
+                                                          </td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </td>
+                                                </tr>
+                                            </a>
+                                          </div>
+                                        </div>
                                       </td> {% endcomment %}
-                                    </div>
                                   </tr>
                                   {% endfor %}
                                 </tbody>
@@ -127,26 +224,6 @@
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-6 mb-3 mb-sm-0">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
                   </div>
                 </div>
               </div>

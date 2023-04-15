@@ -28,9 +28,9 @@
               <div class="mt-3">
                 <a href="{% url 'developerregister' %}"><button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">Developer</button></a>
               </div>
-              <div class="mt-3">
+              {% comment %} <div class="mt-3">
                 <a href="{% url 'adminregister' %}"><button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">Admin</button></a>
-              </div>
+              </div> {% endcomment %}
               <div class="text-center mt-4 font-weight-light">
                 Already have an account? <a href="{% url 'login' %}" class="text-primary">Login</a>
               </div>
