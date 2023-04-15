@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import TemplateView,ListView,DetailView,UpdateView,DeleteView,View
 from django.views.generic.edit import FormView,CreateView
 from .forms import *
@@ -300,12 +300,21 @@ class UserTaskDetailView(DetailView):
 @method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
 class DeveloperSubmitView(CreateView):
     form_class = DeveloperSubmitForm
-    model = Developer_Submit
     template_name = 'project/developer_submit.html'
-    success_url = '/user/developerpage/'
 
-    def form_valid(self, form):
-        return super().form_valid(form)
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(user=request.user)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.user, request.POST, request.FILES)
+        if form.is_valid():
+            submit = form.save(commit=False)
+            submit.submit_developer_name = request.user.username
+            submit.save()
+            return redirect('developerpage')
+        else:
+            return render(request, self.template_name, {'form': form})
 
 
 class ProjectModuleGanttView(DetailView):

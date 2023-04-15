@@ -190,21 +190,6 @@ class DeveloperPage(ListView):
                        })
 
     template_name="user/developer_page.html"
-
-class DeveloperSubmitViewPage(CreateView):
-    form_class = DeveloperSubmitForm
-    model = Developer_Submit
-
-    def get(self,request,*args,**kwargs):
-        submit_task = Developer_Submit.objects.filter(task__user__username=self.request.user.username)
-        return render(request, 'user/developer_page.html',{'submit_task':submit_task})
-
-    template_name="user/developer_page.html"
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, 'Your report has been submitted successfully!')
-        return response
     
 class ShowProfilePageView(DetailView):
     model = User
