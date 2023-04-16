@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'widget_tweaks',
     'phonenumber_field',
+    'tempus_dominus',
+    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [

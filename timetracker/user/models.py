@@ -2,7 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
-
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 # Don't consider this class
 
 genderChoice=(
@@ -226,6 +226,7 @@ class Schedule(models.Model):
     schedule_documents = models.FileField(upload_to='schedule_documents/',null=True,blank=True)
     users = models.ManyToManyField(User, related_name='schedules')
     schedule_meeting_url = models.URLField()
+    schedule_meeting_date = models.DateTimeField()
     schedule_created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

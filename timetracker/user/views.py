@@ -242,8 +242,8 @@ class ScheduleCreateView(CreateView):
                 user.schedules.add(form.instance)
 
                 # Construct email message
-                subject = f'New Meeting:{form.instance.schedule_title}'
-                body = f'<b>You have been invited to a new meeting: {form.instance.schedule_title}</b>\n\n<b>Description:</b> {form.instance.schedule_description}\n\n<b>Meeting URL:</b> {form.instance.schedule_meeting_url}'
+                subject = f'New Meeting: {form.instance.schedule_title}'
+                body = f'<strong>You have been invited to a new meeting: {form.instance.schedule_title}</strong>\n\n<strong>Description:</strong> {form.instance.schedule_description}\n\n<strong>Meeting URL:</strong> {form.instance.schedule_meeting_url}\n\n<strong>Meeting Date and Time: </strong>{form.instance.schedule_meeting_date}'
 
                 # Attach the document if it was uploaded
                 if form.cleaned_data['schedule_documents']:

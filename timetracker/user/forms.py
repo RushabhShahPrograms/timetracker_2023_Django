@@ -3,6 +3,10 @@ import django.forms as form
 from django.contrib.auth.forms import *
 from django.db import transaction
 from .models import User,Schedule
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
+from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 
 
 class AdminRegisterForm(UserCreationForm):
@@ -61,6 +65,10 @@ class ScheduleForm(forms.ModelForm):
         queryset=User.objects.filter(is_developer=True),
         widget=SelectMultiple(attrs={'class': 'chosen-select'})
     )
+
+    schedule_meeting_date = forms.DateTimeField(widget=DateTimePickerInput(format='%Y/%m/%d %H:%M:%S'))
+
+
     class Meta:
         model = Schedule
         fields = '__all__'
