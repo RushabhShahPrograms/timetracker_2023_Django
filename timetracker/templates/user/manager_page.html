@@ -85,29 +85,6 @@
                   <p class="card-title">Project Achievement</p>
                   <p class="font-weight-500">Achievement of the total hours achieved by completed the projects</p>
                   {{ chart|safe }}
-                  {% comment %} <script>
-                    var config = {
-                      type: 'pie',
-                      data: {
-                        datasets: [{
-                          data: {{ data|safe }},
-                          backgroundColor: [
-                            '#696969', '#808080', '#A9A9A9'
-                          ],
-                        }],
-                        labels: {{ labels|safe }}
-                      },
-                      options: {
-                        responsive: true
-                      }
-                    };
-                
-                    window.onload = function() {
-                      var ctx = document.getElementById('pie-chart').getContext('2d');
-                      window.myPie = new Chart(ctx, config);
-                    };
-                
-                  </script> {% endcomment %}
                 </div>
               </div>
             </div>
@@ -146,17 +123,15 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-7 grid-margin stretch-card">
+            <div class="col-md-4 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
                   <p class="card-title mb-0">Pending Projects</p>
                   <div class="table-responsive">
-                    <table class="table table-striped table-borderless">
+                    <table class="table table-borderless">
                       <thead>
                         <tr>
                           <th>Title</th>
-                          <th>Completion Date</th>
-                          <th>Technology</th>
                           <th>Status</th>
                         </tr>  
                       </thead>
@@ -164,8 +139,6 @@
                         {% for project in pendingprojects %}
                         <tr>
                           <td>{{project.project_title}}</td>
-                          <td class="font-weight-bold">{{project.project_completion_date}}</td>
-                          <td>{{project.project_technology}}</td>
                           {% if project.status == 'Completed' %}
   
                             <td class="font-weight-medium"><div class="badge badge-success">Completed</div></td>
@@ -187,7 +160,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-5 stretch-card grid-margin">
+            <div class="col-md-4 stretch-card grid-margin">
               <div class="row">
                 <div class="col-md-12 grid-margin stretch-card">
                   <div class="card">
@@ -225,14 +198,74 @@
                       <p class="card-title text-white">Number of Meetings</p>                      
                       <div class="row">
                         <div class="col-8 text-white">
-                          <h3>34040</h3>
+                          <h3>{{schedules|length}}</h3>
                           <p class="text-white font-weight-500 mb-0">Number of meetings remaining that were assigned to you. Click here to know the schedule.</p>
                         </div>
                         <div class="col-4 background-icon">
+                          
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 stretch-card grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Notifications</p>
+                  <ul class="icon-data-list">
+                    <li>
+                      <div class="d-flex">
+                        <img src="../../images/faces/face1.jpg" alt="user">
+                        <div>
+                          <p class="text-info mb-1">Isabella Becker</p>
+                          <p class="mb-0">Sales dashboard have been created</p>
+                          <small>9:30 am</small>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="d-flex">
+                        <img src="../../images/faces/face2.jpg" alt="user">
+                        <div>
+                          <p class="text-info mb-1">Adam Warren</p>
+                          <p class="mb-0">You have done a great job #TW111</p>
+                          <small>10:30 am</small>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="d-flex">
+                      <img src="../../images/faces/face3.jpg" alt="user">
+                     <div>
+                      <p class="text-info mb-1">Leonard Thornton</p>
+                      <p class="mb-0">Sales dashboard have been created</p>
+                      <small>11:30 am</small>
+                     </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="d-flex">
+                        <img src="../../images/faces/face4.jpg" alt="user">
+                        <div>
+                          <p class="text-info mb-1">George Morrison</p>
+                          <p class="mb-0">Sales dashboard have been created</p>
+                          <small>8:50 am</small>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="d-flex">
+                        <img src="../../images/faces/face5.jpg" alt="user">
+                        <div>
+                        <p class="text-info mb-1">Ryan Cortez</p>
+                        <p class="mb-0">Herbs are fun and easy to grow.</p>
+                        <small>9:00 am</small>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>

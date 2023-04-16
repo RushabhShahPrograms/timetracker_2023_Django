@@ -74,102 +74,188 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6 grid-margin">
+            <div class="col-md-3 grid-margin">
               <div class="card">
-								<div class="card-body">
-									<h4 class="card-title">To Do</h4>
-                  <div class="list-wrapper pt-1">
-                    {% for task in tasks %}
-                    {% if task.status == "Pending" %}
-                            <div>
-                              <b>{{task.task_title}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ task.id }}"> Details </a><br>
-                                  <div class="badge badge-primary">Pending</div>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="exampleModalLong{{ task.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                  <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">{{task.task_title}}</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                          <span aria-hidden="true">&times;</span>
-                                        </button>
-                                      </div>
-                                      <div class="modal-body">
-                                        <p>Task Title: {{ task.task_title }}</p>
-                                        <p>Task Description: {{ task.task_description }}</p>
-                                        <p><b>Project: {{task.project}}</p>
-                                        <p>Module: {{task.module}}</b></p>
-                                        <p>Priority: 
-                                          {% if task.priority == 'Less' %}
-                                            <div class="badge badge-info">Less</div>
-                                          {% else %}
-                                            <div class="badge badge-danger">High</div>                                      
-                                          {% endif %}
-                                        </p>
-                                        <p>Status: <p class="badge badge-primary">Pending</p></p>
-                                        <p>Estimated Hours: {{task.task_estimated_hours}}</p>
-                                        <p><b>User: {{task.user}}</b></p>
-                                        <p>Start Time: {{task.start_time}}</p>
-                                        <p>End Time: {{task.end_time}}</p>
-                                      </div>
-                                      <div class="modal-footer">
-                                        <a href="{% url 'developersubmit' %}" class="btn btn-primary">Submit Task</a>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                            </div>
-                    {% endif %}
+                <div class="card-body">
+                  <p class="card-title">Meetings</p>
+                  <div class="list-wrapper pt-1" style="height: 300px; overflow-y: scroll;">
+                  <ul class="icon-data-list">
+                    {% for meeting in meetings %}
+                    <li>
+                      <div class="d-flex">
+                        <img src="{{meeting.created_by.profile_pic.url}}" alt="user">
+                        <div>
+                          <p class="text-info mb-1">{{meeting.created_by}}</p>
+                          <a href="#" data-toggle="modal" data-target="#exampleModal{{meeting.id}}">
+                            <p class="mb-0">{{meeting.schedule_title}}</p>
+                          </a>
+                          <small>{{meeting.schedule_meeting_date}}</small>
+                        </div>
+                      </div>
+                    </li>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal{{meeting.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            ...
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     {% endfor %}
-                    <br>
-                    {% for module in modules %}
-                    {% if module.status == "Pending" %}
-                            <div>
-                              <b>{{module.module_name}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ module.id }}"> Details </a><br>
-                                  <div class="badge badge-primary">Pending</div>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="exampleModalLong{{ module.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                  <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">{{module.module_name}}</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                          <span aria-hidden="true">&times;</span>
-                                        </button>
-                                      </div>
-                                      <div class="modal-body">
-                                        <p>Task Title: {{ module.module_name }}</p>
-                                        <p>Task Description: {{ module.module_description }}</p>
-                                        <p><b>Project: {{module.project}}</b></p>
-                                        <p>Status: <p class="badge badge-primary">Pending</p></p>
-                                        <p>Estimated Hours: {{moudle.module_estimated_hours}}</p>
-                                        <p><b>User: {{module.user}}</b></p>
-                                        <p>Start Time: {{module.module_start_date}}</p>
-                                        <p>End Time: {{module.module_completion_date}}</p>
-                                      </div>
-                                      <div class="modal-footer">
-                                        <a href="{% url 'developersubmit' %}" class="btn btn-primary">Submit Task</a>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                            </div>
-                    {% endif %}
-                    {% endfor %}
-                    <br>
-                  </div>
-								</div>
-							</div>
+                  </ul>
+                </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Notifications</p>
+                  <div class="list-wrapper pt-1" style="height: 300px; overflow-y: scroll;">
+                  <ul class="icon-data-list">
+                    <li>
+                      <div class="d-flex">
+                        <img src="../../images/faces/face1.jpg" alt="user">
+                        <div>
+                          <p class="text-info mb-1">Isabella Becker</p>
+                          <p class="mb-0">Sales dashboard have been created</p>
+                          <small>9:30 am</small>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="d-flex">
+                        <img src="../../images/faces/face2.jpg" alt="user">
+                        <div>
+                          <p class="text-info mb-1">Adam Warren</p>
+                          <p class="mb-0">You have done a great job #TW111</p>
+                          <small>10:30 am</small>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="d-flex">
+                      <img src="../../images/faces/face3.jpg" alt="user">
+                     <div>
+                      <p class="text-info mb-1">Leonard Thornton</p>
+                      <p class="mb-0">Sales dashboard have been created</p>
+                      <small>11:30 am</small>
+                     </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                </div>
+              </div>
             </div>
           </div>
             <div class="row">
-              <div class="col-md-6 grid-margin stretch-card">
+              <div class="col-md-4 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">To Do</h4>
+                    <div class="list-wrapper pt-1" style="height: 300px; overflow-y: scroll;">
+                      {% for task in tasks %}
+                      {% if task.status == "Pending" %}
+                              <div>
+                                <b>{{task.task_title}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ task.id }}"> Details </a><br>
+                                    <div class="badge badge-primary">Pending</div>
+  
+                                  <!-- Modal -->
+                                  <div class="modal fade" id="exampleModalLong{{ task.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="exampleModalLongTitle">{{task.task_title}}</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <p>Task Title: {{ task.task_title }}</p>
+                                          <p>Task Description: {{ task.task_description }}</p>
+                                          <p><b>Project: {{task.project}}</p>
+                                          <p>Module: {{task.module}}</b></p>
+                                          <p>Priority: 
+                                            {% if task.priority == 'Less' %}
+                                              <div class="badge badge-info">Less</div>
+                                            {% else %}
+                                              <div class="badge badge-danger">High</div>                                      
+                                            {% endif %}
+                                          </p>
+                                          <p>Status: <p class="badge badge-primary">Pending</p></p>
+                                          <p>Estimated Hours: {{task.task_estimated_hours}}</p>
+                                          <p><b>User: {{task.user}}</b></p>
+                                          <p>Start Time: {{task.start_time}}</p>
+                                          <p>End Time: {{task.end_time}}</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <a href="{% url 'developersubmit' %}" class="btn btn-primary">Submit Task</a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                              </div>
+                      {% endif %}
+                      {% endfor %}
+                      <br>
+                      {% for module in modules %}
+                      {% if module.status == "Pending" %}
+                              <div>
+                                <b>{{module.module_name}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ module.id }}"> Details </a><br>
+                                    <div class="badge badge-primary">Pending</div>
+  
+                                  <!-- Modal -->
+                                  <div class="modal fade" id="exampleModalLong{{ module.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="exampleModalLongTitle">{{module.module_name}}</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <p>Task Title: {{ module.module_name }}</p>
+                                          <p>Task Description: {{ module.module_description }}</p>
+                                          <p><b>Project: {{module.project}}</b></p>
+                                          <p>Status: <p class="badge badge-primary">Pending</p></p>
+                                          <p>Estimated Hours: {{moudle.module_estimated_hours}}</p>
+                                          <p><b>User: {{module.user}}</b></p>
+                                          <p>Start Time: {{module.module_start_date}}</p>
+                                          <p>End Time: {{module.module_completion_date}}</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <a href="{% url 'developersubmit' %}" class="btn btn-primary">Submit Task</a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                              </div>
+                      {% endif %}
+                      {% endfor %}
+                      <br>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
                     <p class="card-title mb-0">In Progress</p>
-                      <div class="list-wrapper pt-1">
+                      <div class="list-wrapper pt-1" style="height: 300px; overflow-y: scroll;">
                         {% for task in tasks %}
                         {% if task.status == "In Progress" %}
                         <div>
@@ -182,11 +268,11 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 grid-margin stretch-card">
+              <div class="col-md-4 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
                     <p class="card-title mb-0">Completed</p>
-                      <div class="list-wrapper pt-1">
+                      <div class="list-wrapper pt-1" style="height: 300px; overflow-y: scroll;">
                         {% for task in tasks %}
                         {% if task.status == "Completed" %}
                         <div>

@@ -123,6 +123,7 @@ class ManagerPage(ListView):
         team = Project_Team.objects.all().values()
         module = Project_Module.objects.all().values()
         task = Project_Task.objects.all().values()
+        schedules = Schedule.objects.all().values()
 
         # Bar Chart
         completedproject = Project.objects.filter(status="Completed")
@@ -172,6 +173,7 @@ class ManagerPage(ListView):
                        'pending_projects': pending_projects,
                        'cancelled_projects': cancelled_projects,
                        'chart': chart,
+                       'schedules':schedules,
                        })
 
     template_name="user/manager_page.html"
@@ -183,10 +185,12 @@ class DeveloperPage(ListView):
         modules = Project_Module.objects.filter(user__username=self.request.user.username)
         projects = Project_Team.objects.filter(user__username=self.request.user.username)
         tasks = Project_Task.objects.filter(user__username=self.request.user.username)
+        meetings = Schedule.objects.filter(users__in=[self.request.user])
         return render(request, 'user/developer_page.html',
                       {'modules':modules,
                        'projects':projects,
                        'tasks':tasks,
+                       'meetings':meetings,
                        })
 
     template_name="user/developer_page.html"
@@ -225,8 +229,8 @@ class EditProfilePageView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('userprofile', kwargs={'pk': self.kwargs['pk']})
     
-
-class ScheduleCreateView(CreateView):
+from django.contrib.auth.mixins import LoginRequiredMixin
+class ScheduleCreateView(LoginRequiredMixin, CreateView):
     model = Schedule
     form_class = ScheduleForm
     template_name = 'user/schedule_form.html'

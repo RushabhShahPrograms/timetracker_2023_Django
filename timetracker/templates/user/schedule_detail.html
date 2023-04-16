@@ -31,6 +31,9 @@
                         <p><strong>Documents:</strong> <a href="{{ scheduledetail.schedule_documents.url }}" target="_blank">{{ scheduledetail.schedule_documents }}</a></p>
                       {% endif %}
                     </div>
+                    <div class="form-group">
+                      <p><strong>Meeting Date and Time:</strong> {{ scheduledetail.schedule_meeting_date }}</p>
+                    </div>
                       <div class="form-group">
                         <p><strong>Created At:</strong> {{ scheduledetail.schedule_created_at }}</p>
                       </div>
