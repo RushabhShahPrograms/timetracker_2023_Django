@@ -1,12 +1,104 @@
 {% extends '../base.html' %}
-{% load static %}
-{% block content %}
-  <h1>Schedules</h1>
-  <ul>
-    {% for schedule in schedules %}
-      <li><a href="{% url 'scheduledetail' schedule.pk %}">{{ schedule.schedule_title }}</a></li>
-    {% empty %}
-      <li>No schedules found.</li>
-    {% endfor %}
-  </ul>
-{% endblock content %}
+    {% block content %}
+    {% load static %}
+    {% load crispy_forms_tags %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Meetings List</title>
+      <style>
+        a {
+          color: inherit;
+          text-decoration: none;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container-scroller">
+        {% include '../manager_navbar.html' %}
+          <!-- partial -->
+          <div class="main-panel">
+            <div class="content-wrapper">
+              <div class="row">
+                <div class="col-md-12 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <p class="card-title">List of Meetings</p>
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="table-responsive">
+                            <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="display expandable-table dataTable no-footer" style="width: 100%;" role="grid">
+                              <thead>
+                                <tr role="row">
+                                    <th>No.</th>
+                                    <th>Title</th>
+                                    <th>Developers Invited</th>
+                                    <th>Actions</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                               {% for schedule in schedules %}
+                                <tr class="table table-striped">
+                                    <td>{{forloop.counter}}</td>
+                                    <td><strong><a href="{% url 'scheduledetail' schedule.pk %}">{{ schedule.schedule_title }}</a></strong></td>
+                                    <td>
+                                      {% for user in schedule.users.all %}
+                                        {{ user.username }}
+                                        {% if not forloop.last %}, {% endif %}
+                                      {% empty %}
+                                        No users invited yet.
+                                      {% endfor %}
+                                    </td>
+                                    <div class="font-weight-medium">
+                                    <td>
+                                      <a class="dropdown-item" href="{% url 'scheduleupdate' schedule.id %}" style="color:#4B49AC;"><i class="ti-pencil-alt"></i> Edit</a>
+                                      <a class="dropdown-item" href="{% url 'scheduledelete' schedule.id %}" style="color:#4B49AC;"><i class="ti-trash"></i> Delete</a>
+                                    </td>
+                                  </div>
+                                </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                            <div class="pagination justify-content-center">
+                              <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo; Previous</a>
+                                </li>
+                                {% endif %}
+                                {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                  <a class="page-link" href="#">{{ num }} <span class="sr-only">(current)</span></a>
+                                </li>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
+                                </li>
+                                {% endif %}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+          <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+      </div>
+      <!-- container-scroller -->
+    </body>
+    </html>
+    {% endblock content %}
