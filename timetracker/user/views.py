@@ -23,6 +23,12 @@ from plotly.offline import plot
 from django.db.models import Q
 from django.views import View
 from django.core.mail import EmailMessage
+import calendar
+from calendar import HTMLCalendar
+from datetime import date, datetime
+from django.urls import reverse
+from django.utils.html import conditional_escape as esc
+
 
 class AdminRegisterView(CreateView):
     model = User
@@ -228,7 +234,40 @@ class EditProfilePageView(UpdateView):
     
     def get_success_url(self):
         return reverse_lazy('userprofile', kwargs={'pk': self.kwargs['pk']})
-    
+
+
+class MyHTMLCalendar(HTMLCalendar):
+    def __init__(self, year=None):
+        self.year = year
+        super().__init__()
+
+    def formatmonth(self, theyear, themonth, withyear=True):
+        """
+        Return a formatted month as a table.
+        """
+        self.year = theyear
+        v = []
+        a = v.append
+        a('<table class="calendar">\n')
+        a(self.formatmonthname(theyear, themonth, withyear=withyear))
+        a(self.formatweekheader())
+        for week in self.monthdays2calendar(theyear, themonth):
+            a(self.formatweek(week))
+        a('</table>\n')
+        return ''.join(v)
+
+    def formatday(self, day, weekday):
+        """
+        Return a formatted day cell with given content.
+        """
+        if day == 0:
+            return '<td class="noday">&nbsp;</td>'  # day outside month
+        else:
+            return '<td class="day">%d</td>' % day
+
+
+
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 class ScheduleCreateView(LoginRequiredMixin, CreateView):
     model = Schedule
@@ -282,6 +321,38 @@ class ScheduleListView(ListView):
 
     def get_queryset(self):
         return super().get_queryset()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Get the year and month from the request parameters
+        year = int(self.request.GET.get('year', datetime.now().year))
+        month = self.request.GET.get('month', datetime.now().strftime('%B'))
+
+        # Add the calendar data to the context
+        month_number = list(calendar.month_name).index(month.capitalize())
+        cal = MyHTMLCalendar(year=year).formatmonth(year, month_number)
+        
+        # Highlight the meeting date in the calendar
+        schedules = Schedule.objects.filter(schedule_meeting_date__year=year, schedule_meeting_date__month=month_number)
+        for schedule in schedules:
+            day = schedule.schedule_meeting_date.day
+            html = f'<a href="#">{schedule.schedule_title}</a><br>{schedule.schedule_meeting_date.strftime("%I:%M %p")}'
+            cal = cal.replace(f'>{day}<', f' style="background-color: skyblue">{day}<div class="mt-2">{html}</div><')
+        
+        now = datetime.now()
+        current_year = now.year
+        time = now.strftime('%I:%M:%S %p')
+
+        context['year'] = year
+        context['month'] = month
+        context['month_number'] = month_number
+        context['cal'] = cal
+        context['current_year'] = current_year
+        context['time'] = time
+
+        return context
+
 
 class ScheduleUpdateView(UpdateView):
     model = Schedule

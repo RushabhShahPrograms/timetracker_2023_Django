@@ -41,8 +41,8 @@ path('edituserprofile/<int:pk>/',EditProfilePageView.as_view(),name="edituserpro
 
 #scheduleURLS
 path('addschedule/',ScheduleCreateView.as_view(),name="addschedule"),
- path('schedulelist/',ScheduleListView.as_view(),name="schedulelist"),
- path('scheduledelete/<int:pk>',ScheduleDeleteView.as_view(),name='scheduledelete'),
- path('scheduleupdate/<int:pk>',ScheduleUpdateView.as_view(),name='scheduleupdate'),
- path('scheduledetail/<int:pk>',ScheduleDetailView.as_view(),name='scheduledetail'),
+path('schedulelist/',ScheduleListView.as_view(),name="schedulelist"),
+path('scheduledelete/<int:pk>',ScheduleDeleteView.as_view(),name='scheduledelete'),
+path('scheduleupdate/<int:pk>',ScheduleUpdateView.as_view(),name='scheduleupdate'),
+path('scheduledetail/<int:pk>',ScheduleDetailView.as_view(),name='scheduledetail'),
 ]
