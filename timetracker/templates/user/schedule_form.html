@@ -1,26 +1,57 @@
-{% extends 'base.html' %}
+{% extends '../base.html' %}
+{% block content %}
 {% load static %}
 {% load crispy_forms_tags %}
 {% load widget_tweaks %}
-{% block content %}
-<h2>Create New Schedule</h2>
-<form class="forms-sample" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="form-group">
-        {{form|crispy}}
-        {% comment %} {{ form.users|add_class:"chosen-select" }}
-        {{ form.schedule_title|as_crispy_field }}
-        {{ form.schedule_description|as_crispy_field }}
-        {{ form.schedule_meeting_url|as_crispy_field }} {% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Create Meetings</title>
+</head>
+<body>
+  <div class="container-scroller">
+    {% include '../manager_navbar.html' %}
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Create Meetings</h4>
+                  <form class="forms-sample" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      {{form | crispy}}
+                    </div>
+                    <div class="form-group">
+                      <input class="btn btn-primary mr-2" type = "submit" value = "Submit">
+                      <input class="btn btn-light" type="cancel" value="Cancel">
+                    </div>
+                  </form>
+                    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+                    <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
+                    <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet">
+                    <script>
+                        $(document).ready(function() {
+                            $('.chosen-select').chosen();
+                        });
+                    </script>
+                </div>
+              </div>
+            </div>
+          </div>            
+        </div>
+        <!-- content-wrapper ends -->
+      </div>
+      <!-- main-panel ends -->
     </div>
-    <input class="btn btn-primary mr-2" type="submit" value="Submit">
-</form>
-<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
-<script src="{% static 'js/chosen.jquery.min.js' %}"></script>
-<link href="{% static 'css/chosen.min.css' %}" rel="stylesheet">
-<script>
-    $(document).ready(function() {
-        $('.chosen-select').chosen();
-    });
-</script>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+</body>
+</html>
 {% endblock content %}
