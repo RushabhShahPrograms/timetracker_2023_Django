@@ -171,8 +171,8 @@
                       {% for task in tasks %}
                       {% if task.status == "Pending" %}
                               <div>
-                                <b>{{task.task_title}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ task.id }}"> Details </a><br>
-                                    <div class="badge badge-primary">Pending</div>
+                                <p><b>{{task.task_title}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ task.id }}"> Details </a></p>
+                                    <p class="badge badge-primary">Pending</p>
   
                                   <!-- Modal -->
                                   <div class="modal fade" id="exampleModalLong{{ task.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -191,12 +191,12 @@
                                           <p>Module: {{task.module}}</b></p>
                                           <p>Priority: 
                                             {% if task.priority == 'Less' %}
-                                              <div class="badge badge-info">Less</div>
+                                              <span class="badge badge-info">Less</span>
                                             {% else %}
-                                              <div class="badge badge-danger">High</div>                                      
+                                              <span class="badge badge-danger">High</span>                                      
                                             {% endif %}
                                           </p>
-                                          <p>Status: <p class="badge badge-primary">Pending</p></p>
+                                          <p>Status: <span class="badge badge-primary">Pending</span></p>
                                           <p>Estimated Hours: {{task.task_estimated_hours}}</p>
                                           <p><b>User: {{task.user}}</b></p>
                                           <p>Start Time: {{task.start_time}}</p>
@@ -215,8 +215,8 @@
                       {% for module in modules %}
                       {% if module.status == "Pending" %}
                               <div>
-                                <b>{{module.module_name}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ module.id }}"> Details </a><br>
-                                    <div class="badge badge-primary">Pending</div>
+                                <p><b>{{module.module_name}}</b> ➡️ <a href="#" data-toggle="modal" data-target="#exampleModalLong{{ module.id }}"> Details </a></p>
+                                    <p class="badge badge-primary">Pending</p>
   
                                   <!-- Modal -->
                                   <div class="modal fade" id="exampleModalLong{{ module.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -232,7 +232,7 @@
                                           <p>Task Title: {{ module.module_name }}</p>
                                           <p>Task Description: {{ module.module_description }}</p>
                                           <p><b>Project: {{module.project}}</b></p>
-                                          <p>Status: <p class="badge badge-primary">Pending</p></p>
+                                          <p>Status: <span class="badge badge-primary">Pending</span></p>
                                           <p>Estimated Hours: {{moudle.module_estimated_hours}}</p>
                                           <p><b>User: {{module.user}}</b></p>
                                           <p>Start Time: {{module.module_start_date}}</p>

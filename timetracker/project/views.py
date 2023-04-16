@@ -1,11 +1,10 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import TemplateView,ListView,DetailView,UpdateView,DeleteView,View
 from django.views.generic.edit import FormView,CreateView
 from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from user.decorators import *
-from django.shortcuts import render, get_object_or_404
 import plotly.express as px
 from django.db.models import Q
 from django.contrib import messages
