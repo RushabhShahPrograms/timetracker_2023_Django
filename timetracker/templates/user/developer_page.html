@@ -86,8 +86,8 @@
                         <img src="{{meeting.created_by.profile_pic.url}}" alt="user">
                         <div>
                           <p class="text-info mb-1">{{meeting.created_by}}</p>
-                          <a href="#" data-toggle="modal" data-target="#exampleModal{{meeting.id}}">
-                            <p class="mb-0">{{meeting.schedule_title}}</p>
+                          <a href="#" data-toggle="modal" data-target="#exampleModal{{meeting.id}}" style="color: inherit; text-decoration: none;">
+                            <p class="mb-0"><strong>{{meeting.schedule_title}}</strong></p>
                           </a>
                           <small>{{meeting.schedule_meeting_date}}</small>
                         </div>
@@ -98,17 +98,18 @@
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">{{meeting.schedule_title}}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
                           <div class="modal-body">
-                            ...
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <p><strong>Description:</strong> {{meeting.schedule_description}}</p>
+                            <p><strong>Meeting URL:</strong> <a href="{{ meeting.schedule_meeting_url }}" target="_blank">{{ meeting.schedule_meeting_url }}</a></p>
+                            {% if meeting.schedule_documents %}
+                            <p><strong>Documents:</strong> <a href="{{ meeting.schedule_documents.url }}" target="_blank">{{ meeting.schedule_documents }}</a></p>
+                            {% endif %}
+                            <p><strong>Meeting Date:</strong> {{meeting.schedule_meeting_date}}</p>
                           </div>
                         </div>
                       </div>

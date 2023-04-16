@@ -25,7 +25,8 @@
                         <p><strong>Description:</strong> {{ scheduledetail.schedule_description }}</p>
                       </div>
                       <div class="form-group">
-                        <p><strong>Meeting URL:</strong> <a href="{{ scheduledetail.schedule_meeting_url }}" target="_blank">{{ scheduledetail.schedule_meeting_url }}</a></p>                      </div>
+                        <p><strong>Meeting URL:</strong> <a href="{{ scheduledetail.schedule_meeting_url }}" target="_blank">{{ scheduledetail.schedule_meeting_url }}</a></p>
+                      </div>
                       <div class="form-group">
                         {% if scheduledetail.schedule_documents %}
                         <p><strong>Documents:</strong> <a href="{{ scheduledetail.schedule_documents.url }}" target="_blank">{{ scheduledetail.schedule_documents }}</a></p>
