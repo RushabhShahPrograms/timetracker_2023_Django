@@ -192,22 +192,3 @@ class Developer_Submit(models.Model):
 
     def __str__(self):
         return f"{self.submit_title} ({self.submit_developer_name}, {self.submit_submit_date.strftime('%Y-%m-%d %H:%M:%S')})"
-    
-    @property
-    def request(self):
-        return self._request
-
-    @request.setter
-    def request(self, value):
-        self._request = value
-
-    def get_absolute_url(self):
-        return reverse('developer_submit_detail', kwargs={'pk': self.pk})
-    
-    @receiver(post_save, sender=Developer_Submit)
-    def notify_manager(sender, instance, created, **kwargs):
-        if created:
-            submit_developer_name = instance.developer_name
-            submit_manager = instance.submit_manager
-            message = f"A new submission has been made by {submit_developer_name}."
-            messages.info(submit_manager, message)

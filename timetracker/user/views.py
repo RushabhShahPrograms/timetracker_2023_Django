@@ -26,8 +26,6 @@ from django.core.mail import EmailMessage
 import calendar
 from calendar import HTMLCalendar
 from datetime import date, datetime
-from django.urls import reverse
-from django.utils.html import conditional_escape as esc
 
 
 class AdminRegisterView(CreateView):
@@ -130,7 +128,6 @@ class ManagerPage(ListView):
         module = Project_Module.objects.all().values()
         task = Project_Task.objects.all().values()
         schedules = Schedule.objects.all().values()
-        notifications = messages.get_messages(request)
 
         # Bar Chart
         completedproject = Project.objects.filter(status="Completed")
@@ -181,7 +178,6 @@ class ManagerPage(ListView):
                        'cancelled_projects': cancelled_projects,
                        'chart': chart,
                        'schedules':schedules,
-                       'notifications': notifications,
                        })
 
     template_name="user/manager_page.html"

@@ -214,13 +214,6 @@
               <div class="card">
                 <div class="card-body">
                   <p class="card-title">Notifications</p>
-                  {% if notifications %}
-                    <ul class="notifications">
-                      {% for notification in notifications %}
-                        <li{% if notification.tags %} class="{{ notification.tags }}"{% endif %}>{{ notification }}</li>
-                      {% endfor %}
-                    </ul>
-                  {% endif %}
                 </div>
               </div>
             </div>
