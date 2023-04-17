@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
     'admin_interface',
     'colorfield',
     'django.contrib.admin',
@@ -49,7 +48,6 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'tempus_dominus',
     'bootstrap_datepicker_plus',
-    'channels',
     'ckeditor',
 ]
 
@@ -85,14 +83,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'timetracker.wsgi.application'
-
-ASGI_APPLICATION = 'timetracker.asgi.application'
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }
-}
 
 #Auth Settings
 AUTH_USER_MODEL = 'user.User'

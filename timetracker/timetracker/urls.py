@@ -26,5 +26,9 @@ urlpatterns = [
     path('project/',include('project.urls')),
 ]
 
+admin.site.index_title = "SkyDash"
+#admin.site.site_header = "SkyDash Admin"
+admin.site.site_title = "SkyDash Admin Panel"
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
