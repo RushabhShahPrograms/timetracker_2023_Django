@@ -118,16 +118,46 @@ def logoutUser(request):
 class AdminPage(TemplateView):
     template_name="user/admin_page.html"
 
+class MyHTMLCalendar(HTMLCalendar):
+    def __init__(self, year=None):
+        self.year = year
+        super().__init__()
+
+    def formatmonth(self, theyear, themonth, withyear=True):
+        """
+        Return a formatted month as a table.
+        """
+        self.year = theyear
+        v = []
+        a = v.append
+        a('<table class="calendar">\n')
+        a(self.formatmonthname(theyear, themonth, withyear=withyear))
+        a(self.formatweekheader())
+        for week in self.monthdays2calendar(theyear, themonth):
+            a(self.formatweek(week))
+        a('</table>\n')
+        return ''.join(v)
+
+    def formatday(self, day, weekday):
+        """
+        Return a formatted day cell with given content.
+        """
+        if day == 0:
+            return '<td class="noday">&nbsp;</td>'  # day outside month
+        else:
+            return '<td class="day">%d</td>' % day
+
 # @method_decorator(login_required(login_url='/user/login'), name='dispatch')
 @method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
 class ManagerPage(ListView):
+    template_name="user/manager_page.html"
 
     def get(self,request,*args,**kwargs):
         project = Project.objects.all().values()
         team = Project_Team.objects.all().values()
         module = Project_Module.objects.all().values()
         task = Project_Task.objects.all().values()
-        schedules = Schedule.objects.all().values()
+        schedules = Schedule.objects.all()
 
         # Bar Chart
         completedproject = Project.objects.filter(status="Completed")
@@ -179,8 +209,38 @@ class ManagerPage(ListView):
                        'chart': chart,
                        'schedules':schedules,
                        })
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        schedules = Schedule.objects.all().values()
 
-    template_name="user/manager_page.html"
+        # Get the year and month from the request parameters
+        year = int(self.request.GET.get('year', datetime.now().year))
+        month = self.request.GET.get('month', datetime.now().strftime('%B'))
+
+        # Add the calendar data to the context
+        month_number = list(calendar.month_name).index(month.capitalize())
+        cal = MyHTMLCalendar(year=year).formatmonth(year, month_number)
+        
+        # Highlight the meeting date in the calendar
+        schedules = Schedule.objects.filter(schedule_meeting_date__year=year, schedule_meeting_date__month=month_number)
+        for schedule in schedules:
+            day = schedule.schedule_meeting_date.day
+            html = f'<a href="#">{schedule.schedule_title}</a><br>{schedule.schedule_meeting_date.strftime("%I:%M %p")}'
+            cal = cal.replace(f'>{day}<', f' style="background-color: skyblue">{day}<div class="mt-2">{html}</div><')
+        
+        now = datetime.now()
+        current_year = now.year
+        time = now.strftime('%I:%M %p')
+
+        context['year'] = year
+        context['month'] = month
+        context['month_number'] = month_number
+        context['cal'] = cal
+        context['current_year'] = current_year
+        context['time'] = time
+
+        return context
 
 @method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
 class DeveloperPage(ListView):
@@ -232,38 +292,6 @@ class EditProfilePageView(UpdateView):
     
     def get_success_url(self):
         return reverse_lazy('userprofile', kwargs={'pk': self.kwargs['pk']})
-
-
-class MyHTMLCalendar(HTMLCalendar):
-    def __init__(self, year=None):
-        self.year = year
-        super().__init__()
-
-    def formatmonth(self, theyear, themonth, withyear=True):
-        """
-        Return a formatted month as a table.
-        """
-        self.year = theyear
-        v = []
-        a = v.append
-        a('<table class="calendar">\n')
-        a(self.formatmonthname(theyear, themonth, withyear=withyear))
-        a(self.formatweekheader())
-        for week in self.monthdays2calendar(theyear, themonth):
-            a(self.formatweek(week))
-        a('</table>\n')
-        return ''.join(v)
-
-    def formatday(self, day, weekday):
-        """
-        Return a formatted day cell with given content.
-        """
-        if day == 0:
-            return '<td class="noday">&nbsp;</td>'  # day outside month
-        else:
-            return '<td class="day">%d</td>' % day
-
-
 
 
 from django.contrib.auth.mixins import LoginRequiredMixin

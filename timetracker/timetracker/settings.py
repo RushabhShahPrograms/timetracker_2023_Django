@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'tempus_dominus',
     'bootstrap_datepicker_plus',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -77,6 +79,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'timetracker.wsgi.application'
+
+ASGI_APPLICATION = 'timetracker.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 #Auth Settings
 AUTH_USER_MODEL = 'user.User'

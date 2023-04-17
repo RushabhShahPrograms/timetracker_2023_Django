@@ -41,8 +41,11 @@
     <script src="{% static "js/dashboard.js" %}"></script>
     <script src="{% static "js/Chart.roundedBarCharts.js" %}"></script>
     <!-- End custom js for this page-->
+    <!--Htmx-WebSocket-->
+    <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
+    <!--End-Htmx-WebSocket-->
 </head>
-<body>
+<body hx-ext="ws" ws-connect="/ws/notifications/">
     {% block content %}    
     {% endblock content %}
 </body>

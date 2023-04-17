@@ -17,6 +17,40 @@
       height: 100%;
       min-height: 400px;
     }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    table.calendar {
+      border-collapse: separate;
+      border-spacing: 5px;
+    }
+    table.calendar td {
+        border: 1px solid black;
+        text-align: center;
+        vertical-align: middle;
+        width: 100px;
+        height: 100px;
+    }
+    table.calendar td.day {
+      text-align: center;
+      vertical-align: middle;
+      width: 80px;
+      height: 80px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .today {
+      background-color: yellow;
+    }
+    .meeting-scheduled {
+      background-color: lightblue;
+    }
+    .meeting-details {
+      font-size: 10px;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
@@ -123,7 +157,14 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4 grid-margin stretch-card">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  {{cal|safe}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
                   <p class="card-title mb-0">Pending Projects</p>
@@ -132,6 +173,7 @@
                       <thead>
                         <tr>
                           <th>Title</th>
+                          <th>Technology</th>
                           <th>Status</th>
                         </tr>  
                       </thead>
@@ -139,6 +181,7 @@
                         {% for project in pendingprojects %}
                         <tr>
                           <td>{{project.project_title}}</td>
+                          <td>{{project.project_technology}}</td>
                           {% if project.status == 'Completed' %}
   
                             <td class="font-weight-medium"><div class="badge badge-success">Completed</div></td>

@@ -66,7 +66,7 @@ class ScheduleForm(forms.ModelForm):
         widget=SelectMultiple(attrs={'class': 'chosen-select'})
     )
 
-    schedule_meeting_date = forms.DateTimeField(widget=DateTimePickerInput(format='%Y/%m/%d %H:%M:%S'))
+    schedule_meeting_date = forms.DateTimeField(widget=DateTimePickerInput(format='%Y/%m/%d %H:%M'))
 
 
     class Meta:
