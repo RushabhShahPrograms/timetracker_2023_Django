@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
-
+from ckeditor.fields import RichTextField
 genderChoice=(
    ("Male","male"),
    ("Female","female")
@@ -27,7 +27,7 @@ class User(AbstractUser):
     contact_number = PhoneNumberField(null=True, blank=True, unique=True)
     alternate_contact_number = PhoneNumberField(null=True, blank=True, unique=True)
     alternate_email = models.EmailField(blank=True,null=True)
-    bio = models.TextField(max_length=200,null=True,blank=True)
+    bio = RichTextField(null=True,blank=True)
     website_url = models.URLField(max_length=200,null=True,blank=True)
     linkedin_url = models.URLField(max_length=200,null=True,blank=True)
     twitter_url = models.URLField(max_length=200,null=True,blank=True)
@@ -50,7 +50,7 @@ class User(AbstractUser):
 
 class Schedule(models.Model):
     schedule_title = models.CharField(max_length=200)
-    schedule_description = models.TextField()
+    schedule_description = RichTextField(null=True,blank=True)
     schedule_documents = models.FileField(upload_to='schedule_documents/',null=True,blank=True)
     users = models.ManyToManyField(User, related_name='schedules')
     schedule_meeting_url = models.URLField()

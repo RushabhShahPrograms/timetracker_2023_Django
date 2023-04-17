@@ -6,6 +6,7 @@ from user.models import User
 from django.contrib import messages
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from ckeditor.fields import RichTextField
 
 # Status Class Don't consider this class as it is not used anywhere
 status_choice = (("Completed","Completed"),
@@ -28,7 +29,7 @@ status_choice = (("Completed","Completed"),
                  ("Cancelled","Cancelled"))
 class Project(models.Model):
     project_title = models.CharField(max_length=100)
-    project_decription = models.TextField()
+    project_decription = RichTextField(null=True,blank=True)
     project_technology = models.CharField(max_length=100)
     project_estimated_hours = models.IntegerField()
     project_start_date = models.DateField()
@@ -51,7 +52,7 @@ status_choice = (("Completed","Completed"),
 class Project_Module(models.Model):
     project = models.ForeignKey(Project,on_delete=models.CASCADE)
     module_name = models.CharField(max_length=100)
-    module_description = models.TextField()
+    module_description = RichTextField(null=True,blank=True)
     module_estimated_hours = models.IntegerField()
     module_start_date = models.DateField()
     module_completion_date = models.DateField()
@@ -78,7 +79,7 @@ class Project_Task(models.Model):
    module = models.ForeignKey(Project_Module,on_delete=models.CASCADE)
    project = models.ForeignKey(Project,on_delete=models.CASCADE)
    task_title = models.CharField(max_length=100)
-   task_description = models.TextField()
+   task_description = RichTextField(null=True,blank=True)
    priority = models.CharField(choices=priorityChoice,max_length=30)
    user= models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
    task_estimated_hours = models.IntegerField()
@@ -174,8 +175,8 @@ class Developer_Submit(models.Model):
     module = models.ForeignKey(Project_Module, on_delete=models.CASCADE,null=True,blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE,null=True,blank=True)
     submit_title = models.CharField(max_length=200)
-    submit_description = models.TextField()
-    code_snippets = models.TextField(blank=True, null=True)
+    submit_description = RichTextField(null=True,blank=True)
+    code_snippets = RichTextField(null=True,blank=True)
     submit_screenshots = models.ImageField(upload_to='developer_task_screenshots/', blank=True, null=True)
     submit_file = models.FileField(upload_to='developer_task_files/',blank=True,null=True)
     status = models.CharField(choices=status_choice,max_length=50, default='In Progress')
@@ -183,7 +184,7 @@ class Developer_Submit(models.Model):
     submit_submit_date = models.DateTimeField(auto_now_add=True)
     submit_developer_name = models.CharField(max_length=100)
     submit_manager_name = models.CharField(max_length=100)
-    comments = models.TextField(blank=True, null=True)
+    comments = RichTextField(null=True,blank=True)
     submit_url = models.URLField(blank=True, null=True)
 
     class Meta:

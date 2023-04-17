@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'tempus_dominus',
     'bootstrap_datepicker_plus',
     'channels',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
