@@ -24,6 +24,7 @@
                   <form class="forms-sample" method="POST">
                     {% csrf_token %}
                     <div class="form-group">
+                      {{form.media}}
                       {{form | crispy}}
                     </div>
                     <div class="form-group">
