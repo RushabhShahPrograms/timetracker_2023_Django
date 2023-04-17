@@ -22,7 +22,7 @@
                   <div class="card-body">
                     <h4 class="card-title">{{ scheduledetail.schedule_title }}</h4>
                       <div class="form-group">
-                        <p><strong>Description:</strong> {{ scheduledetail.schedule_description }}</p>
+                        <p><strong>Description:</strong> {{ scheduledetail.schedule_description|safe }}</p>
                       </div>
                       <div class="form-group">
                         <p><strong>Meeting URL:</strong> <a href="{{ scheduledetail.schedule_meeting_url }}" target="_blank">{{ scheduledetail.schedule_meeting_url }}</a></p>
