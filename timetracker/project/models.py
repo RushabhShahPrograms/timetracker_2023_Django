@@ -6,7 +6,6 @@ from user.models import User
 from django.contrib import messages
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Developer_Submit
 
 # Status Class Don't consider this class as it is not used anywhere
 status_choice = (("Completed","Completed"),
