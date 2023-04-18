@@ -56,7 +56,7 @@ class Project_Module(models.Model):
     module_estimated_hours = models.IntegerField()
     module_start_date = models.DateField()
     module_completion_date = models.DateField()
-    user= models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
+    user= models.ManyToManyField(User)
     status = models.CharField(choices=status_choice,max_length=100)
 
     class Meta:
@@ -125,7 +125,7 @@ badgeChoice=(
 class Project_Team(models.Model):
     team_name = models.CharField(max_length=100)
     project = models.ForeignKey(Project,on_delete=models.CASCADE)
-    user= models.ForeignKey(User,on_delete=models.CASCADE)
+    user= models.ManyToManyField(User)
     status = models.CharField(choices=status_choice,max_length=100)
     badge = models.CharField(choices=badgeChoice,max_length=25)
 

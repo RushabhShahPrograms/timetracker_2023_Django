@@ -315,7 +315,6 @@ class DeveloperSubmitView(CreateView):
         else:
             return render(request, self.template_name, {'form': form})
 
-
 class ProjectModuleGanttView(DetailView):
     model = Project
     template_name = 'project/modules_chart_detail.html'

@@ -25,14 +25,14 @@ class ProjectAdmin(admin.ModelAdmin):
 
 class Project_TeamAdmin(admin.ModelAdmin):
     save_on_top = True
-    list_display=('team_name','project','user','status')
+    list_display=('team_name','project','status')
     list_display_links=('team_name','project')
     search_fields=['team_name','status']
     list_filter=('status','project')
 
 class Project_ModuleAdmin(admin.ModelAdmin):
     save_on_top = True
-    list_display=('module_name','project','module_completion_date','user','status')
+    list_display=('module_name','project','module_completion_date','status')
     list_display_links=('module_name','project')
     search_fields=['module_name','module_estimated_hours','status','module_start_date','module_completion_date']
     list_filter=('status','module_estimated_hours','module_completion_date','module_start_date')

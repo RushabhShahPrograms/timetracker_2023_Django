@@ -158,6 +158,7 @@ class ManagerPage(ListView):
         module = Project_Module.objects.all().values()
         task = Project_Task.objects.all().values()
         schedules = Schedule.objects.all()
+        developersubmit = Developer_Submit.objects.all()
 
         # Bar Chart
         completedproject = Project.objects.filter(status="Completed")
@@ -208,6 +209,7 @@ class ManagerPage(ListView):
                        'cancelled_projects': cancelled_projects,
                        'chart': chart,
                        'schedules':schedules,
+                       'developersubmit':developersubmit
                        })
     
     def get_context_data(self, **kwargs):

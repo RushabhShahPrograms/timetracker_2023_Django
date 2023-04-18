@@ -5,6 +5,9 @@ from user.models import User
 from django.forms import DateTimeInput,DateInput
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+from django.forms import CheckboxSelectMultiple
+from crispy_forms.bootstrap import PrependedText
+from crispy_forms.layout import Submit, Layout
 
 class AddProjectsForm(form.ModelForm):
 
@@ -19,14 +22,19 @@ class AddProjectsForm(form.ModelForm):
         fields = '__all__'
         
 class ProjectModulesForm(form.ModelForm):
-
+    # user = form.ModelChoiceField(queryset=User.objects.filter(is_developer=True))
+    user = forms.ModelMultipleChoiceField(
+        queryset=User.objects.filter(is_developer=True),
+        widget=CheckboxSelectMultiple(attrs={'class': 'horizontal'}),
+    )
     module_start_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
     module_completion_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.add_input(Submit('submit', 'Submit'))
-
-    user = form.ModelChoiceField(queryset=User.objects.filter(is_developer=True))
+    helper.layout = Layout(
+        PrependedText('user', 'user'),
+    )
     class Meta:
         model = Project_Module
         fields = '__all__'
@@ -45,7 +53,18 @@ class ProjectTaskForm(form.ModelForm):
         fields = '__all__'
 
 class ProjectTeamForm(form.ModelForm):
-    user = form.ModelChoiceField(queryset=User.objects.filter(is_developer=True))
+    # user = form.ModelChoiceField(queryset=User.objects.filter(is_developer=True))
+    user = forms.ModelMultipleChoiceField(
+        queryset=User.objects.filter(is_developer=True),
+        widget=CheckboxSelectMultiple,
+    )
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('submit', 'Submit'))
+    helper.layout = Layout(
+        PrependedText('user', 'user'),
+    )
+
     class Meta:
         model = Project_Team
         fields ='__all__'
