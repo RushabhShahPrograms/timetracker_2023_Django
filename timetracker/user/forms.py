@@ -83,18 +83,24 @@ class EditUserProfileForm(UserChangeForm):
         user.save()
         return user
     
-from django.forms.widgets import SelectMultiple
+
+from django.forms import CheckboxSelectMultiple
+from crispy_forms.bootstrap import PrependedText
+from crispy_forms.layout import Submit, Layout
 
 class ScheduleForm(forms.ModelForm):
     users = forms.ModelMultipleChoiceField(
         queryset=User.objects.filter(is_developer=True),
-        widget=SelectMultiple(attrs={'class': 'chosen-select'})
+        widget=CheckboxSelectMultiple,
     )
 
-    schedule_meeting_date = forms.DateTimeField(widget=DateTimeInput(attrs={'type': 'datetime-local'}))
+    schedule_meeting_date = forms.DateTimeField(widget=DateTimeInput(attrs={'type': 'datetime-local','class':'form-control'}))
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.add_input(Submit('submit', 'Submit'))
+    helper.layout = Layout(
+        PrependedText('users', 'users'),
+    )
 
 
     class Meta:

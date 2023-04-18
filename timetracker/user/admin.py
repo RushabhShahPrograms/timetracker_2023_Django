@@ -1,8 +1,12 @@
 from django.contrib import admin
 from .models import *
 from django.utils.html import format_html
+from django.forms import CheckboxSelectMultiple
 
 class ScheduleAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.ManyToManyField: {'widget': CheckboxSelectMultiple},
+    }
     search_fields=['schedule_title','schedule_meeting_date']
     list_display=('schedule_title','created_by','schedule_meeting_url','schedule_meeting_date')
     list_display_links=('schedule_title','created_by','schedule_meeting_date')

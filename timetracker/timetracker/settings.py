@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'phonenumber_field',
     'tempus_dominus',
-    'bootstrap_datepicker_plus',
     'ckeditor',
 ]
 
