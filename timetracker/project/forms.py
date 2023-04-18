@@ -2,19 +2,43 @@ import django.forms as form
 from django import forms
 from .models import *
 from user.models import User
+from django.forms import DateTimeInput,DateInput
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 
 class AddProjectsForm(form.ModelForm):
+
+    project_start_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    project_completion_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('submit', 'Submit'))
+
     class Meta:
         model = Project
         fields = '__all__'
         
 class ProjectModulesForm(form.ModelForm):
+
+    module_start_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    module_completion_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('submit', 'Submit'))
+
     user = form.ModelChoiceField(queryset=User.objects.filter(is_developer=True))
     class Meta:
         model = Project_Module
         fields = '__all__'
 
 class ProjectTaskForm(form.ModelForm):
+
+    start_time = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    end_time = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('submit', 'Submit'))
+
     user = form.ModelChoiceField(queryset=User.objects.filter(is_developer=True))
     class Meta:
         model = Project_Task
@@ -33,6 +57,12 @@ class UserTaskForm(form.ModelForm):
 
 
 class DeveloperSubmitForm(forms.ModelForm):
+
+    submit_submit_date = forms.DateTimeField(widget=DateTimeInput(attrs={'type': 'datetime-local'}))
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('submit', 'Submit'))
+
     class Meta:
         model = Developer_Submit
         fields = '__all__'
