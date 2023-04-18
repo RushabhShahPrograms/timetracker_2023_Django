@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import TemplateView,ListView,DetailView,UpdateView,DeleteView,View
 from django.views.generic.edit import FormView,CreateView
@@ -341,4 +342,63 @@ class ProjectModuleGanttView(DetailView):
             context['chart_div'] = ''
             context['modules'] = []
 
-        return context    
+        return context
+    
+class TimerView(View):
+    def post(self, request, pk):
+        task = get_object_or_404(Project_Task, pk=pk)
+
+        # check if a timer is already running for the user and task
+        task_timer = TaskTimer.objects.filter(task=task, user=request.user, end_time__isnull=True).first()
+        if task_timer:
+            # timer is already running
+            if request.POST.get('action') == 'pause':
+                if not task_timer.is_paused:
+                    # pause the timer
+                    task_timer.is_paused = True
+                    task_timer.pause_time = timezone.now()
+                    task_timer.save()
+
+            elif request.POST.get('action') == 'resume':
+                if task_timer.is_paused:
+                    # resume the timer
+                    pause_duration = timezone.now() - task_timer.pause_time
+                    task_timer.is_paused = False
+                    task_timer.start_time += pause_duration
+                    task_timer.pause_time = None
+                    task_timer.save()
+
+            elif request.POST.get('action') == 'stop':
+                if not task_timer.is_paused:
+                    # stop the timer and calculate the duration
+                    task_timer.end_time = timezone.now()
+                    task_timer.save()
+                    duration = task_timer.end_time - task_timer.start_time
+                    task.timer_duration = duration
+                    task.status = 'In Progress'
+                    task.save()
+
+        else:
+            # timer is not running, start a new one
+            task_timer = TaskTimer.objects.create(task=task, user=request.user, start_time=timezone.now())
+
+        return JsonResponse({'success': True})
+
+
+from django import template
+from django.utils import timezone
+from datetime import timedelta
+register = template.Library()
+
+@register.simple_tag(takes_context=True)
+def task_timer(context, task):
+    task_timer = TaskTimer.objects.filter(task=task, user=context['request'].user, end_time__isnull=True).first()
+    if task_timer:
+        if task_timer.is_paused:
+            time_elapsed = task_timer.pause_time - task_timer.start_time
+        else:
+            time_elapsed = timezone.now() - task_timer.start_time
+    else:
+        time_elapsed = task.timer_duration or timedelta()
+
+    return f'{time_elapsed // timedelta(hours=1):02d}:{(time_elapsed // timedelta(minutes=1)) % 60:02d}:{(time_elapsed // timedelta(seconds=1)) % 60:02d}'

@@ -83,7 +83,7 @@ class Project_Task(models.Model):
    priority = models.CharField(choices=priorityChoice,max_length=30)
    user= models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
    task_estimated_hours = models.IntegerField()
-   task_util_minutes = models.IntegerField()
+   timer_duration = models.DurationField(blank=True, null=True)
    status = models.CharField(choices=status_choice,max_length=100, default='Pending')
    start_time = models.DateField(null=True, blank=True)
    end_time = models.DateField(null=True, blank=True)
@@ -191,4 +191,18 @@ class Developer_Submit(models.Model):
        db_table='developer_submit'
 
     def __str__(self):
-        return f"{self.submit_title} ({self.submit_developer_name}, {self.submit_submit_date.strftime('%Y-%m-%d %H:%M:%S')})"
+        return self.submit_title
+    
+class TaskTimer(models.Model):
+    task = models.ForeignKey(Project_Task, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
+    is_paused = models.BooleanField(default=False)
+    pause_time = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'TaskTimer'
+    
+    def __str__(self):
+        return self.start_time

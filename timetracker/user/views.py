@@ -252,11 +252,13 @@ class DeveloperPage(ListView):
         projects = Project_Team.objects.filter(user__username=self.request.user.username)
         tasks = Project_Task.objects.filter(user__username=self.request.user.username)
         meetings = Schedule.objects.filter(users__in=[self.request.user])
+        timer = TaskTimer.objects.all()
         return render(request, 'user/developer_page.html',
                       {'modules':modules,
                        'projects':projects,
                        'tasks':tasks,
                        'meetings':meetings,
+                       'timer':timer
                        })
 
     template_name="user/developer_page.html"
@@ -314,7 +316,7 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
 
                 # Construct email message
                 subject = f'New Meeting: {form.instance.schedule_title}'
-                body = f'<strong>You have been invited to a new meeting: {form.instance.schedule_title}</strong>\n\n<strong>Description:</strong> {form.instance.schedule_description}\n\n<strong>Meeting URL:</strong> {form.instance.schedule_meeting_url}\n\n<strong>Meeting Date and Time: </strong>{form.instance.schedule_meeting_date}'
+                body = f'You have been invited to a new meeting: {form.instance.schedule_title}\n\nDescription: {form.instance.schedule_description}\n\nMeeting URL: {form.instance.schedule_meeting_url}\n\nMeeting Date and Time: {form.instance.schedule_meeting_date}'
 
                 # Attach the document if it was uploaded
                 if form.cleaned_data['schedule_documents']:
