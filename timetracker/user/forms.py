@@ -3,13 +3,19 @@ import django.forms as form
 from django.contrib.auth.forms import *
 from django.db import transaction
 from .models import User,Schedule
+from django import forms
+from django.forms import DateTimeInput,DateInput
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
-from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 
 
 class AdminRegisterForm(UserCreationForm):
+
+    birthDate = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('submit', 'Submit'))
+    
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ('username', 'email', 'password1', 'password2','gender','birthDate','salary')
@@ -22,6 +28,12 @@ class AdminRegisterForm(UserCreationForm):
         return user    
 
 class ManagerRegisterForm(UserCreationForm):
+
+    birthDate = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('submit', 'Submit'))
+
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ('username', 'email', 'password1', 'password2','gender','birthDate','salary')
@@ -35,6 +47,12 @@ class ManagerRegisterForm(UserCreationForm):
 
 
 class DeveloperRegistrationForm(UserCreationForm):
+
+    birthDate = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('submit', 'Submit'))
+
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ('username', 'email', 'password1', 'password2','gender','birthDate','salary')
@@ -48,6 +66,13 @@ class DeveloperRegistrationForm(UserCreationForm):
     
 
 class EditUserProfileForm(UserChangeForm):
+
+    birthDate = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('submit', 'Submit'))
+
+
     class Meta(UserChangeForm.Meta):
         model = User
         fields = '__all__'
@@ -66,7 +91,10 @@ class ScheduleForm(forms.ModelForm):
         widget=SelectMultiple(attrs={'class': 'chosen-select'})
     )
 
-    schedule_meeting_date = forms.DateTimeField(widget=DateTimePickerInput(format='%Y/%m/%d %H:%M'))
+    schedule_meeting_date = forms.DateTimeField(widget=DateTimeInput(attrs={'type': 'datetime-local'}))
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('submit', 'Submit'))
 
 
     class Meta:
