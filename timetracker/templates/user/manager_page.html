@@ -70,11 +70,10 @@
                       <i class="mdi mdi-calendar"></i> Notifications
                      </button>
                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2" style="">
-                       <a class="dropdown-item" href="#">
                         <div>
                           <ul>
                             {% for developer in developersubmit %}
-                            <li>
+                            <li class="dropdown-item">
                               <div class="d-flex">
                                 <div>
                                   <p class="text-info mb-1">{{developer.submit_developer_name}}</p>
@@ -86,7 +85,6 @@
                             {% endfor %}
                           </ul>
                         </div>
-                       </a>
                      </div>
                    </div>
                   </div>
