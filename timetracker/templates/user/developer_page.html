@@ -23,6 +23,67 @@
                   <h3 class="font-weight-bold">Welcome {{user.username}}</h3>
                   <h6 class="font-weight-normal mb-0">All systems are running smoothly!</h6>
                 </div>
+                <div class="col-12 col-xl-4">
+                  <div class="justify-content-end d-flex">
+                   <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
+                    <button id="notification-button" class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="mdi mdi-calendar"></i> Notifications
+                      {% if new_notifications %}
+                        <span class="badge badge-pill badge-danger">{{ developersubmit|length }}</span>
+                      {% endif %}
+                    </button>                    
+                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2" style="">
+                        <div>
+                          <ul>
+                            {% for meeting in notifymeetings %}
+                            <li class="dropdown-item">
+                              <div class="d-flex">
+                                <div>
+                                  <p class="text-info mb-1">New Meeting</p>
+                                    <p class="mb-0"><strong>{{meeting.schedule_title}}</strong></p>
+                                  <small>{{meeting.schedule_meeting_date}}</small>
+                                </div>
+                              </div>
+                            </li>
+                            {% endfor %}
+                            {% for module in notifymodules %}
+                            <li class="dropdown-item">
+                              <div class="d-flex">
+                                <div>
+                                  <p class="text-info mb-1">New Module</p>
+                                    <p class="mb-0"><strong>{{module.module_name}}</strong></p>
+                                  <small>{{module.module_start_date}}</small>
+                                </div>
+                              </div>
+                            </li>
+                            {% endfor %}
+                            {% for project in notifyprojects %}
+                            <li class="dropdown-item">
+                              <div class="d-flex">
+                                <div>
+                                  <p class="text-info mb-1">New Project</p>
+                                    <p class="mb-0"><strong>{{project.team_name}}</strong></p>
+                                </div>
+                              </div>
+                            </li>
+                            {% endfor %}
+                            {% for task in notifytasks %}
+                            <li class="dropdown-item">
+                              <div class="d-flex">
+                                <div>
+                                  <p class="text-info mb-1">New Task</p>
+                                    <p class="mb-0"><strong>{{task.task_title}}</strong></p>
+                                  <small>{{task.start_time}}</small>
+                                </div>
+                              </div>
+                            </li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                     </div>
+                   </div>
+                  </div>
+                 </div>
               </div>
             </div>
           </div>
@@ -116,6 +177,370 @@
                       </div>
                       {% endfor %}
                     </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title mb-0">To Do Pending Tasks</p>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <div style="overflow-y: scroll;">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>End Date</th>
+                        </tr>  
+                      </thead>
+                      <tbody>
+                        {% for task in tasks %}
+                        {% if task.status == 'Pending' %}
+                        <tr>
+                          <td>
+                            <a type="button" data-toggle="modal" data-target="#exampleModalCenter{{task.id}}">
+                            <strong>{{task.task_title}}</strong>
+                            </a>
+                          </td>
+                          <td>{{task.end_time}}</td>
+                        </tr>
+                        <div class="modal fade" id="exampleModalCenter{{task.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Given Task</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <p><strong>Title: </strong>{{task.task_title}}</p>
+                                <p><strong>Task Description: </strong>{{task.task_description}}</p>
+                                <p><strong>From Module: </strong>{{task.module}}</p>
+                                <p><strong>From Project: </strong>{{task.project}}</p>
+                                <p><strong>Estimated Hours: </strong>{{task.task_estimated_hours}}</p>
+                                <p><strong>Start Date: </strong>{{task.start_time}}</p>
+                                <p><strong>End Date: </strong>{{task.end_time}}</p>
+                                <p><strong>Priority: </strong>
+                                  {% if task.priority == 'High' %}
+                                    <span class="badge badge-danger">High Priority</span>
+                                  {% else %}
+                                    <span class="badge badge-primary">Low Priority</span>
+                                  {% endif %}
+                                </p>
+                                <p><strong>Status: </strong>
+                                  {% if task.status == 'Pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                  {% elif task.status == 'In Progress' %}
+                                    <span class="badge badge-primary">In Progress</span>
+                                  {% elif task.status == 'Completed' %}
+                                    <span class="badge badge-success">Completed</span>
+                                  {% else %}
+                                    <span class="badge badge-danger">Cancelled</span>
+                                  {% endif %}
+                                </p>
+
+                              </div>
+                              <div class="modal-footer">
+                                <button class="btn btn-info">Start Timer</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% for module in modules %}
+                        {% if module.status == 'Pending' %}
+                        <tr>
+                          <td>
+                            <a type="button" data-toggle="modal" data-target="#exampleModalCenter{module.id}}">
+                            <strong>{{module.module_name}}</strong>
+                            </a>
+                          </td>
+                          <td>{{module.module_completion_date}}</td>
+                        </tr>
+                        <div class="modal fade" id="exampleModalCenter{{module.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Given Module</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                
+                                <p><strong>Title: </strong>{{module.module_name}}</p>
+                                <p><strong>Module Description: </strong>{{module.module_description}}</p>
+                                <p><strong>From Project: </strong>{{module.project}}</p>
+                                <p><strong>Estimated Hours: </strong>{{module.module_estimated_hours}}</p>
+                                <p><strong>Start Date: </strong>{{module.module_start_date}}</p>
+                                <p><strong>End Date: </strong>{{module.module_completion_date}}</p>
+                                <p><strong>Status: </strong>
+                                  {% if module.status == 'Pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                  {% elif module.status == 'In Progress' %}
+                                    <span class="badge badge-primary">In Progress</span>
+                                  {% elif module.status == 'Completed' %}
+                                    <span class="badge badge-success">Completed</span>
+                                  {% else %}
+                                    <span class="badge badge-danger">Cancelled</span>
+                                  {% endif %}
+                                </p>
+
+                              </div>
+                              <div class="modal-footer">
+                                <button class="btn btn-info">Pause Timer</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                      </tbody>
+                    </div>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title mb-0">Items InProgress</p>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <div style="overflow-y: scroll;">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>End Date</th>
+                        </tr>  
+                      </thead>
+                      <tbody>
+                        {% for task in tasks %}
+                        {% if task.status == 'In Progress' %}
+                        <tr>
+                          <td>
+                            <a type="button" data-toggle="modal" data-target="#exampleModalCenter{{task.id}}">
+                            <strong>{{task.task_title}}</strong>
+                            </a>
+                          </td>
+                          <td>{{task.end_time}}</td>
+                        </tr>
+                        <div class="modal fade" id="exampleModalCenter{{task.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Given Task</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <p><strong>Title: </strong>{{task.task_title}}</p>
+                                <p><strong>Task Description: </strong>{{task.task_description}}</p>
+                                <p><strong>From Module: </strong>{{task.module}}</p>
+                                <p><strong>From Project: </strong>{{task.project}}</p>
+                                <p><strong>Estimated Hours: </strong>{{task.task_estimated_hours}}</p>
+                                <p><strong>Start Date: </strong>{{task.start_time}}</p>
+                                <p><strong>End Date: </strong>{{task.end_time}}</p>
+                                <p><strong>Priority: </strong>
+                                  {% if task.priority == 'High' %}
+                                    <span class="badge badge-danger">High Priority</span>
+                                  {% else %}
+                                    <span class="badge badge-primary">Low Priority</span>
+                                  {% endif %}
+                                </p>
+                                <p><strong>Status: </strong>
+                                  {% if task.status == 'Pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                  {% elif task.status == 'In Progress' %}
+                                    <span class="badge badge-primary">In Progress</span>
+                                  {% elif task.status == 'Completed' %}
+                                    <span class="badge badge-success">Completed</span>
+                                  {% else %}
+                                    <span class="badge badge-danger">Cancelled</span>
+                                  {% endif %}
+                                </p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-dark" data-dismiss="modal">Submit Task</button>
+                                <button type="button" class="btn btn-warning">Pause Timer</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% for module in modules %}
+                        {% if module.status == 'In Progress' %}
+                        <tr>
+                          <td>
+                            <a type="button" data-toggle="modal" data-target="#exampleModalCenter{{module.id}}">
+                            <strong>{{module.module_name}}</strong>
+                            </a>
+                          </td>
+                          <td>{{module.module_completion_date}}</td>
+                        </tr>
+                        <div class="modal fade" id="exampleModalCenter{{module.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Given Module</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <p><strong>Title: </strong>{{module.module_name}}</p>
+                                <p><strong>Module Description: </strong>{{module.module_description}}</p>
+                                <p><strong>From Project: </strong>{{module.project}}</p>
+                                <p><strong>Estimated Hours: </strong>{{module.module_estimated_hours}}</p>
+                                <p><strong>Start Date: </strong>{{module.module_start_date}}</p>
+                                <p><strong>End Date: </strong>{{module.module_completion_date}}</p>
+                                <p><strong>Status: </strong>
+                                  {% if module.status == 'Pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                  {% elif module.status == 'In Progress' %}
+                                    <span class="badge badge-primary">In Progress</span>
+                                  {% elif module.status == 'Completed' %}
+                                    <span class="badge badge-success">Completed</span>
+                                  {% else %}
+                                    <span class="badge badge-danger">Cancelled</span>
+                                  {% endif %}
+                                </p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-dark" data-dismiss="modal">Submit Task</button>
+                                <button type="button" class="btn btn-warning">Pause Timer</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                      </tbody>
+                    </div>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title mb-0">Items Completed</p>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <div style="overflow-y: scroll;">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>End Date</th>
+                        </tr>  
+                      </thead>
+                      <tbody>
+                        {% for task in tasks %}
+                        {% if task.status == 'Completed' %}
+                        <tr>
+                          <td>
+                            <a type="button" data-toggle="modal" data-target="#exampleModalCenter{{task.id}}">
+                            <strong>{{task.task_title}}</strong>
+                            </a>
+                          </td>
+                          <td>{{task.end_time}}</td>
+                        </tr>
+                        <div class="modal fade" id="exampleModalCenter{{task.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Given Task</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <p><strong>Title: </strong>{{task.task_title}}</p>
+                                <p><strong>Task Description: </strong>{{task.task_description}}</p>
+                                <p><strong>From Module: </strong>{{task.module}}</p>
+                                <p><strong>From Project: </strong>{{task.project}}</p>
+                                <p><strong>Estimated Hours: </strong>{{task.task_estimated_hours}}</p>
+                                <p><strong>Start Date: </strong>{{task.start_time}}</p>
+                                <p><strong>End Date: </strong>{{task.end_time}}</p>
+                                <p><strong>Priority: </strong>
+                                  {% if task.priority == 'High' %}
+                                    <span class="badge badge-danger">High Priority</span>
+                                  {% else %}
+                                    <span class="badge badge-primary">Low Priority</span>
+                                  {% endif %}
+                                </p>
+                                <p><strong>Status: </strong>
+                                  {% if task.status == 'Pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                  {% elif task.status == 'In Progress' %}
+                                    <span class="badge badge-primary">In Progress</span>
+                                  {% elif task.status == 'Completed' %}
+                                    <span class="badge badge-success">Completed</span>
+                                  {% else %}
+                                    <span class="badge badge-danger">Cancelled</span>
+                                  {% endif %}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% for module in modules %}
+                        {% if module.status == 'Completed' %}
+                        <tr>
+                          <td>
+                            <a type="button" data-toggle="modal" data-target="#exampleModalCenter{module.id}}">
+                            <strong>{{module.module_name}}</strong>
+                            </a>
+                          </td>
+                          <td>{{module.module_completion_date}}</td>
+                        </tr>
+                        <div class="modal fade" id="exampleModalCenter{{module.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Given Module</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <p><strong>Title: </strong>{{module.module_name}}</p>
+                                <p><strong>Module Description: </strong>{{module.module_description}}</p>
+                                <p><strong>From Project: </strong>{{module.project}}</p>
+                                <p><strong>Estimated Hours: </strong>{{module.module_estimated_hours}}</p>
+                                <p><strong>Start Date: </strong>{{module.module_start_date}}</p>
+                                <p><strong>End Date: </strong>{{module.module_completion_date}}</p>
+                                <p><strong>Status: </strong>
+                                  {% if module.status == 'Pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                  {% elif module.status == 'In Progress' %}
+                                    <span class="badge badge-primary">In Progress</span>
+                                  {% elif module.status == 'Completed' %}
+                                    <span class="badge badge-success">Completed</span>
+                                  {% else %}
+                                    <span class="badge badge-danger">Cancelled</span>
+                                  {% endif %}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                      </div>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>

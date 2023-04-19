@@ -262,16 +262,24 @@ class DeveloperPage(ListView):
 
     def get(self,request,*args,**kwargs):
         modules = Project_Module.objects.filter(user__username=self.request.user.username)
+        notifymodules = Project_Module.objects.filter(user__username=self.request.user.username).order_by(F('module_start_date'))[:1]
         projects = Project_Team.objects.filter(user__username=self.request.user.username)
+        notifyprojects = Project_Team.objects.filter(user__username=self.request.user.username)[:1]
         tasks = Project_Task.objects.filter(user__username=self.request.user.username)
-        meetings = Schedule.objects.filter(users__in=[self.request.user]).order_by(F('schedule_meeting_date').desc(nulls_last=True))
+        notifytasks = Project_Task.objects.filter(user__username=self.request.user.username).order_by(F('end_time'))[:1]
+        meetings = Schedule.objects.filter(users__in=[self.request.user]).order_by(F('schedule_meeting_date').desc(nulls_last=True))[:6]
+        notifymeetings = Schedule.objects.filter(users__in=[self.request.user]).order_by(F('schedule_meeting_date').desc(nulls_last=True))[:1]
         timer = TaskTimer.objects.all()
         return render(request, 'user/developer_page.html',
                       {'modules':modules,
                        'projects':projects,
                        'tasks':tasks,
                        'meetings':meetings,
-                       'timer':timer
+                       'notifymeetings':notifymeetings,
+                       'notifytasks':notifytasks,
+                       'notifymodules':notifymodules,
+                       'notifyprojects':notifyprojects,
+                       'timer':timer,
                        })
 
     template_name="user/developer_page.html"
