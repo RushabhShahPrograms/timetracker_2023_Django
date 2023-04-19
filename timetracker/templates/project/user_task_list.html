@@ -92,6 +92,10 @@
                                       {% elif task.status == 'Pending' %}
             
                                         <div class="badge badge-warning">Pending</div>
+
+                                      {% elif task.status == 'In Progress' %}
+            
+                                        <div class="badge badge-info">In Progress</div>
                                       
                                       {% else %}
             
