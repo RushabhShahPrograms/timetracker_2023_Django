@@ -348,6 +348,7 @@ class ScheduleListView(ListView):
     model = Schedule
     template_name = 'user/schedule_list.html'
     context_object_name = 'schedules'
+    ordering = ['-schedule_meeting_date']
 
     def get_queryset(self):
         return super().get_queryset()
