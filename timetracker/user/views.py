@@ -236,6 +236,7 @@ class ManagerPage(ListView):
                         'total_schedules':total_schedules
                        })
 
+from django.db.models import F
 @method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
 class DeveloperPage(ListView):
 
@@ -243,7 +244,7 @@ class DeveloperPage(ListView):
         modules = Project_Module.objects.filter(user__username=self.request.user.username)
         projects = Project_Team.objects.filter(user__username=self.request.user.username)
         tasks = Project_Task.objects.filter(user__username=self.request.user.username)
-        meetings = Schedule.objects.filter(users__in=[self.request.user])
+        meetings = Schedule.objects.filter(users__in=[self.request.user]).order_by(F('schedule_meeting_date').desc(nulls_last=True))
         timer = TaskTimer.objects.all()
         return render(request, 'user/developer_page.html',
                       {'modules':modules,

@@ -45,6 +45,7 @@
                                 <tr role="row">
                                     <th>No.</th>
                                     <th>Title</th>
+                                    <th>Meeting Date</th>
                                     <th>Developers Invited</th>
                                     <th>Actions</th>
                                 </tr>
@@ -54,6 +55,7 @@
                                 <tr class="table table-striped">
                                     <td>{{forloop.counter}}</td>
                                     <td><strong><a href="{% url 'scheduledetail' schedule.pk %}">{{ schedule.schedule_title }}</a></strong></td>
+                                    <td>{{schedule.schedule_meeting_date}}</td>
                                     <td>
                                       {% for user in schedule.users.all %}
                                         {{ user.username }}
