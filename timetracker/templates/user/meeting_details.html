@@ -1,0 +1,27 @@
+<table>
+    {% for meeting in schedule %}
+    <tr>
+      <td><b>Meeting Date:</b>{{meeting.schedule_meeting_date}}</td>
+    </tr>
+    <tr>
+      <td><b>Meeting Documents:</b></td>
+        <td>
+            {% if meeting.schedule_documents %}
+            <a href="{{ meeting.schedule_documents.url }}" target="_blank">{{ meeting.schedule_documents }}</a>
+            {% else %} None
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+      <td><b>Meeting Title:</b>{{meeting.schedule_title}}</td>
+    </tr>
+    <tr>
+      <td><b>Meeting Description:</b>{{meeting.schedule_description}}</td>
+    </tr>
+    <tr>
+        <td><b>Meeting URL:</b><a href="{{ meeting.schedule_meeting_url }}" target="_blank">{{ meeting.schedule_meeting_url }}</a></td>
+    </tr>
+    {% endfor %}
+    <!-- Add more fields here as needed -->
+  </table>
+  

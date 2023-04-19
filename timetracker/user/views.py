@@ -196,6 +196,23 @@ class ManagerPage(ListView):
 
         chart = plot(go.Figure(data=data, layout=layout), output_type='div')
 
+        #Calendar
+        # Get the year and month from the request parameters
+        year = int(self.request.GET.get('year', datetime.now().year))
+        month = self.request.GET.get('month', datetime.now().strftime('%B'))
+
+        # Add the calendar data to the context
+        month_number = list(calendar.month_name).index(month.capitalize())
+        cal = MyHTMLCalendar(year=year).formatmonth(year, month_number)
+        
+        # Highlight the meeting date in the calendar
+        schedules = Schedule.objects.filter(schedule_meeting_date__year=year, schedule_meeting_date__month=month_number)
+        for schedule in schedules:
+            day = schedule.schedule_meeting_date.day
+            html = f'<a class="calendar-meeting-link" data-toggle="modal" data-target="#meeting-details-modal" data-meeting-id="{schedule.pk}" href="#">{day}</a>'
+            cal = cal.replace(f'>{day}<', f' style="background-color: skyblue">{html}<')
+        total_schedules = schedules.count()
+
         return render(request, 'user/manager_page.html',
                       {'projects':project,
                        'teams':team,
@@ -209,40 +226,15 @@ class ManagerPage(ListView):
                        'cancelled_projects': cancelled_projects,
                        'chart': chart,
                        'schedules':schedules,
-                       'developersubmit':developersubmit
+                       'developersubmit':developersubmit,
+                       'year': year,
+                        'month': month,
+                        'month_number': month_number,
+                        'cal': cal,
+                        'current_year': datetime.now().year,
+                        'time': datetime.now().strftime('%I:%M:%S %p'),
+                        'total_schedules':total_schedules
                        })
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        schedules = Schedule.objects.all().values()
-
-        # Get the year and month from the request parameters
-        year = int(self.request.GET.get('year', datetime.now().year))
-        month = self.request.GET.get('month', datetime.now().strftime('%B'))
-
-        # Add the calendar data to the context
-        month_number = list(calendar.month_name).index(month.capitalize())
-        cal = MyHTMLCalendar(year=year).formatmonth(year, month_number)
-        
-        # Highlight the meeting date in the calendar
-        schedules = Schedule.objects.filter(schedule_meeting_date__year=year, schedule_meeting_date__month=month_number)
-        for schedule in schedules:
-            day = schedule.schedule_meeting_date.day
-            html = f'<a href="#">{schedule.schedule_title}</a><br>{schedule.schedule_meeting_date.strftime("%I:%M %p")}'
-            cal = cal.replace(f'>{day}<', f' style="background-color: skyblue">{day}<div class="mt-2">{html}</div><')
-        
-        now = datetime.now()
-        current_year = now.year
-        time = now.strftime('%I:%M %p')
-
-        context['year'] = year
-        context['month'] = month
-        context['month_number'] = month_number
-        context['cal'] = cal
-        context['current_year'] = current_year
-        context['time'] = time
-
-        return context
 
 @method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
 class DeveloperPage(ListView):
@@ -352,37 +344,6 @@ class ScheduleListView(ListView):
 
     def get_queryset(self):
         return super().get_queryset()
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # Get the year and month from the request parameters
-        year = int(self.request.GET.get('year', datetime.now().year))
-        month = self.request.GET.get('month', datetime.now().strftime('%B'))
-
-        # Add the calendar data to the context
-        month_number = list(calendar.month_name).index(month.capitalize())
-        cal = MyHTMLCalendar(year=year).formatmonth(year, month_number)
-        
-        # Highlight the meeting date in the calendar
-        schedules = Schedule.objects.filter(schedule_meeting_date__year=year, schedule_meeting_date__month=month_number)
-        for schedule in schedules:
-            day = schedule.schedule_meeting_date.day
-            html = f'<a href="#">{schedule.schedule_title}</a><br>{schedule.schedule_meeting_date.strftime("%I:%M %p")}'
-            cal = cal.replace(f'>{day}<', f' style="background-color: skyblue">{day}<div class="mt-2">{html}</div><')
-        
-        now = datetime.now()
-        current_year = now.year
-        time = now.strftime('%I:%M:%S %p')
-
-        context['year'] = year
-        context['month'] = month
-        context['month_number'] = month_number
-        context['cal'] = cal
-        context['current_year'] = current_year
-        context['time'] = time
-
-        return context
 
 
 class ScheduleUpdateView(UpdateView):
@@ -405,3 +366,9 @@ class ScheduleDeleteView(DeleteView):
         return self.delete(request, *args, **kwargs)
     
     success_url = '/user/schedulelist/'
+
+
+def get_meeting_details(request, meeting_id):
+    schedule = get_object_or_404(Schedule, pk=meeting_id)
+    context = {'schedule': schedule}
+    return render(request, 'user/meeting_details.html', context)

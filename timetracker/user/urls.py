@@ -45,4 +45,6 @@ path('schedulelist/',ScheduleListView.as_view(),name="schedulelist"),
 path('scheduledelete/<int:pk>',ScheduleDeleteView.as_view(),name='scheduledelete'),
 path('scheduleupdate/<int:pk>',ScheduleUpdateView.as_view(),name='scheduleupdate'),
 path('scheduledetail/<int:pk>',ScheduleDetailView.as_view(),name='scheduledetail'),
+
+path('get-meeting-details/<int:meeting_id>/', get_meeting_details, name='get_meeting_details'),
 ]

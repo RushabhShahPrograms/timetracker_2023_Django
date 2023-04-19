@@ -23,14 +23,14 @@
     }
     table.calendar {
       border-collapse: separate;
-      border-spacing: 5px;
+      border-spacing: 0px;
     }
     table.calendar td {
         border: 1px solid black;
         text-align: center;
         vertical-align: middle;
-        width: 100px;
-        height: 100px;
+        width: 90px;
+        height: 90px;
     }
     table.calendar td.day {
       text-align: center;
@@ -46,10 +46,6 @@
     }
     .meeting-scheduled {
       background-color: lightblue;
-    }
-    .meeting-details {
-      font-size: 10px;
-      margin-top: 5px;
     }
   </style>
 </head>
@@ -88,25 +84,163 @@
                 <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
                   <div class="card card-dark-blue">
                     <div class="card-body">
-                      <p class="mb-4">Total Teams</p>
-                      <p class="fs-30 mb-2">{{teams|length}}</p>
+                      <p class="mb-4">Total Meetings</p>
+                      <p class="fs-30 mb-2">{{schedules|length}}</p>
                     </div>
                   </div>
                 </div>
                 <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
                   <div class="card card-light-blue">
                     <div class="card-body">
-                      <p class="mb-4">Projects Completed</p>
-                      <p class="fs-30 mb-2">{{completedprojects|length}}</p>
+                      <p class="mb-4">Total Modules</p>
+                      <p class="fs-30 mb-2">{{modules|length}}</p>
                     </div>
                   </div>
                 </div>
                 <div class="col-xl-3 col-sm-6">
                   <div class="card card-light-danger">
                     <div class="card-body">
-                      <p class="mb-4">Projects Pending</p>
-                      <p class="fs-30 mb-2">{{pendingprojects|length}}</p>
+                      <p class="mb-4">Total Task</p>
+                      <p class="fs-30 mb-2">{{tasks|length}}</p>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  {{cal|safe}}
+                  <!-- Modal for meeting details -->
+                    <div class="modal fade" id="meeting-details-modal" tabindex="-1" role="dialog" aria-labelledby="meeting-details-modal-label" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="meeting-details-modal-label">Meeting Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div id="meeting-details">
+                              <!-- Meeting details will be inserted here -->
+                              {% include 'user/meeting_details.html' %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <script>
+                      $(document).ready(function() {
+                        // Event listener for meeting link
+                        $('.calendar-meeting-link').click(function() {
+                          // Get the meeting ID from the data-meeting-id attribute
+                          var meeting_id = $(this).data('meeting-id');
+                          
+                          // Make an AJAX request to get the meeting details
+                          $.ajax({
+                            url: '/get-meeting-details/' + meeting_id,
+                            type: 'GET',
+                            success: function(data) {
+                              // Update the meeting details in the modal
+                              $('#meeting-details').html(data);
+                            },
+                            error: function() {
+                              alert('Error getting meeting details!');
+                            }
+                          });
+                          
+                          // Open the modal
+                          $('#meeting-details-modal').modal('show');
+                        });
+                      });
+                    </script>                    
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title mb-0">Pending Projects</p>
+                  <div class="table-responsive">
+                    <table class="table table-borderless">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>Technology</th>
+                          <th>Status</th>
+                        </tr>  
+                      </thead>
+                      <tbody>
+                        {% for project in pendingprojects %}
+                        <tr>
+                          <td>{{project.project_title}}</td>
+                          <td>{{project.project_technology}}</td>
+                          {% if project.status == 'Completed' %}
+  
+                            <td class="font-weight-medium"><div class="badge badge-success">Completed</div></td>
+                          
+                          {% elif project.status == 'Pending' %}
+  
+                            <td class="font-weight-medium"><div class="badge badge-warning">Pending</div></td>
+                          
+                          {% else %}
+  
+                            <td class="font-weight-medium"><div class="badge badge-danger">Cancelled</div></td>
+                            
+                          {% endif %}
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 stretch-card grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Notifications</p>
+                  <div style="height: 300px; overflow-y: scroll;">
+                    <ul class="icon-data-list">
+                      {% for developer in developersubmit %}
+                      <li>
+                        <div class="d-flex">
+                          <img src="{{developer.submit_developer_name.profile_pic.url}}" alt="user">
+                          <div>
+                            <p class="text-info mb-1">{{developer.submit_developer_name}}</p>
+                            <a href="#" data-toggle="modal" data-target="#exampleModal{{developer.id}}" style="color: inherit; text-decoration: none;">
+                              <p class="mb-0"><strong>{{developer.submit_title}}</strong></p>
+                            </a>
+                            <small>{{developer.submit_submit_date}}</small>
+                          </div>
+                        </div>
+                      </li>
+                      <!-- Modal -->
+                      <div class="modal fade" id="exampleModal{{developer.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">{{meeting.schedule_title}}</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <p><strong>Description:</strong> {{meeting.schedule_description}}</p>
+                              <p><strong>Meeting URL:</strong> <a href="{{ meeting.schedule_meeting_url }}" target="_blank">{{ meeting.schedule_meeting_url }}</a></p>
+                              {% if meeting.schedule_documents %}
+                              <p><strong>Documents:</strong> <a href="{{ meeting.schedule_documents.url }}" target="_blank">{{ meeting.schedule_documents }}</a></p>
+                              {% endif %}
+                              <p><strong>Meeting Date:</strong> {{meeting.schedule_meeting_date}}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -152,153 +286,6 @@
                         Plotly.Plots.resize('project-chart');
                       });
                     </script>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  {{cal|safe}}
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <p class="card-title mb-0">Pending Projects</p>
-                  <div class="table-responsive">
-                    <table class="table table-borderless">
-                      <thead>
-                        <tr>
-                          <th>Title</th>
-                          <th>Technology</th>
-                          <th>Status</th>
-                        </tr>  
-                      </thead>
-                      <tbody>
-                        {% for project in pendingprojects %}
-                        <tr>
-                          <td>{{project.project_title}}</td>
-                          <td>{{project.project_technology}}</td>
-                          {% if project.status == 'Completed' %}
-  
-                            <td class="font-weight-medium"><div class="badge badge-success">Completed</div></td>
-                          
-                          {% elif project.status == 'Pending' %}
-  
-                            <td class="font-weight-medium"><div class="badge badge-warning">Pending</div></td>
-                          
-                          {% else %}
-  
-                            <td class="font-weight-medium"><div class="badge badge-danger">Cancelled</div></td>
-                            
-                          {% endif %}
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4 stretch-card grid-margin">
-              <div class="row">
-                <div class="col-md-12 grid-margin stretch-card">
-                  <div class="card">
-                    <div class="card-body">
-                      <p class="card-title">See More...</p>
-                      <div class="table-responsive">
-                        <table class="table table-striped table-borderless">
-                          <thead>
-                            <tr>
-                              <th>List</th>
-                              <th>Total</th>
-                              <th>Redirect</th>
-                            </tr>  
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td class="font-weight-bold">Modules</td>
-                              <td>{{modules|length}}</td>
-                              <td><a class="btn btn-info" href="{% url 'moduleslist' %}">View all</a></td>
-                            </tr>
-                            <tr>
-                              <td class="font-weight-bold">Task</td>
-                              <td>{{tasks|length}}</td>
-                              <td><a class="btn btn-info" href="{% url 'taskslist' %}">View all</a></td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-12 stretch-card grid-margin grid-margin-md-0">
-                  <div class="card data-icon-card-primary">
-                    <div class="card-body">
-                      <p class="card-title text-white">Number of Meetings</p>                      
-                      <div class="row">
-                        <div class="col-8 text-white">
-                          <h3>{{schedules|length}}</h3>
-                          <p class="text-white font-weight-500 mb-0">Number of meetings remaining that were assigned to you. Click here to know the schedule.</p>
-                        </div>
-                        <div>
-                          <a href="{% url 'schedulelist' %}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-up-right-circle-fill" viewBox="0 0 16 16">
-                              <path d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8zm5.904 2.803a.5.5 0 1 1-.707-.707L9.293 6H6.525a.5.5 0 1 1 0-1H10.5a.5.5 0 0 1 .5.5v3.975a.5.5 0 0 1-1 0V6.707l-4.096 4.096z"/>
-                            </svg></a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4 stretch-card grid-margin">
-              <div class="card">
-                <div class="card-body">
-                  <p class="card-title">Notifications</p>
-                  <div style="height: 300px; overflow-y: scroll;">
-                    <ul class="icon-data-list">
-                      {% for developer in developersubmit %}
-                      <li>
-                        <div class="d-flex">
-                          <img src="{{developer.submit_developer_name.profile_pic.url}}" alt="user">
-                          <div>
-                            <p class="text-info mb-1">{{developer.submit_developer_name}}</p>
-                            <a href="#" data-toggle="modal" data-target="#exampleModal{{developer.id}}" style="color: inherit; text-decoration: none;">
-                              <p class="mb-0"><strong>{{developer.submit_title}}</strong></p>
-                            </a>
-                            <small>{{developer.submit_submit_date}}</small>
-                          </div>
-                        </div>
-                      </li>
-                      <!-- Modal -->
-                      <div class="modal fade" id="exampleModal{{developer.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLabel">{{meeting.schedule_title}}</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <p><strong>Description:</strong> {{meeting.schedule_description}}</p>
-                              <p><strong>Meeting URL:</strong> <a href="{{ meeting.schedule_meeting_url }}" target="_blank">{{ meeting.schedule_meeting_url }}</a></p>
-                              {% if meeting.schedule_documents %}
-                              <p><strong>Documents:</strong> <a href="{{ meeting.schedule_documents.url }}" target="_blank">{{ meeting.schedule_documents }}</a></p>
-                              {% endif %}
-                              <p><strong>Meeting Date:</strong> {{meeting.schedule_meeting_date}}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      {% endfor %}
-                    </ul>
-                  </div>
                 </div>
               </div>
             </div>
