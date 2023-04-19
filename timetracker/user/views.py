@@ -245,6 +245,17 @@ class ManagerPage(ListView):
                         'InProgresstask':InProgresstask,
                        })
 
+
+def notifications(request):
+    developersubmit = Developer_Submit.objects.order_by('-submit_date')[:6]
+    if developersubmit:
+        request.session['new_notifications'] = True
+    else:
+        request.session['new_notifications'] = False
+    return render(request, 'notifications.html', {'developersubmit': developersubmit, 'new_notifications': request.session.get('new_notifications', False)})
+
+
+
 from django.db.models import F
 @method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
 class DeveloperPage(ListView):
