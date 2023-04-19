@@ -56,7 +56,7 @@ class Project_Module(models.Model):
     module_estimated_hours = models.IntegerField()
     module_start_date = models.DateField()
     module_completion_date = models.DateField()
-    user= models.ManyToManyField(User)
+    user= models.ForeignKey(User,on_delete=models.CASCADE,default=True)
     status = models.CharField(choices=status_choice,max_length=100)
 
     class Meta:

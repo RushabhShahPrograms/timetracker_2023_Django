@@ -154,11 +154,16 @@ class ManagerPage(ListView):
 
     def get(self,request,*args,**kwargs):
         project = Project.objects.all().values()
+        InProgressProject = Project.objects.filter(status="In Progress")
         team = Project_Team.objects.all().values()
         module = Project_Module.objects.all().values()
+        pendingmodule = Project_Module.objects.filter(status="Pending")
+        InProgressmodule = Project_Module.objects.filter(status="In Progress")
         task = Project_Task.objects.all().values()
+        pendingtask = Project_Task.objects.filter(status="Pending")
+        InProgresstask = Project_Task.objects.filter(status="In Progress")
         schedules = Schedule.objects.all()
-        developersubmit = Developer_Submit.objects.all()
+        developersubmit = Developer_Submit.objects.all().order_by(F('submit_submit_date').desc(nulls_last=True))[:5]
 
         # Bar Chart
         completedproject = Project.objects.filter(status="Completed")
@@ -206,18 +211,19 @@ class ManagerPage(ListView):
         cal = MyHTMLCalendar(year=year).formatmonth(year, month_number)
         
         # Highlight the meeting date in the calendar
-        schedules = Schedule.objects.filter(schedule_meeting_date__year=year, schedule_meeting_date__month=month_number)
+        schedules = Schedule.objects.filter(schedule_meeting_date__year=year, schedule_meeting_date__month=month_number).order_by(F('schedule_meeting_date').desc(nulls_last=True))
         for schedule in schedules:
             day = schedule.schedule_meeting_date.day
-            html = f'<a class="calendar-meeting-link" data-toggle="modal" data-target="#meeting-details-modal" data-meeting-id="{schedule.pk}" href="#">{day}</a>'
+            html = f'<a class="calendar-meeting-link" data-toggle="modal" data-target="#meeting-details-modal" data-meeting-id="{schedule.pk}">{day}</a>'
             cal = cal.replace(f'>{day}<', f' style="background-color: skyblue">{html}<')
-        total_schedules = schedules.count()
 
         return render(request, 'user/manager_page.html',
                       {'projects':project,
                        'teams':team,
                        'completedprojects':completedproject,
                        'pendingprojects':pendingproject,
+                       'pendingmodule':pendingmodule,
+                       'pendingtask':pendingtask,
                        'modules':module,
                        'tasks':task,
                        'chs':chs,
@@ -233,7 +239,10 @@ class ManagerPage(ListView):
                         'cal': cal,
                         'current_year': datetime.now().year,
                         'time': datetime.now().strftime('%I:%M:%S %p'),
-                        'total_schedules':total_schedules
+                        'schedules':schedules,
+                        'InProgressproject':InProgressProject,
+                        'InProgressmodule':InProgressmodule,
+                        'InProgresstask':InProgresstask,
                        })
 
 from django.db.models import F

@@ -64,9 +64,33 @@
                   <h6 class="font-weight-normal mb-0">All systems are running smoothly!</h6>
                 </div>
                 <div class="col-12 col-xl-4">
-                 <div class="justify-content-end d-flex">
+                  <div class="justify-content-end d-flex">
+                   <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
+                     <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="mdi mdi-calendar"></i> Notifications
+                     </button>
+                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2" style="">
+                       <a class="dropdown-item" href="#">
+                        <div>
+                          <ul>
+                            {% for developer in developersubmit %}
+                            <li>
+                              <div class="d-flex">
+                                <div>
+                                  <p class="text-info mb-1">{{developer.submit_developer_name}}</p>
+                                    <p class="mb-0"><strong>{{developer.submit_title}}</strong></p>
+                                  <small>{{developer.submit_submit_date}}</small>
+                                </div>
+                              </div>
+                            </li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                       </a>
+                     </div>
+                   </div>
+                  </div>
                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -172,66 +196,27 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-3 grid-margin stretch-card">
+            <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <p class="card-title mb-0">Pending Projects</p>
-                  <div class="table-responsive">
-                    <table class="table table-borderless">
-                      <thead>
-                        <tr>
-                          <th>Title</th>
-                          <th>Technology</th>
-                          <th>Status</th>
-                        </tr>  
-                      </thead>
-                      <tbody>
-                        {% for project in pendingprojects %}
-                        <tr>
-                          <td>{{project.project_title}}</td>
-                          <td>{{project.project_technology}}</td>
-                          {% if project.status == 'Completed' %}
-  
-                            <td class="font-weight-medium"><div class="badge badge-success">Completed</div></td>
-                          
-                          {% elif project.status == 'Pending' %}
-  
-                            <td class="font-weight-medium"><div class="badge badge-warning">Pending</div></td>
-                          
-                          {% else %}
-  
-                            <td class="font-weight-medium"><div class="badge badge-danger">Cancelled</div></td>
-                            
-                          {% endif %}
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 stretch-card grid-margin">
-              <div class="card">
-                <div class="card-body">
-                  <p class="card-title">Notifications</p>
+                  <p class="card-title mb-2">Meetings</p>
                   <div style="height: 300px; overflow-y: scroll;">
                     <ul class="icon-data-list">
-                      {% for developer in developersubmit %}
+                      {% for meeting in schedules %}
                       <li>
                         <div class="d-flex">
-                          <img src="{{developer.submit_developer_name.profile_pic.url}}" alt="user">
+                          <img src="{{meeting.created_by.profile_pic.url}}" alt="user">
                           <div>
-                            <p class="text-info mb-1">{{developer.submit_developer_name}}</p>
-                            <a href="#" data-toggle="modal" data-target="#exampleModal{{developer.id}}" style="color: inherit; text-decoration: none;">
-                              <p class="mb-0"><strong>{{developer.submit_title}}</strong></p>
+                            <p class="text-info mb-1">{{meeting.created_by}}</p>
+                            <a href="#" data-toggle="modal" data-target="#exampleModal{{meeting.id}}" style="color: inherit; text-decoration: none;">
+                              <p class="mb-0"><strong>{{meeting.schedule_title}}</strong></p>
                             </a>
-                            <small>{{developer.submit_submit_date}}</small>
+                            <small>{{meeting.schedule_meeting_date}}</small>
                           </div>
                         </div>
                       </li>
                       <!-- Modal -->
-                      <div class="modal fade" id="exampleModal{{developer.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal fade" id="exampleModal{{meeting.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
@@ -247,12 +232,110 @@
                               <p><strong>Documents:</strong> <a href="{{ meeting.schedule_documents.url }}" target="_blank">{{ meeting.schedule_documents }}</a></p>
                               {% endif %}
                               <p><strong>Meeting Date:</strong> {{meeting.schedule_meeting_date}}</p>
+                              <p>
+                                <strong>Invited Developers: </strong>
+                                {% for user in meeting.users.all %}
+                                        {{ user.username }}
+                                        {% if not forloop.last %}, {% endif %}
+                                      {% empty %}
+                                        No users invited yet.
+                                      {% endfor %}
+                              </p>
                             </div>
                           </div>
                         </div>
                       </div>
                       {% endfor %}
                     </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title mb-0">Pending Projects</p>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>End Date</th>
+                        </tr>  
+                      </thead>
+                      <tbody>
+                        {% for project in pendingprojects %}
+                        <tr>
+                          <td>
+                            <a href="{% url 'projectdetail' project.id %}" style="color: inherit; text-decoration: none;">
+                            <strong>{{project.project_title}}</strong>
+                            </a>
+                          </td>
+                          <td>{{project.project_completion_date}}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title mb-0">Pending Modules</p>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>End Date</th>
+                        </tr>  
+                      </thead>
+                      <tbody>
+                        {% for module in pendingmodule %}
+                        <tr>
+                          <td>
+                            <a href="{% url 'modulesdetail' module.id %}" style="color: inherit; text-decoration: none;">
+                            <strong>{{module.module_name}}</strong>
+                            </a>
+                          </td>
+                          <td>{{module.module_completion_date}}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title mb-0">Pending Tasks</p>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>End Date</th>
+                        </tr>  
+                      </thead>
+                      <tbody>
+                        {% for task in pendingtask %}
+                        <tr>
+                          <td>
+                            <a href="{% url 'tasksdetail' task.id %}" style="color: inherit; text-decoration: none;">
+                            <strong>{{task.task_title}}</strong>
+                            </a>
+                          </td>
+                          <td>{{task.end_time}}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -302,6 +385,96 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-4 grid-margin stretch-card">
+               <div class="card">
+                  <div class="card-body">
+                     <p class="card-title mb-0">InProgress Projects</p>
+                     <div class="table-responsive">
+                        <table class="table table-bordered">
+                           <thead>
+                              <tr>
+                                 <th>Title</th>
+                                 <th>End Date</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for project in InProgressproject %}
+                              <tr>
+                                 <td>
+                                    <a href="{% url 'projectdetail' project.id %}" style="color: inherit; text-decoration: none;">
+                                    <strong>{{project.project_title}}</strong>
+                                    </a>
+                                 </td>
+                                 <td>{{project.project_completion_date}}</td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-4 grid-margin stretch-card">
+               <div class="card">
+                  <div class="card-body">
+                     <p class="card-title mb-0">InProgress Modules</p>
+                     <div class="table-responsive">
+                        <table class="table table-bordered">
+                           <thead>
+                              <tr>
+                                 <th>Title</th>
+                                 <th>End Date</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for module in InProgressmodule %}
+                              <tr>
+                                 <td>
+                                    <a href="{% url 'modulesdetail' module.id %}" style="color: inherit; text-decoration: none;">
+                                    <strong>{{module.module_name}}</strong>
+                                    </a>
+                                 </td>
+                                 <td>{{module.module_completion_date}}</td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-4 grid-margin stretch-card">
+               <div class="card">
+                  <div class="card-body">
+                     <p class="card-title mb-0">InProgress Task</p>
+                     <div class="table-responsive">
+                        <table class="table table-bordered">
+                           <thead>
+                              <tr>
+                                 <th>Title</th>
+                                 <th>End Date</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for task in InProgresstask %}
+                              <tr>
+                                 <td>
+                                    <a href="{% url 'tasksdetail' task.id %}" style="color: inherit; text-decoration: none;">
+                                    <strong>{{task.task_title}}</strong>
+                                    </a>
+                                 </td>
+                                 <td>{{task.end_time}}</td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+        </div>
         <!-- content-wrapper ends -->
       </div>
       <!-- main-panel ends -->
