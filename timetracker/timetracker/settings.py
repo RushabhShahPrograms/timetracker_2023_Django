@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'channels',
     'admin_interface',
     'colorfield',
     'django.contrib.admin',
@@ -82,17 +81,7 @@ TEMPLATES = [
     },
 ]
 
-#WSGI_APPLICATION = 'timetracker.wsgi.application'
-ASGI_APPLICATION = 'timetracker.asgi.application'
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.timetracker.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("localhost", 6379)],
-        },
-    },
-}
+WSGI_APPLICATION = 'timetracker.wsgi.application'
 
 #Auth Settings
 AUTH_USER_MODEL = 'user.User'

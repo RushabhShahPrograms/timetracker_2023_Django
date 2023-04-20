@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
-from .models import User,Schedule
+from .models import User,Schedule,Timer
 from .forms import *
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
@@ -269,7 +269,7 @@ class DeveloperPage(ListView):
         notifytasks = Project_Task.objects.filter(user__username=self.request.user.username).order_by(F('end_time'))[:1]
         meetings = Schedule.objects.filter(users__in=[self.request.user]).order_by(F('schedule_meeting_date').desc(nulls_last=True))[:6]
         notifymeetings = Schedule.objects.filter(users__in=[self.request.user]).order_by(F('schedule_meeting_date').desc(nulls_last=True))[:1]
-        timer = TaskTimer.objects.all()
+        
         return render(request, 'user/developer_page.html',
                       {'modules':modules,
                        'projects':projects,
@@ -279,10 +279,44 @@ class DeveloperPage(ListView):
                        'notifytasks':notifytasks,
                        'notifymodules':notifymodules,
                        'notifyprojects':notifyprojects,
-                       'timer':timer,
                        })
 
     template_name="user/developer_page.html"
+
+# def save_time(request):
+#     if request.method == 'POST':
+#         start_time = request.POST.get('start_time')
+#         end_time = request.POST.get('end_time')
+#         time_elapsed = request.POST.get('time_elapsed')
+
+#         # Do something with the data here
+
+#         return JsonResponse({'success': True})
+#     else:
+#         return JsonResponse({'success': False})
+
+# from django.views.decorators.http import require_http_methods
+# @require_http_methods(["POST"])
+# def start_time(request):
+#     timer, created = Timer.objects.get_or_create(user=request.user, end_time__isnull=True)
+#     timer.start_time = timezone.now()
+#     timer.save()
+#     return JsonResponse({'success': True})
+
+# @require_http_methods(["POST"])
+# def end_time(request):
+#     timer = Timer.objects.filter(user=request.user, end_time__isnull=True).last()
+#     timer.end_time = timezone.now()
+#     timer.save()
+#     return JsonResponse({'success': True})
+
+# @require_http_methods(["POST"])
+# def working_hours(request):
+#     timers = Timer.objects.filter(user=request.user, end_time__isnull=False)
+#     working_hours = []
+#     for timer in timers:
+#         working_hours.append((timer.start_time.date(), (timer.end_time - timer.start_time).total_seconds() / 3600))
+#     return JsonResponse({'working_hours': working_hours})
     
 class ShowProfilePageView(DetailView):
     model = User
@@ -401,3 +435,21 @@ def get_meeting_details(request, meeting_id):
     schedule = get_object_or_404(Schedule, pk=meeting_id)
     context = {'schedule': schedule}
     return render(request, 'user/meeting_details.html', context)
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from project.models import Project_Task
+
+@csrf_exempt
+def start_timer(request):
+    if request.method == 'POST' and request.is_ajax():
+        task_id = request.POST.get('task_id')
+        try:
+            task = Project_Task.objects.get(id=task_id)
+            task.status = 'In Progress'
+            task.save()
+            return JsonResponse({'success': True})
+        except Project_Task.DoesNotExist:
+            pass
+    return JsonResponse({'success': False})

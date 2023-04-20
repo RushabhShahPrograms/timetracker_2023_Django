@@ -62,3 +62,8 @@ class Schedule(models.Model):
     
     def __str__(self):
         return self.schedule_title
+    
+class Timer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField(null=True, blank=True)

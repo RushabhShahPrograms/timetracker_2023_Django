@@ -79,7 +79,7 @@ class DeveloperSubmitForm(forms.ModelForm):
         model = Developer_Submit
         fields = '__all__'
         widgets = {
-            'submit_manager_name': forms.TextInput(attrs={'class': 'form-control', 'readonly': True}),
+            'submit_manager_name': forms.TextInput(attrs={'class': 'form-control', 'editable': True}),
         }
 
     def __init__(self, user, *args, **kwargs):
