@@ -283,6 +283,14 @@ class DeveloperPage(ListView):
 
     template_name="user/developer_page.html"
 
+class TaskStartView(View):
+    def post(self, request, task_id):
+        task = get_object_or_404(Project_Task, id=task_id, user=request.user)
+        task.status = 'In Progress'
+        task.start_time = date.today()
+        task.save()
+        return redirect('developerpage')
+
 # def save_time(request):
 #     if request.method == 'POST':
 #         start_time = request.POST.get('start_time')

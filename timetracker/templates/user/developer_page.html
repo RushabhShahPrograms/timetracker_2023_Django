@@ -359,7 +359,10 @@
 
                               </div>
                               <div class="modal-footer">
-                                <a class="btn btn-info start-timer" data-task-id="{{task.id}}">Start</a>
+                                <form method="post" action="{% url 'task_start' task.id %}">
+                                  {% csrf_token %}
+                                  <input type="submit" value="Start" class="btn btn-primary">
+                              </form>
                               </div>
                             </div>
                           </div>

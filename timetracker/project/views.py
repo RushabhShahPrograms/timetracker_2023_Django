@@ -9,6 +9,10 @@ from user.decorators import *
 import plotly.express as px
 from django.db.models import Q
 from django.contrib import messages
+from django.core.mail import send_mail
+from datetime import date, timedelta
+from django.conf import settings
+
 
 class IndexView(TemplateView):
     template_name = "project/index.html"
@@ -165,6 +169,20 @@ class ModulesDeleteView(DeleteView):
     
     success_url = '/project/moduleslist/'
 
+def send_reminder_mail():
+    pending_modules = Project_Module.objects.filter(status__in=['Pending', 'In Progress'])
+    for module in pending_modules:
+        days_left = (module.module_completion_date - date.today()).days
+        if days_left <= 3:
+            subject = f'Reminder: Only 3 days left to complete {module.module_name}'
+            message = f'Hi {module.user.username},\n\nJust a friendly reminder that you have only 3 days left to complete the module {module.module_name} assigned to you.\n\nThanks,\nThe Project Manager'
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[module.user.email],
+                fail_silently=False,
+            )
 
 @method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
 class TaskListView(ListView):

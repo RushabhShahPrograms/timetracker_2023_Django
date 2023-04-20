@@ -1,5 +1,6 @@
 #Project Models
 from datetime import timezone
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from user.models import User
@@ -7,6 +8,9 @@ from django.contrib import messages
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from ckeditor.fields import RichTextField
+from django.core.mail import send_mail
+from django.utils import timezone
+from datetime import timedelta
 
 # Status Class Don't consider this class as it is not used anywhere
 status_choice = (("Completed","Completed"),
@@ -87,6 +91,21 @@ class Project_Task(models.Model):
    status = models.CharField(choices=status_choice,max_length=100, default='Pending')
    start_time = models.DateField(null=True, blank=True)
    end_time = models.DateField(null=True, blank=True)
+   
+   def save(self, *args, **kwargs):
+        if self.status == 'Pending':
+            delta = self.end_time - timezone.now().date()
+            if delta.days <= 3:
+                subject = 'Reminder: Task pending for module completion'
+                message = f'Hello {self.user.username},\n\nYou have a pending task "{self.task_title}" for the module "{self.module.module_name}". The task is scheduled to end in 3 days ({self.module.module_completion_date}). Please complete the task before the module ends.\n\nPriority: {self.priority}\n\nThank you.'
+                send_mail(subject, message, from_email=settings.EMAIL_HOST_USER, recipient_list=[self.user.email], fail_silently=False)
+        elif self.status == 'In Progress':
+            delta = self.end_time - timezone.now().date()
+            if delta.days <= 3:
+                subject = 'Reminder: Task in progress for module completion'
+                message = f'Hello {self.user.username},\n\nYou have a task "{self.task_title}" in progress for the module "{self.module.module_name}". The module is scheduled to end in 3 days ({self.module.module_completion_date}). Please complete the task before the module ends.\n\nPriority: {self.priority}\n\nThank you.'
+                send_mail(subject, message, from_email=settings.EMAIL_HOST_USER, recipient_list=[self.user.email], fail_silently=False)
+        super().save(*args, **kwargs)
 
    class Meta:
        db_table='project_task'

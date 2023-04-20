@@ -53,4 +53,5 @@ path('get-meeting-details/<int:meeting_id>/', get_meeting_details, name='get_mee
 # path('start_time/', start_time, name='start_time'),
 # path('end_time/', end_time, name='end_time'),
 # path('working_hours/', working_hours, name='working_hours'),
+path('<int:task_id>/start/', TaskStartView.as_view(), name='task_start'),
 ]
