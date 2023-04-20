@@ -269,6 +269,22 @@ class DeveloperPage(ListView):
         notifytasks = Project_Task.objects.filter(user__username=self.request.user.username).order_by(F('end_time'))[:1]
         meetings = Schedule.objects.filter(users__in=[self.request.user]).order_by(F('schedule_meeting_date').desc(nulls_last=True))[:6]
         notifymeetings = Schedule.objects.filter(users__in=[self.request.user]).order_by(F('schedule_meeting_date').desc(nulls_last=True))[:1]
+
+        #Calendar
+        # Get the year and month from the request parameters
+        year = int(self.request.GET.get('year', datetime.now().year))
+        month = self.request.GET.get('month', datetime.now().strftime('%B'))
+
+        # Add the calendar data to the context
+        month_number = list(calendar.month_name).index(month.capitalize())
+        cal = MyHTMLCalendar(year=year).formatmonth(year, month_number)
+        
+        # Highlight the meeting date in the calendar
+        schedules = Schedule.objects.filter(users__username=self.request.user.username,schedule_meeting_date__year=year, schedule_meeting_date__month=month_number).order_by(F('schedule_meeting_date').desc(nulls_last=True))
+        for schedule in schedules:
+            day = schedule.schedule_meeting_date.day
+            html = f'<a class="calendar-meeting-link" data-toggle="modal" data-target="#meeting-details-modal" data-meeting-id="{schedule.pk}">{day}</a>'
+            cal = cal.replace(f'>{day}<', f' style="background-color: skyblue">{html}<')
         
         return render(request, 'user/developer_page.html',
                       {'modules':modules,
@@ -279,6 +295,13 @@ class DeveloperPage(ListView):
                        'notifytasks':notifytasks,
                        'notifymodules':notifymodules,
                        'notifyprojects':notifyprojects,
+                       'year': year,
+                        'month': month,
+                        'month_number': month_number,
+                        'cal': cal,
+                        'current_year': datetime.now().year,
+                        'time': datetime.now().strftime('%I:%M:%S %p'),
+                        'schedules':schedules,
                        })
 
     template_name="user/developer_page.html"
