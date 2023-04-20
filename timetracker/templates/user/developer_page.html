@@ -369,33 +369,11 @@
                         </div>
                         {% endif %}
                         {% endfor %}
-                        <script>
-                          $(document).ready(function() {
-                            // Send AJAX request to change status to In Progress
-                            $('.start-timer').click(function() {
-                              var task_id = $(this).data('task-id');
-                              $.ajax({
-                                url: '/start_timer/',
-                                method: 'POST',
-                                data: {
-                                  'task_id': task_id,
-                                  'csrfmiddlewaretoken': '{{csrf_token}}'
-                                },
-                                success: function(response) {
-                                  $('#status-' + task_id).removeClass('badge-warning').addClass('badge-primary').html('In Progress');
-                                },
-                                error: function(response) {
-                                  alert('Error starting timer.');
-                                }
-                              });
-                            });
-                          });
-                          </script>
                         {% for module in modules %}
                         {% if module.status == 'Pending' %}
                         <tr>
                           <td>
-                            <a type="button" data-toggle="modal" data-target="#exampleModalCenter{module.id}}">
+                            <a type="button" data-toggle="modal" data-target="#exampleModalCenter{{module.id}}">
                             <strong>{{module.module_name}}</strong>
                             </a>
                           </td>
@@ -432,7 +410,9 @@
 
                               </div>
                               <div class="modal-footer">
-                                <button class="btn btn-info">Pause Timer</button>
+                                {% if module.status == "Pending" %}
+                                  <a class="btn btn-primary" href="{% url 'start_module' module.pk %}">Start</a>
+                                {% endif %}
                               </div>
                             </div>
                           </div>

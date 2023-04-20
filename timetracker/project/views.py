@@ -28,7 +28,7 @@ class AddProjectsView(CreateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
-@method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
+@method_decorator([login_required(login_url="/user/login")],name='dispatch')
 class AddProjectModulesView(CreateView):
     form_class = ProjectModulesForm
     model = Project_Module

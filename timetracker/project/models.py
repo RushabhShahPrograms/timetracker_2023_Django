@@ -63,6 +63,11 @@ class Project_Module(models.Model):
     user= models.ForeignKey(User,on_delete=models.CASCADE,default=True)
     status = models.CharField(choices=status_choice,max_length=100)
 
+    def start_module(self):
+        if self.status == 'Pending':
+            self.status = 'In Progress'
+            self.save()
+
     class Meta:
         db_table='project_module'
 

@@ -291,6 +291,12 @@ class TaskStartView(View):
         task.save()
         return redirect('developerpage')
 
+def start_module(request, pk):
+    module = get_object_or_404(Project_Module, pk=pk, user=request.user)
+    module.status = "In Progress"
+    module.save()
+    return redirect('developerpage')
+
 # def save_time(request):
 #     if request.method == 'POST':
 #         start_time = request.POST.get('start_time')
