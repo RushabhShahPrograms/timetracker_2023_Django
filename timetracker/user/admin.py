@@ -30,3 +30,5 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.register(User,UserAdmin)
 admin.site.register(Schedule,ScheduleAdmin)
+admin.site.register(Timer)
+admin.site.register(WorkTime)

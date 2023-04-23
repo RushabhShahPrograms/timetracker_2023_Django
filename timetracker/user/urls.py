@@ -49,10 +49,10 @@ path('scheduledetail/<int:pk>',ScheduleDetailView.as_view(),name='scheduledetail
 path('get-meeting-details/<int:meeting_id>/', get_meeting_details, name='get_meeting_details'),
 
 # other URL mappings
-# path('save-time/', views.save_time, name='save-time'),
-# path('start_time/', start_time, name='start_time'),
-# path('end_time/', end_time, name='end_time'),
-# path('working_hours/', working_hours, name='working_hours'),
 path('<int:task_id>/start/', TaskStartView.as_view(), name='task_start'),
 path('start_module/<int:pk>/', views.start_module, name='start_module'),
+
+#TimerURLS
+path('save-timer/', views.save_timer, name='save_timer'),
+path('timer-chart/', timer_chart, name='timer_chart'),
 ]

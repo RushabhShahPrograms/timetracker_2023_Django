@@ -67,3 +67,20 @@ class Timer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table='timer'
+
+    def __str__(self):
+        return self.start_time
+    
+class WorkTime(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField(unique=True)
+    minutes = models.IntegerField(default=0)
+
+    class Meta:
+        db_table='worktime'
+
+    def __str__(self):
+        return self.date

@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
-from .models import User,Schedule,Timer
+from .models import User,Schedule,WorkTime
 from .forms import *
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
@@ -269,6 +269,7 @@ class DeveloperPage(ListView):
         notifytasks = Project_Task.objects.filter(user__username=self.request.user.username).order_by(F('end_time'))[:1]
         meetings = Schedule.objects.filter(users__in=[self.request.user]).order_by(F('schedule_meeting_date').desc(nulls_last=True))[:6]
         notifymeetings = Schedule.objects.filter(users__in=[self.request.user]).order_by(F('schedule_meeting_date').desc(nulls_last=True))[:1]
+        # user_timers = Timer.objects.filter(user=request.user)
 
         #Calendar
         # Get the year and month from the request parameters
@@ -302,6 +303,7 @@ class DeveloperPage(ListView):
                         'current_year': datetime.now().year,
                         'time': datetime.now().strftime('%I:%M:%S %p'),
                         'schedules':schedules,
+                        # 'user_timers': user_timers,
                        })
 
     template_name="user/developer_page.html"
@@ -473,20 +475,51 @@ def get_meeting_details(request, meeting_id):
     context = {'schedule': schedule}
     return render(request, 'user/meeting_details.html', context)
 
-
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from project.models import Project_Task
+from .models import Timer
 
 @csrf_exempt
-def start_timer(request):
-    if request.method == 'POST' and request.is_ajax():
-        task_id = request.POST.get('task_id')
-        try:
-            task = Project_Task.objects.get(id=task_id)
-            task.status = 'In Progress'
-            task.save()
-            return JsonResponse({'success': True})
-        except Project_Task.DoesNotExist:
-            pass
-    return JsonResponse({'success': False})
+def save_timer(request):
+    if request.method == 'POST':
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+        timer = Timer(start_time=start_time, end_time=end_time)
+        timer.save()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False})
+    
+def timer_chart(request):
+  # Get all Timer objects for the logged-in user
+  timers = Timer.objects.filter(user=request.user)
+
+  # Format data for Plotly.js
+  x = [timer.start_time.date() for timer in timers]
+  y = [timer.duration().seconds / 3600 for timer in timers]
+
+  # Create Plotly chart
+  data = [go.Scatter(x=x, y=y, mode='lines')]
+  layout = go.Layout(title='Timer History', xaxis=dict(title='Date'), yaxis=dict(title='Hours'))
+  chart = go.Figure(data=data, layout=layout)
+
+  # Render template with chart
+  return render(request, 'user/developer_page.html', {'chart': chart.to_html()})
+
+
+# from django.http import JsonResponse
+# from django.views.decorators.csrf import csrf_exempt
+# from project.models import Project_Task
+
+# @csrf_exempt
+# def start_timer(request):
+#     if request.method == 'POST' and request.is_ajax():
+#         task_id = request.POST.get('task_id')
+#         try:
+#             task = Project_Task.objects.get(id=task_id)
+#             task.status = 'In Progress'
+#             task.save()
+#             return JsonResponse({'success': True})
+#         except Project_Task.DoesNotExist:
+#             pass
+#     return JsonResponse({'success': False})

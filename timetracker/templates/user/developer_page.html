@@ -49,14 +49,14 @@
         border: 1px solid black;
         text-align: center;
         vertical-align: middle;
-        width: 90px;
-        height: 90px;
+        width: 85px;
+        height: 63px;
     }
     table.calendar td.day {
       text-align: center;
       vertical-align: middle;
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -239,107 +239,6 @@
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <p class="card-title">Your Day-to-Day Work Hours</p>
-                  <p class="font-weight-500">Check Your Dedication to Work!</p>
-                  {% comment %} <button onclick="startTimer()">Start Timer</button>
-                  <button onclick="endTimer()">End Timer</button>
-
-                  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                  <script type="text/javascript">
-                    var startTime;
-                    var endTime;
-                    var timeElapsed;
-
-                    function startTimer() {
-                      startTime = new Date();
-                    }
-
-                    function endTimer() {
-                      endTime = new Date();
-                      timeElapsed = (endTime - startTime) / 1000;
-                      $.ajax({
-                        url: '/save-time/',
-                        type: 'POST',
-                        data: {
-                          'start_time': startTime,
-                          'end_time': endTime,
-                          'time_elapsed': timeElapsed
-                        },
-                        success: function(response) {
-                          console.log(response);
-                        }
-                      });
-                    }
-                  </script> {% endcomment %}
-
-                  {% comment %} <div id="working-hours-chart"></div>
-
-                  <script>
-                    $(document).ready(function() {
-                      var chartData = [];
-
-                      function updateChart() {
-                        $.ajax({
-                          url: '{% url "working_hours" %}',
-                          method: 'GET',
-                          success: function(data) {
-                            chartData = data.working_hours;
-                            var chart = new Highcharts.Chart({
-                              chart: {
-                                renderTo: 'working-hours-chart',
-                                type: 'line'
-                              },
-                              title: {
-                                text: 'Working Hours'
-                              },
-                              xAxis: {
-                                type: 'datetime'
-                              },
-                              yAxis: {
-                                title: {
-                                  text: 'Working Hours'
-                                }
-                              },
-                              series: [{
-                                name: 'Working Hours',
-                                data: chartData
-                              }]
-                            });
-                          }
-                        });
-                      }
-
-                      updateChart();
-
-                      $('#start-time-btn').click(function() {
-                        $.ajax({
-                          url: '/start_timer/',
-                          method: 'POST',
-                          success: function() {
-                            updateChart();
-                          }
-                        });
-                      });
-
-                      $('#end-time-btn').click(function() {
-                        $.ajax({
-                          url: '/end_timer/',
-                          method: 'POST',
-                          success: function() {
-                            updateChart();
-                          }
-                        });
-                      });
-                    });
-                  </script> {% endcomment %}
-
-                  <canvas id="order-chart"></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
                   <p class="card-title">Meetings</p>
                   <div style="height: 300px; overflow-y: scroll;">
                     <ul class="icon-data-list">
@@ -383,9 +282,19 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 grid-margin stretch-card">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Your Day-to-Day Work Hours</p>
+                  <p class="font-weight-500">Check Your Dedication to Work!</p>
+                  {% comment %} <canvas id="order-chart"></canvas> {% endcomment %}
+                  <div id="timer-chart">
+                    {{ chart|safe }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
                   <p class="card-title mb-0">To Do Pending Tasks</p>
@@ -514,6 +423,8 @@
                 </div>
               </div>
             </div>
+          </div>
+          <div class="row">
             <div class="col-md-4 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -751,6 +662,127 @@
                 </div>
               </div>
             </div>
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Start Your Work</p>
+                  <div id="timer-container">
+                    <span id="timer">00:00:00</span>
+                    <div id="timer-buttons">
+                      <input type="button" id="start-timer" value="Start">
+                      <input type="button" id="pause-timer" value="Pause">
+                      <input type="button" id="resume-timer" value="Resume">
+                      <input type="button" id="stop-timer" value="Stop">
+                    </div>
+                  </div>
+                </div>
+                <script>
+                  $(document).ready(function() {
+                    // Initialize variables
+                    var timer;
+                    var startTime;
+                    var endTime;
+                    var elapsedTime = 0;
+                    var timerRunning = false;
+                  
+                    // Handle start timer button click
+                    $('#start-timer').click(function() {
+                      // Set start time
+                      startTime = new Date().getTime();
+                  
+                      // Start timer
+                      timer = setInterval(updateTimer, 1000);
+                      timerRunning = true;
+                    });
+                  
+                    // Handle pause timer button click
+                    $('#pause-timer').click(function() {
+                      // Save elapsed time
+                      elapsedTime += new Date().getTime() - startTime;
+                  
+                      // Pause timer
+                      clearInterval(timer);
+                      timerRunning = false;
+                    });
+                  
+                    // Handle resume timer button click
+                    $('#resume-timer').click(function() {
+                      // Set start time
+                      startTime = new Date().getTime();
+                  
+                      // Resume timer
+                      timer = setInterval(updateTimer, 1000);
+                      timerRunning = true;
+                    });
+                  
+                    // Handle stop timer button click
+                    $('#stop-timer').click(function() {
+                      // Save end time
+                      endTime = new Date().getTime();
+                  
+                      // Save timer to database
+                      saveTimer(startTime, endTime);
+                  
+                      // Reset variables
+                      elapsedTime = 0;
+                      timerRunning = false;
+                  
+                      // Reset UI
+                      $('#timer').text('00:00:00');
+                      clearInterval(timer);
+                    });
+                  
+                    // Update timer function
+                    function updateTimer() {
+                      // Calculate elapsed time
+                      var now = new Date().getTime();
+                      var elapsed = now - startTime + elapsedTime;
+                  
+                      // Convert to hours, minutes, and seconds
+                      var hours = Math.floor(elapsed / (1000 * 60 * 60));
+                      var minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+                      var seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
+                  
+                      // Update UI
+                      $('#timer').text(pad(hours) + ':' + pad(minutes) + ':' + pad(seconds));
+                    }
+
+                    // Save timer to database function
+                    function saveTimer(start, end) {
+                      // Format date and time values for Django DateTimeField
+                      var startDate = new Date(start);
+                      var endDate = new Date(end);
+                      var startFormatted = startDate.toISOString().slice(0, 19).replace('T', ' ');
+                      var endFormatted = endDate.toISOString().slice(0, 19).replace('T', ' ');
+
+                      // Send AJAX request to server to save timer
+                      $.ajax({
+                        url: 'user/save-timer/',
+                        type: 'POST',
+                        data: {
+                          'start_time': startFormatted,
+                          'end_time': endFormatted,
+                        },
+                        success: function(data) {
+                          // Display success message
+                          alert('Timer saved successfully!');
+                        },
+                        error: function() {
+                          // Display error message
+                          alert('Error saving timer.');
+                        }
+                      });
+                    }
+
+                  
+                    // Pad function to add leading zero to single-digit numbers
+                    function pad(num) {
+                      return (num < 10 ? '0' + num : num);
+                    }
+                  });                        
+                </script>
+              </div>
+            </div>            
           </div>
         </div>
           <!-- content-wrapper ends -->
