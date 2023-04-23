@@ -259,51 +259,16 @@ class UserProjectTeamListView(ListView):
     
 @method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
 class UserTaskListView(ListView):
-    paginate_by=5
-    model = Project_Task
-    template_name = 'project/user_task_list.html'
-    context_object_name = 'user_tasks'
-    
-    def get_queryset(self):
-        sort_by = self.request.GET.get('sort_by', None)
-        search = self.request.GET.get('search', None)
-        queryset = super().get_queryset().filter(user__username=self.request.user.username)
-        
-        if search:
-            queryset = queryset.filter(Q(task_title__icontains=search) | Q(priority__icontains=search))
-        
-        if sort_by == 'name':
-            queryset = queryset.order_by('task_title')
-        elif sort_by == 'priority':
-            queryset = queryset.order_by('priority')
-        elif sort_by == 'status':
-            queryset = queryset.order_by('status')
-        
-        return queryset
 
-@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
-class UserModulesListView(ListView):
-    paginate_by=5
-    model = Project_Module
-    template_name = 'project/user_task_list.html'
-    context_object_name = 'usermodules'
-    
-    def get_queryset(self):
-        sort_by = self.request.GET.get('sort_by', None)
-        search = self.request.GET.get('search', None)
-        queryset = super().get_queryset().filter(user__username=self.request.user.username)
-        
-        if search:
-            queryset = queryset.filter(Q(module_name__icontains=search) | Q(user__icontains=search))
-        
-        if sort_by == 'name':
-            queryset = queryset.order_by('module_name')
-        elif sort_by == 'start_date':
-            queryset = queryset.order_by('module_start_date')
-        elif sort_by == 'completion_date':
-            queryset = queryset.order_by('module_completion_date')
-        
-        return queryset
+    def get(self,request,*args,**kwargs):
+        usermodules = Project_Module.objects.filter(user__username=self.request.user.username)
+        user_tasks = Project_Task.objects.filter(user__username=self.request.user.username)
+
+        return render(request, 'project/user_task_list.html',
+                      {
+                        'usermodules':usermodules,
+                        'user_tasks':user_tasks,
+                      })
 
 
 @method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
@@ -352,3 +317,87 @@ class ProjectModuleGanttView(DetailView):
             context['modules'] = []
 
         return context
+    
+
+import plotly.graph_objs as go
+import plotly.io as pio
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
+from io import BytesIO
+from .models import *
+
+def generate_pdf(request):
+    # Query the data from your models
+    projects = Project.objects.all()
+    project_tasks = Project_Task.objects.all()
+
+    # Generate the plot using Plotly
+    fig = go.Figure(data=[go.Bar(x=[p.project_title for p in projects], y=[p.project_estimated_hours for p in projects])])
+    plotly_image = pio.to_image(fig, format='png')
+
+    # Create a buffer for the PDF
+    buffer = BytesIO()
+
+    # Create a SimpleDocTemplate object
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+
+    # Create a sample style sheet
+    styles = getSampleStyleSheet()
+
+    # Create a list of Paragraph and Spacer objects
+    elements = []
+    elements.append(Paragraph("Data Report", styles['Title']))
+    elements.append(Spacer(1, 0.25*inch))
+
+    # Add the Plotly image to the PDF
+    plotly_image_io = BytesIO(plotly_image)
+    plotly_image_obj = Image(plotly_image_io)
+    plotly_image_obj.drawHeight = 300
+    plotly_image_obj.drawWidth = 500
+    elements.append(plotly_image_obj)
+    elements.append(Spacer(1, 0.25*inch))
+
+    # Add the data from your models to the PDF
+    elements.append(Paragraph("Projects:", styles['Heading1']))
+    for project in projects:
+        elements.append(Paragraph(project.project_title, styles['Heading2']))
+        elements.append(Paragraph(project.project_decription, styles['Normal']))
+        elements.append(Spacer(1, 0.25*inch))
+
+        # Add project tasks
+        elements.append(Paragraph("Tasks:", styles['Heading3']))
+        project_tasks = Project_Task.objects.filter(project=project)
+        for task in project_tasks:
+            elements.append(Paragraph(task.task_title, styles['Heading4']))
+            elements.append(Paragraph(task.task_description, styles['Normal']))
+            elements.append(Paragraph(task.start_time.strftime("%Y-%m-%d %H:%M:%S"), styles['Normal']))
+            elements.append(Paragraph(task.end_time.strftime("%Y-%m-%d %H:%M:%S"), styles['Normal']))
+            elements.append(Paragraph(task.user.username, styles['Normal']))
+            elements.append(Spacer(1, 0.25*inch))
+
+        # Add project modules
+        elements.append(Paragraph("Modules:", styles['Heading3']))
+        project_modules = Project_Module.objects.filter(project=project)
+        for module in project_modules:
+            elements.append(Paragraph(module.module_name, styles['Heading4']))
+            elements.append(Paragraph(module.module_description, styles['Normal']))
+            elements.append(Spacer(1, 0.25*inch))
+
+    # Add the elements to the doc
+    doc.build(elements)
+
+    # Set the response content type to 'application/pdf'
+    response = HttpResponse(content_type='application/pdf')
+
+    # Set the filename for the PDF
+    response['Content-Disposition'] = 'attachment; filename="my_pdf_report.pdf"'
+
+    # Write the PDF buffer to the response
+    response.write(buffer.getvalue())
+
+    # Close the buffer and return the response
+    buffer.close()
+    return response

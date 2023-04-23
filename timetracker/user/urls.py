@@ -51,4 +51,7 @@ path('get-meeting-details/<int:meeting_id>/', get_meeting_details, name='get_mee
 # other URL mappings
 path('<int:task_id>/start/', TaskStartView.as_view(), name='task_start'),
 path('start_module/<int:pk>/', views.start_module, name='start_module'),
+path('<int:task_id>/complete/', TaskStartView.as_view(), name='task_complete'),
+path('complete_module/<int:pk>/', views.start_module, name='complete_module'),
+
 ]

@@ -9,7 +9,6 @@ urlpatterns = [
  path('addprojectsteam/',AddProjectTeamView.as_view(),name="addprojectsteam"),
  path('addusertask/',UserTaskView.as_view(),name="addusertask"),
  path('teamlist/', UserProjectTeamListView.as_view(), name='teamlist'),
- path('usermodulelist/',UserModulesListView.as_view(),name='usermodulesist'),
  path('usertasklist/',UserTaskListView.as_view(),name='usertasklist'),
  path('projectlist/',ProjectListView.as_view(),name="projectlist"),
  path('projectdelete/<int:pk>',ProjectDeleteView.as_view(),name='projectdelete'),
@@ -26,4 +25,5 @@ urlpatterns = [
  path('tasksdetail/<int:pk>',TaskDetailView.as_view(),name='tasksdetail'),
 
  path('developersubmit/',DeveloperSubmitView.as_view(),name='developersubmit'),
+ path('generate-pdf/', views.generate_pdf, name='generate-pdf'),
 ]

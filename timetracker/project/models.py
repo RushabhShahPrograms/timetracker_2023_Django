@@ -1,5 +1,5 @@
 #Project Models
-from datetime import timezone
+from datetime import datetime, timezone
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
@@ -58,15 +58,10 @@ class Project_Module(models.Model):
     module_name = models.CharField(max_length=100)
     module_description = RichTextField(null=True,blank=True)
     module_estimated_hours = models.IntegerField()
-    module_start_date = models.DateField()
-    module_completion_date = models.DateField()
+    module_start_date = models.DateTimeField()
+    module_completion_date = models.DateTimeField()
     user= models.ForeignKey(User,on_delete=models.CASCADE,default=True)
     status = models.CharField(choices=status_choice,max_length=100)
-
-    def start_module(self):
-        if self.status == 'Pending':
-            self.status = 'In Progress'
-            self.save()
 
     class Meta:
         db_table='project_module'
@@ -94,19 +89,19 @@ class Project_Task(models.Model):
    task_estimated_hours = models.IntegerField()
    timer_duration = models.DurationField(blank=True, null=True)
    status = models.CharField(choices=status_choice,max_length=100, default='Pending')
-   start_time = models.DateField(null=True, blank=True)
-   end_time = models.DateField(null=True, blank=True)
+   start_time = models.DateTimeField(null=True, blank=True)
+   end_time = models.DateTimeField(null=True, blank=True)
    
    def save(self, *args, **kwargs):
         if self.status == 'Pending':
-            delta = self.end_time - timezone.now().date()
-            if delta.days <= 3:
+            delta = self.end_time - timezone.now()
+            if delta.days == 3:
                 subject = 'Reminder: Task pending for module completion'
                 message = f'Hello {self.user.username},\n\nYou have a pending task "{self.task_title}" for the module "{self.module.module_name}". The task is scheduled to end in 3 days ({self.module.module_completion_date}). Please complete the task before the module ends.\n\nPriority: {self.priority}\n\nThank you.'
                 send_mail(subject, message, from_email=settings.EMAIL_HOST_USER, recipient_list=[self.user.email], fail_silently=False)
         elif self.status == 'In Progress':
-            delta = self.end_time - timezone.now().date()
-            if delta.days <= 3:
+            delta = self.end_time - timezone.now()
+            if delta.days == 3:
                 subject = 'Reminder: Task in progress for module completion'
                 message = f'Hello {self.user.username},\n\nYou have a task "{self.task_title}" in progress for the module "{self.module.module_name}". The module is scheduled to end in 3 days ({self.module.module_completion_date}). Please complete the task before the module ends.\n\nPriority: {self.priority}\n\nThank you.'
                 send_mail(subject, message, from_email=settings.EMAIL_HOST_USER, recipient_list=[self.user.email], fail_silently=False)

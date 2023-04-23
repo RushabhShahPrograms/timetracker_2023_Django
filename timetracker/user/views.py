@@ -312,13 +312,29 @@ class TaskStartView(View):
     def post(self, request, task_id):
         task = get_object_or_404(Project_Task, id=task_id, user=request.user)
         task.status = 'In Progress'
-        task.start_time = date.today()
+        task.start_time = datetime.now()
+        task.save()
+        return redirect('developerpage')
+
+class TaskCompleteView(View):
+    def post(self, request, task_id):
+        task = get_object_or_404(Project_Task, id=task_id, user=request.user)
+        task.status = 'Completed'
+        task.end_time = datetime.now()
         task.save()
         return redirect('developerpage')
 
 def start_module(request, pk):
     module = get_object_or_404(Project_Module, pk=pk, user=request.user)
     module.status = "In Progress"
+    module.module_start_date = datetime.now()
+    module.save()
+    return redirect('developerpage')
+
+def complete_module(request, pk):
+    module = get_object_or_404(Project_Module, pk=pk, user=request.user)
+    module.status = "Completed"
+    module.module_completion_date = datetime.now()
     module.save()
     return redirect('developerpage')
 
