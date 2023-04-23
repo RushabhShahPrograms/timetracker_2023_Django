@@ -17,127 +17,97 @@
           <div class="main-panel">
             <div class="content-wrapper">
               <div class="row">
-                <div class="col-md-12 grid-margin stretch-card">
+                <div class="col-md-4 grid-margin stretch-card">
                   <div class="card">
                     <div class="card-body">
-                      <p class="card-title">List of Task</p>
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="table-responsive">
-                            <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                <div class="row">
-                                  <!--Searching and sorting-->
-                                  <div class="col-sm-12 col-md-6">
-                                      <form method="get" action="{% url 'usertasklist' %}">
-                                        <div class="form-row align-items-center">
-                                            <div class="col my-1">
-                                                <label class="mr-sm-2 sr-only" for="sort_by">Sort by</label>
-                                                <select class="custom-select mr-sm-2" id="sort_by" name="sort_by">
-                                                    <option value="">Sort by</option>
-                                                    <option value="name" {% if request.GET.sort_by == 'name' %}selected{% endif %}>Name</option>
-                                                    <option value="start_date" {% if request.GET.sort_by == 'priority' %}selected{% endif %}>Priority</option>
-                                                    <option value="completion_date" {% if request.GET.sort_by == 'status' %}selected{% endif %}>Status</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-auto my-1">
-                                                <label class="mr-sm-2 sr-only" for="search">Search</label>
-                                                <input type="text" class="form-control" id="search" name="search" placeholder="Search" value="{{ request.GET.search }}">
-                                            </div>
-                                            <div class="col-auto my-1">
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                            </div>
-                                        </div>
-                                      </form>
-                                  </div>
-                                  <!--Searching and sorting ends-->
-                                </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <table class="display expandable-table dataTable no-footer" style="width: 100%;" role="grid">
-                              <thead>
-                                <tr role="row">
-                                    <th>No.</th>
-                                    <th>Title</th>
-                                    <th>Description</th>
-                                    <th>Modules</th>
-                                    <th>Project</th>
-                                    <th>Priority</th>
-                                    <th>Status</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                               {% for task in user_tasks %}
-                                <tr class="table table-striped">
-                                    <td>{{forloop.counter}}</td>
-                                    <td>{{task.task_title}}</td>
-                                    <td>{{task.task_description}}</td>
-                                    <td><b>{{task.module}}</b></td>
-                                    <td>{{task.project}}</td>
-                                    <td class="font-weight-medium">
-                                      {% if task.priority == 'Less' %}
-            
-                                        <div class="badge badge-warning">Less</div>
-                                      
-                                      {% else %}
-            
-                                        <div class="badge badge-danger">High</div>
-                                        
-                                      {% endif %}
-                                    </td>
-                                    <td class="font-weight-medium">
-                                      {% if task.status == 'Completed' %}
-            
-                                        <div class="badge badge-success">Completed</div>
-                                      
-                                      {% elif task.status == 'Pending' %}
-            
-                                        <div class="badge badge-warning">Pending</div>
-
-                                      {% elif task.status == 'In Progress' %}
-            
-                                        <div class="badge badge-info">In Progress</div>
-                                      
-                                      {% else %}
-            
-                                        <div class="badge badge-danger">Cancelled</div>
-                                        
-                                      {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                              </tbody>
-                            </table>
-                            <div class="pagination justify-content-center">
-                              <ul class="pagination">
-                                {% if page_obj.has_previous %}
-                                <li class="page-item">
-                                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo; Previous</a>
-                                </li>
-                                {% endif %}
-                                {% for num in page_obj.paginator.page_range %}
-                                {% if page_obj.number == num %}
-                                <li class="page-item active">
-                                  <a class="page-link" href="#">{{ num }} <span class="sr-only">(current)</span></a>
-                                </li>
-                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                                <li class="page-item">
-                                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                                </li>
-                                {% endif %}
-                                {% endfor %}
-                                {% if page_obj.has_next %}
-                                <li class="page-item">
-                                  <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
-                                </li>
-                                {% endif %}
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
+                      <p class="card-title mb-0">Pending Projects</p>
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>Title</th>
+                              <th>End Date</th>
+                            </tr>  
+                          </thead>
+                          <tbody>
+                            {% for project in pendingprojects %}
+                            <tr>
+                              <td>
+                                <a href="{% url 'projectdetail' project.id %}" style="color: inherit; text-decoration: none;">
+                                <strong>{{project.project_title}}</strong>
+                                </a>
+                              </td>
+                              <td>{{project.project_completion_date}}</td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
+                  </div>
                 </div>
-          <!-- main-panel ends -->
-        </div>
+                <div class="col-md-4 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <p class="card-title mb-0">Pending Modules</p>
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>Title</th>
+                              <th>End Date</th>
+                            </tr>  
+                          </thead>
+                          <tbody>
+                            {% for module in pendingmodule %}
+                            <tr>
+                              <td>
+                                <a href="{% url 'modulesdetail' module.id %}" style="color: inherit; text-decoration: none;">
+                                <strong>{{module.module_name}}</strong>
+                                </a>
+                              </td>
+                              <td>{{module.module_completion_date}}</td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <p class="card-title mb-0">Pending Tasks</p>
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>Title</th>
+                              <th>End Date</th>
+                            </tr>  
+                          </thead>
+                          <tbody>
+                            {% for task in pendingtask %}
+                            <tr>
+                              <td>
+                                <a href="{% url 'tasksdetail' task.id %}" style="color: inherit; text-decoration: none;">
+                                <strong>{{task.task_title}}</strong>
+                                </a>
+                              </td>
+                              <td>{{task.end_time}}</td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- main-panel ends -->
+          </div>
         <!-- page-body-wrapper ends -->
       </div>
       <!-- container-scroller -->

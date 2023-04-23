@@ -285,7 +285,7 @@ class UserTaskListView(ListView):
 class UserModulesListView(ListView):
     paginate_by=5
     model = Project_Module
-    template_name = 'project/user_modules_list.html'
+    template_name = 'project/user_task_list.html'
     context_object_name = 'usermodules'
     
     def get_queryset(self):
@@ -304,16 +304,7 @@ class UserModulesListView(ListView):
             queryset = queryset.order_by('module_completion_date')
         
         return queryset
-    
-@method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
-class UserTaskDetailView(DetailView):
-    model = Project_Task
-    template_name = 'project/user_task_detail.html'
-    context_object_name = 'usertasksdetail'
-    
-    def get(self, request, *args, **kwargs):
-        team = Project_Team.objects.filter(project_id=self.kwargs['pk'])
-        return render(request, self.template_name, {'usertasksdetail': self.get_object(),'team':team})
+
 
 @method_decorator([login_required(login_url="/user/login"),developer_required],name='dispatch')
 class DeveloperSubmitView(CreateView):

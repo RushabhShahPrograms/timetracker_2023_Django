@@ -51,8 +51,4 @@ path('get-meeting-details/<int:meeting_id>/', get_meeting_details, name='get_mee
 # other URL mappings
 path('<int:task_id>/start/', TaskStartView.as_view(), name='task_start'),
 path('start_module/<int:pk>/', views.start_module, name='start_module'),
-
-#TimerURLS
-path('save-timer/', views.save_timer, name='save_timer'),
-path('timer-chart/', timer_chart, name='timer_chart'),
 ]

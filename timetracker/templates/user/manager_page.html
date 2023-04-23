@@ -149,51 +149,7 @@
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  {{cal|safe}}
-                  <!-- Modal for meeting details -->
-                    <div class="modal fade" id="meeting-details-modal" tabindex="-1" role="dialog" aria-labelledby="meeting-details-modal-label" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="meeting-details-modal-label">Meeting Details</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <div id="meeting-details">
-                              <!-- Meeting details will be inserted here -->
-                              {% include 'user/meeting_details.html' %}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <script>
-                      $(document).ready(function() {
-                        // Event listener for meeting link
-                        $('.calendar-meeting-link').click(function() {
-                          // Get the meeting ID from the data-meeting-id attribute
-                          var meeting_id = $(this).data('meeting-id');
-                          
-                          // Make an AJAX request to get the meeting details
-                          $.ajax({
-                            url: '/get-meeting-details/' + meeting_id,
-                            type: 'GET',
-                            success: function(data) {
-                              // Update the meeting details in the modal
-                              $('#meeting-details').html(data);
-                            },
-                            error: function() {
-                              alert('Error getting meeting details!');
-                            }
-                          });
-                          
-                          // Open the modal
-                          $('#meeting-details-modal').modal('show');
-                        });
-                      });
-                    </script>                    
+                  {{cal|safe}}         
                 </div>
               </div>
             </div>
@@ -227,7 +183,7 @@
                               </button>
                             </div>
                             <div class="modal-body">
-                              <p><strong>Description:</strong> {{meeting.schedule_description}}</p>
+                              <p><strong>Description:</strong> {{ meeting.schedule_description|safe }}</p>
                               <p><strong>Meeting URL:</strong> <a href="{{ meeting.schedule_meeting_url }}" target="_blank">{{ meeting.schedule_meeting_url }}</a></p>
                               {% if meeting.schedule_documents %}
                               <p><strong>Documents:</strong> <a href="{{ meeting.schedule_documents.url }}" target="_blank">{{ meeting.schedule_documents }}</a></p>

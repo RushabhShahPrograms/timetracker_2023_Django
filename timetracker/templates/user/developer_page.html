@@ -188,51 +188,7 @@
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  {{cal|safe}}
-                  <!-- Modal for meeting details -->
-                    <div class="modal fade" id="meeting-details-modal" tabindex="-1" role="dialog" aria-labelledby="meeting-details-modal-label" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="meeting-details-modal-label">Meeting Details</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <div id="meeting-details">
-                              <!-- Meeting details will be inserted here -->
-                              {% include 'user/meeting_details.html' %}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <script>
-                      $(document).ready(function() {
-                        // Event listener for meeting link
-                        $('.calendar-meeting-link').click(function() {
-                          // Get the meeting ID from the data-meeting-id attribute
-                          var meeting_id = $(this).data('meeting-id');
-                          
-                          // Make an AJAX request to get the meeting details
-                          $.ajax({
-                            url: '/get-meeting-details/' + meeting_id,
-                            type: 'GET',
-                            success: function(data) {
-                              // Update the meeting details in the modal
-                              $('#meeting-details').html(data);
-                            },
-                            error: function() {
-                              alert('Error getting meeting details!');
-                            }
-                          });
-                          
-                          // Open the modal
-                          $('#meeting-details-modal').modal('show');
-                        });
-                      });
-                    </script>                    
+                  {{cal|safe}}                 
                 </div>
               </div>
             </div>
@@ -266,7 +222,7 @@
                               </button>
                             </div>
                             <div class="modal-body">
-                              <p><strong>Description:</strong> {{meeting.schedule_description}}</p>
+                              <p><strong>Description:</strong> {{ meeting.schedule_description|safe }}</p>
                               <p><strong>Meeting URL:</strong> <a href="{{ meeting.schedule_meeting_url }}" target="_blank">{{ meeting.schedule_meeting_url }}</a></p>
                               {% if meeting.schedule_documents %}
                               <p><strong>Documents:</strong> <a href="{{ meeting.schedule_documents.url }}" target="_blank">{{ meeting.schedule_documents }}</a></p>
@@ -661,128 +617,7 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-4 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <p class="card-title">Start Your Work</p>
-                  <div id="timer-container">
-                    <span id="timer">00:00:00</span>
-                    <div id="timer-buttons">
-                      <input type="button" id="start-timer" value="Start">
-                      <input type="button" id="pause-timer" value="Pause">
-                      <input type="button" id="resume-timer" value="Resume">
-                      <input type="button" id="stop-timer" value="Stop">
-                    </div>
-                  </div>
-                </div>
-                <script>
-                  $(document).ready(function() {
-                    // Initialize variables
-                    var timer;
-                    var startTime;
-                    var endTime;
-                    var elapsedTime = 0;
-                    var timerRunning = false;
-                  
-                    // Handle start timer button click
-                    $('#start-timer').click(function() {
-                      // Set start time
-                      startTime = new Date().getTime();
-                  
-                      // Start timer
-                      timer = setInterval(updateTimer, 1000);
-                      timerRunning = true;
-                    });
-                  
-                    // Handle pause timer button click
-                    $('#pause-timer').click(function() {
-                      // Save elapsed time
-                      elapsedTime += new Date().getTime() - startTime;
-                  
-                      // Pause timer
-                      clearInterval(timer);
-                      timerRunning = false;
-                    });
-                  
-                    // Handle resume timer button click
-                    $('#resume-timer').click(function() {
-                      // Set start time
-                      startTime = new Date().getTime();
-                  
-                      // Resume timer
-                      timer = setInterval(updateTimer, 1000);
-                      timerRunning = true;
-                    });
-                  
-                    // Handle stop timer button click
-                    $('#stop-timer').click(function() {
-                      // Save end time
-                      endTime = new Date().getTime();
-                  
-                      // Save timer to database
-                      saveTimer(startTime, endTime);
-                  
-                      // Reset variables
-                      elapsedTime = 0;
-                      timerRunning = false;
-                  
-                      // Reset UI
-                      $('#timer').text('00:00:00');
-                      clearInterval(timer);
-                    });
-                  
-                    // Update timer function
-                    function updateTimer() {
-                      // Calculate elapsed time
-                      var now = new Date().getTime();
-                      var elapsed = now - startTime + elapsedTime;
-                  
-                      // Convert to hours, minutes, and seconds
-                      var hours = Math.floor(elapsed / (1000 * 60 * 60));
-                      var minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
-                      var seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
-                  
-                      // Update UI
-                      $('#timer').text(pad(hours) + ':' + pad(minutes) + ':' + pad(seconds));
-                    }
-
-                    // Save timer to database function
-                    function saveTimer(start, end) {
-                      // Format date and time values for Django DateTimeField
-                      var startDate = new Date(start);
-                      var endDate = new Date(end);
-                      var startFormatted = startDate.toISOString().slice(0, 19).replace('T', ' ');
-                      var endFormatted = endDate.toISOString().slice(0, 19).replace('T', ' ');
-
-                      // Send AJAX request to server to save timer
-                      $.ajax({
-                        url: 'user/save-timer/',
-                        type: 'POST',
-                        data: {
-                          'start_time': startFormatted,
-                          'end_time': endFormatted,
-                        },
-                        success: function(data) {
-                          // Display success message
-                          alert('Timer saved successfully!');
-                        },
-                        error: function() {
-                          // Display error message
-                          alert('Error saving timer.');
-                        }
-                      });
-                    }
-
-                  
-                    // Pad function to add leading zero to single-digit numbers
-                    function pad(num) {
-                      return (num < 10 ? '0' + num : num);
-                    }
-                  });                        
-                </script>
-              </div>
-            </div>            
+            </div>          
           </div>
         </div>
           <!-- content-wrapper ends -->

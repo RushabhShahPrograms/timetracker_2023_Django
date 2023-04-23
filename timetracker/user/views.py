@@ -322,40 +322,6 @@ def start_module(request, pk):
     module.save()
     return redirect('developerpage')
 
-# def save_time(request):
-#     if request.method == 'POST':
-#         start_time = request.POST.get('start_time')
-#         end_time = request.POST.get('end_time')
-#         time_elapsed = request.POST.get('time_elapsed')
-
-#         # Do something with the data here
-
-#         return JsonResponse({'success': True})
-#     else:
-#         return JsonResponse({'success': False})
-
-# from django.views.decorators.http import require_http_methods
-# @require_http_methods(["POST"])
-# def start_time(request):
-#     timer, created = Timer.objects.get_or_create(user=request.user, end_time__isnull=True)
-#     timer.start_time = timezone.now()
-#     timer.save()
-#     return JsonResponse({'success': True})
-
-# @require_http_methods(["POST"])
-# def end_time(request):
-#     timer = Timer.objects.filter(user=request.user, end_time__isnull=True).last()
-#     timer.end_time = timezone.now()
-#     timer.save()
-#     return JsonResponse({'success': True})
-
-# @require_http_methods(["POST"])
-# def working_hours(request):
-#     timers = Timer.objects.filter(user=request.user, end_time__isnull=False)
-#     working_hours = []
-#     for timer in timers:
-#         working_hours.append((timer.start_time.date(), (timer.end_time - timer.start_time).total_seconds() / 3600))
-#     return JsonResponse({'working_hours': working_hours})
     
 class ShowProfilePageView(DetailView):
     model = User
@@ -474,52 +440,3 @@ def get_meeting_details(request, meeting_id):
     schedule = get_object_or_404(Schedule, pk=meeting_id)
     context = {'schedule': schedule}
     return render(request, 'user/meeting_details.html', context)
-
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from .models import Timer
-
-@csrf_exempt
-def save_timer(request):
-    if request.method == 'POST':
-        start_time = request.POST.get('start_time')
-        end_time = request.POST.get('end_time')
-        timer = Timer(start_time=start_time, end_time=end_time)
-        timer.save()
-        return JsonResponse({'success': True})
-    else:
-        return JsonResponse({'success': False})
-    
-def timer_chart(request):
-  # Get all Timer objects for the logged-in user
-  timers = Timer.objects.filter(user=request.user)
-
-  # Format data for Plotly.js
-  x = [timer.start_time.date() for timer in timers]
-  y = [timer.duration().seconds / 3600 for timer in timers]
-
-  # Create Plotly chart
-  data = [go.Scatter(x=x, y=y, mode='lines')]
-  layout = go.Layout(title='Timer History', xaxis=dict(title='Date'), yaxis=dict(title='Hours'))
-  chart = go.Figure(data=data, layout=layout)
-
-  # Render template with chart
-  return render(request, 'user/developer_page.html', {'chart': chart.to_html()})
-
-
-# from django.http import JsonResponse
-# from django.views.decorators.csrf import csrf_exempt
-# from project.models import Project_Task
-
-# @csrf_exempt
-# def start_timer(request):
-#     if request.method == 'POST' and request.is_ajax():
-#         task_id = request.POST.get('task_id')
-#         try:
-#             task = Project_Task.objects.get(id=task_id)
-#             task.status = 'In Progress'
-#             task.save()
-#             return JsonResponse({'success': True})
-#         except Project_Task.DoesNotExist:
-#             pass
-#     return JsonResponse({'success': False})
