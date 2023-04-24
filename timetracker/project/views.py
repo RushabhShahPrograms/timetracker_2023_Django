@@ -336,19 +336,21 @@ class TaskCompleteView(View):
         task.status = 'Completed'
         task.end_time = timezone.now()
         task.timer_duration = task.end_time - task.start_time
-        print(task.timer_duration)
         task.save()
         return redirect('developerpage')
 
 def start_module(request, pk):
     module = get_object_or_404(Project_Module, pk=pk, user=request.user)
     module.status = "In Progress"
+    module.module_start_date = timezone.now()
     module.save()
     return redirect('developerpage')
 
 def complete_module(request, pk):
     module = get_object_or_404(Project_Module, pk=pk, user=request.user)
     module.status = "Completed"
+    module.module_completion_date = timezone.now()
+    module.timer_duration = module.module_completion_date - module.module_start_date
     module.save()
     return redirect('developerpage')
 

@@ -178,7 +178,7 @@
                   <div class="card card-light-danger">
                     <div class="card-body">
                       <p class="mb-4">Total Work Hours</p>
-                      <p class="fs-30 mb-2">47033</p>
+                      <p class="fs-30 mb-2">{{total_hours_formatted}}</p>
                     </div>
                   </div>
                 </div>
@@ -251,6 +251,19 @@
               </div>
             </div>
             <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Your Day-to-Day Modules Hours</p>
+                  <p class="font-weight-500">Check Your Dedication to Work!</p>
+                  {% comment %} <canvas id="order-chart"></canvas> {% endcomment %}
+                  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                  {{ module_chart_div|safe }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
                   <p class="card-title mb-0">To Do Pending Tasks</p>
@@ -379,8 +392,6 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row">
             <div class="col-md-4 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">

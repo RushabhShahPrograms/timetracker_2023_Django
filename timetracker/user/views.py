@@ -27,7 +27,7 @@ from django.core.mail import EmailMessage
 import calendar
 from calendar import HTMLCalendar
 from datetime import date, datetime
-
+from django.db.models import Sum
 
 class AdminRegisterView(CreateView):
     model = User
@@ -352,6 +352,42 @@ class DeveloperPage(ListView):
 
         # Generate the HTML code to display the chart
         chart_div = plot(fig, output_type='div', include_plotlyjs=False)
+
+        #Module Line Chart
+        # Query the data
+        modules = Project_Module.objects.filter(user=request.user, status='Completed')
+        module_titles = [module.module_name for module in modules]
+        timer_durations = [module.timer_duration.total_seconds() / 60 for module in modules] # convert to minutes
+
+        # Create the Scatter trace
+        trace = go.Scatter(
+            x=module_titles,
+            y=timer_durations,
+            mode='lines+markers'
+        )
+
+        # Create the Layout object
+        layout = go.Layout(
+            title='Time Taken to Complete Modules',
+            xaxis=dict(title='Module Title'),
+            yaxis=dict(title='Timer Duration (minutes)')
+        )
+
+        # Create the Figure object
+        fig = go.Figure(data=[trace], layout=layout)
+
+        # Generate the HTML code to display the chart
+        module_chart_div = plot(fig, output_type='div', include_plotlyjs=False)
+
+        # Total Hours
+        user = request.user
+        # calculate total hours for tasks
+        task_hours = Project_Task.objects.filter(user=user, status='Completed').aggregate(Sum('timer_duration'))['timer_duration__sum'] or 0
+        # calculate total hours for modules
+        module_hours = Project_Module.objects.filter(user=user, status='Completed').aggregate(Sum('timer_duration'))['timer_duration__sum'] or 0
+        # calculate total hours for all tasks and modules
+        total_hours = (task_hours or 0) + (module_hours or 0)
+        total_hours_formatted = '{:.2f}'.format(total_hours.total_seconds() / 3600)
         
         return render(request, 'user/developer_page.html',
                       {'modules':modules,
@@ -370,6 +406,8 @@ class DeveloperPage(ListView):
                         'time': datetime.now().strftime('%I:%M:%S %p'),
                         'schedules':schedules,
                         'chart_div':chart_div,
+                        'module_chart_div':module_chart_div,
+                        'total_hours_formatted':total_hours_formatted,
                        })
 
     template_name="user/developer_page.html"
