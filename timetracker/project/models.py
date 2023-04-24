@@ -81,8 +81,8 @@ priorityChoice=(
    ('Less','Less Priority')
 )
 class Project_Task(models.Model):
-   module = models.ForeignKey(Project_Module,on_delete=models.CASCADE)
-   project = models.ForeignKey(Project,on_delete=models.CASCADE)
+   module = models.ForeignKey(Project_Module,on_delete=models.CASCADE,null=True,blank=True)
+   project = models.ForeignKey(Project,on_delete=models.CASCADE,null=True,blank=True)
    task_title = models.CharField(max_length=100)
    task_description = RichTextField(null=True,blank=True)
    priority = models.CharField(choices=priorityChoice,max_length=30)

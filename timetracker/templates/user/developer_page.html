@@ -197,7 +197,7 @@
               <div class="card">
                 <div class="card-body">
                   <p class="card-title">Meetings</p>
-                  <div style="height: 300px; overflow-y: scroll;">
+                  <div style="height: 400px; overflow-y: scroll;">
                     <ul class="icon-data-list">
                       {% for meeting in meetings %}
                       <li>
@@ -263,7 +263,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4 grid-margin stretch-card">
+            <div class="col-md-4 grid-margin">
               <div class="card">
                 <div class="card-body">
                   <p class="card-title mb-0">To Do Pending Tasks</p>
@@ -281,7 +281,7 @@
                         {% if task.status == 'Pending' %}
                         <tr>
                           <td>
-                            <a type="button" data-toggle="modal" data-target="#exampleModalCenter{{task.id}}">
+                            <a type="button" data-toggle="modal" data-target="#exampleModalCenter{{task.id}}" style="color: inherit; text-decoration: none;">
                             <strong>{{task.task_title}}</strong>
                             </a>
                           </td>
@@ -392,7 +392,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-4 grid-margin stretch-card">
+            <div class="col-md-4 grid-margin">
               <div class="card">
                 <div class="card-body">
                   <p class="card-title mb-0">Items InProgress</p>
@@ -520,7 +520,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-4 grid-margin stretch-card">
+            <div class="col-md-4 grid-margin">
               <div class="card">
                 <div class="card-body">
                   <p class="card-title mb-0">Items Completed</p>

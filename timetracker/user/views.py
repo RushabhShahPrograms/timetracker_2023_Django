@@ -282,11 +282,11 @@ from django.db.models import F
 class DeveloperPage(ListView):
 
     def get(self,request,*args,**kwargs):
-        modules = Project_Module.objects.filter(user__username=self.request.user.username)
+        tmodules = Project_Module.objects.filter(user__username=self.request.user.username)
         notifymodules = Project_Module.objects.filter(user__username=self.request.user.username).order_by(F('module_start_date'))[:1]
         projects = Project_Team.objects.filter(user__username=self.request.user.username)
         notifyprojects = Project_Team.objects.filter(user__username=self.request.user.username)[:1]
-        tasks = Project_Task.objects.filter(user__username=self.request.user.username)
+        ttasks = Project_Task.objects.filter(user__username=self.request.user.username)
         notifytasks = Project_Task.objects.filter(user__username=self.request.user.username).order_by(F('end_time'))[:1]
         meetings = Schedule.objects.filter(users__in=[self.request.user]).order_by(F('schedule_meeting_date').desc(nulls_last=True))[:6]
         notifymeetings = Schedule.objects.filter(users__in=[self.request.user]).order_by(F('schedule_meeting_date').desc(nulls_last=True))[:1]
@@ -390,9 +390,9 @@ class DeveloperPage(ListView):
         total_hours_formatted = '{:.2f}'.format(total_hours.total_seconds() / 3600)
         
         return render(request, 'user/developer_page.html',
-                      {'modules':modules,
+                      {'modules':tmodules,
                        'projects':projects,
-                       'tasks':tasks,
+                       'tasks':ttasks,
                        'meetings':meetings,
                        'notifymeetings':notifymeetings,
                        'notifytasks':notifytasks,
