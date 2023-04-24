@@ -23,8 +23,8 @@ class AddProjectsForm(form.ModelForm):
         
 class ProjectModulesForm(form.ModelForm):
     user = form.ModelChoiceField(queryset=User.objects.filter(is_developer=True))
-    module_start_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
-    module_completion_date = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    module_start_date = forms.DateTimeField(widget=DateTimeInput(attrs={'type': 'datetime-local'}))
+    module_completion_date = forms.DateTimeField(widget=DateTimeInput(attrs={'type': 'datetime-local'}))
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.add_input(Submit('submit', 'Submit'))
@@ -34,8 +34,8 @@ class ProjectModulesForm(form.ModelForm):
 
 class ProjectTaskForm(form.ModelForm):
 
-    start_time = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
-    end_time = forms.DateField(widget=DateInput(attrs={'type': 'date'}))
+    start_time = forms.DateTimeField(widget=DateTimeInput(attrs={'type': 'datetime-local'}))
+    end_time = forms.DateTimeField(widget=DateTimeInput(attrs={'type': 'datetime-local'}))
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.add_input(Submit('submit', 'Submit'))

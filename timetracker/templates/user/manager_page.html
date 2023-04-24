@@ -213,7 +213,7 @@
             <div class="col-md-4 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <p class="card-title mb-0">Pending Projects   <a href="{% url 'generate-pdf' %}">Generate PDF</a></p>
+                  <p class="card-title mb-0">Pending Projects</p>
                   <div class="table-responsive">
                     <table class="table">
                       <thead>
@@ -313,6 +313,8 @@
                 <div class="card-body">
                  <div class="d-flex justify-content-between">
                   <p class="card-title">Projects Assigned</p>
+                  <a href="{% url 'generate-pdf' %}" class="text-info" target="_blank">Generate PDF</a>
+                  <a href="{% url 'generate-monthly-pdf' %}" class="text-info" target="_blank">Generate Montly PDF</a>
                  </div>
                   <p class="font-weight-500">Projects Assigned to us by this year and this chart represents the hardwork done by our company to complete the project on time.</p>
                   <div id="project-chart"></div>

@@ -26,4 +26,5 @@ urlpatterns = [
 
  path('developersubmit/',DeveloperSubmitView.as_view(),name='developersubmit'),
  path('generate-pdf/', views.generate_pdf, name='generate-pdf'),
+ path('generate-monthly-pdf/', views.generate_monthly_pdf, name='generate-monthly-pdf'),
 ]

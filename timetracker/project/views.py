@@ -1,3 +1,6 @@
+import io
+import os
+from pydoc import doc
 from django.http import JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import TemplateView,ListView,DetailView,UpdateView,DeleteView,View
@@ -319,85 +322,172 @@ class ProjectModuleGanttView(DetailView):
         return context
     
 
-import plotly.graph_objs as go
-import plotly.io as pio
+# from django.http import HttpResponse
+# from reportlab.pdfgen import canvas
+# from reportlab.lib.pagesizes import A4
+# from reportlab.platypus import Table
+# from .models import Project, Project_Module, Project_Task
+# from reportlab.graphics.shapes import Drawing
+# from reportlab.graphics.charts.linecharts import HorizontalLineChart
+# from reportlab.lib import colors
+# from reportlab.graphics import renderPDF
+# from reportlab.graphics.charts.textlabels import Label
+# from reportlab.graphics.shapes import Drawing
+# import graphviz
+
+# def generate_pdf(request):
+#     # Create a file-like object to store the PDF data
+#     buffer = io.BytesIO()
+
+#     # Create a canvas object with the file-like object and the page size
+#     c = canvas.Canvas(buffer, pagesize=A4)
+
+#     # Draw the title on the canvas
+#     c.setFont("Helvetica-Bold", 18)
+#     c.drawString(50, 770, "Report")
+
+#     # Get the data from the models
+#     projects = Project.objects.all()
+#     modules = Project_Module.objects.all()
+#     tasks = Project_Task.objects.all()
+
+#     # Create tables for each model and its fields
+#     project_table_data = [["Project Title", "Project Technology", "Project Start Date", "Project Completion Date", "Project File"]]
+#     for project in projects:
+#         project_table_data.append([project.project_title, project.project_technology, project.project_start_date, project.project_completion_date, project.project_file])
+
+#     module_table_data = [["Project", "Module Name", "Module Start Date", "Module Completion Date", "User"]]
+#     for module in modules:
+#         module_table_data.append([module.project, module.module_name, module.module_start_date, module.module_completion_date, module.user])
+
+#     task_table_data = [["Project", "Module", "Task Title", "Priority", "User", "Start Time", "End Time"]]
+#     for task in tasks:
+#         task_table_data.append([task.project, task.module, task.task_title, task.priority, task.user, task.start_time, task.end_time])
+
+#     # Create table objects with the data and some style options
+#     project_table = Table(project_table_data, colWidths=[doc.width / len(project_table_data[0])] * len(project_table_data[0]))
+#     project_table = Table(project_table_data)
+#     project_table.setStyle([
+#     ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+#     ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+#     ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+#     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+#     ("FONTSIZE", (0, 0), (-1, 0), 14),
+#     ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+#     ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+#     ("TEXTCOLOR", (0, 1), (-1, -1), colors.black),
+#     ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+#     ("FONTSIZE", (0, 1), (-1, -1), 12),
+#     ("VALIGN", (0, 1), (-1, -1), "MIDDLE"),
+#     ("BOTTOMPADDING", (0, 1), (-1, -1), 6),
+#     ("GRID", (0, 0), (-1, -1), 1, colors.black),
+# ])
+
+#     module_table = Table(module_table_data)
+#     module_table.setStyle([
+#     ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+#     ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+#     ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+#     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+#     ("FONTSIZE", (0, 0), (-1, 0), 14),
+#     ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+#     ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+#     ("TEXTCOLOR", (0, 1), (-1, -1), colors.black),
+#     ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+#     ("FONTSIZE", (0, 1), (-1, -1), 12),
+#     ("VALIGN", (0, 1), (-1, -1), "MIDDLE"),
+#     ("BOTTOMPADDING", (0, 1), (-1, -1), 6),
+#     ("GRID", (0, 0), (-1, -1), 1, colors.black),
+# ])
+
+#     task_table = Table(task_table_data)
+#     task_table.setStyle([
+#     ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+#     ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+#     ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+#     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+#     ("FONTSIZE", (0, 0), (-1, 0), 14),
+#     ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+#     ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+#     ("TEXTCOLOR", (0, 1), (-1, -1), colors.black),
+#     ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+#     ("FONTSIZE", (0, 1), (-1, -1), 12),
+#     ("VALIGN", (0, 1), (-1, -1), "MIDDLE"),
+#     ("BOTTOMPADDING", (0, 1), (-1, -1), 6),
+#     ("GRID", (0, 0), (-1, -1), 1, colors.black),
+# ])
+
+#     # Draw the tables on the canvas at the center
+#     table_width = 500  # Set the table width
+#     table_x = (table_width) / 2  # Calculate the x position to center the table
+#     project_table.wrapOn(c, 50, 50)
+#     project_table.drawOn(c, table_x, 700)
+
+#     module_table.wrapOn(c, 50, 50)
+#     module_table.drawOn(c, table_x, 500)
+
+#     task_table.wrapOn(c, 50, 50)
+#     task_table.drawOn(c, table_x, 300)
+
+#     # Save the canvas and get the PDF data from the file-like object
+#     c.save()
+#     pdf = buffer.getvalue()
+#     buffer.close()
+
+#     # Create an HttpResponse object with the PDF data and the appropriate headers
+#     response = HttpResponse(pdf, content_type="application/pdf")
+#     response["Content-Disposition"] = 'filename="report.pdf"'
+
+#     # Return the response
+#     return response
+
+
+from django.shortcuts import render
 from django.http import HttpResponse
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
-from io import BytesIO
-from .models import *
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 def generate_pdf(request):
-    # Query the data from your models
+    template = get_template('project/pdf.html')
     projects = Project.objects.all()
-    project_tasks = Project_Task.objects.all()
+    modules = Project_Module.objects.all()
+    tasks = Project_Task.objects.all()
+    context = {'projects': projects,
+               'modules':modules,
+               'tasks':tasks,}
+    html = template.render(context)
 
-    # Generate the plot using Plotly
-    fig = go.Figure(data=[go.Bar(x=[p.project_title for p in projects], y=[p.project_estimated_hours for p in projects])])
-    plotly_image = pio.to_image(fig, format='png')
+    pdf_file = HttpResponse(content_type='application/pdf')
+    pdf_file['Content-Disposition'] = 'attachment; filename="overall_report.pdf"'
 
-    # Create a buffer for the PDF
-    buffer = BytesIO()
+    pisa.CreatePDF(html, dest=pdf_file)
 
-    # Create a SimpleDocTemplate object
-    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    return pdf_file
 
-    # Create a sample style sheet
-    styles = getSampleStyleSheet()
 
-    # Create a list of Paragraph and Spacer objects
-    elements = []
-    elements.append(Paragraph("Data Report", styles['Title']))
-    elements.append(Spacer(1, 0.25*inch))
+import datetime
 
-    # Add the Plotly image to the PDF
-    plotly_image_io = BytesIO(plotly_image)
-    plotly_image_obj = Image(plotly_image_io)
-    plotly_image_obj.drawHeight = 300
-    plotly_image_obj.drawWidth = 500
-    elements.append(plotly_image_obj)
-    elements.append(Spacer(1, 0.25*inch))
+def generate_monthly_pdf(request):
+    # Get the current month and year
+    now = datetime.datetime.now()
+    month = now.month
+    year = now.year
 
-    # Add the data from your models to the PDF
-    elements.append(Paragraph("Projects:", styles['Heading1']))
-    for project in projects:
-        elements.append(Paragraph(project.project_title, styles['Heading2']))
-        elements.append(Paragraph(project.project_decription, styles['Normal']))
-        elements.append(Spacer(1, 0.25*inch))
+    # Filter the data by the current month
+    projects = Project.objects.filter(project_start_date__month=month, project_start_date__year=year)
+    modules = Project_Module.objects.filter(module_start_date__month=month, module_start_date__year=year)
+    tasks = Project_Task.objects.filter(start_time__month=month, start_time__year=year)
 
-        # Add project tasks
-        elements.append(Paragraph("Tasks:", styles['Heading3']))
-        project_tasks = Project_Task.objects.filter(project=project)
-        for task in project_tasks:
-            elements.append(Paragraph(task.task_title, styles['Heading4']))
-            elements.append(Paragraph(task.task_description, styles['Normal']))
-            elements.append(Paragraph(task.start_time.strftime("%Y-%m-%d %H:%M:%S"), styles['Normal']))
-            elements.append(Paragraph(task.end_time.strftime("%Y-%m-%d %H:%M:%S"), styles['Normal']))
-            elements.append(Paragraph(task.user.username, styles['Normal']))
-            elements.append(Spacer(1, 0.25*inch))
+    # Render the PDF template with the filtered data
+    template = get_template('project/monthlypdf.html')
+    context = {'projects': projects,
+               'modules': modules,
+               'tasks': tasks}
+    html = template.render(context)
 
-        # Add project modules
-        elements.append(Paragraph("Modules:", styles['Heading3']))
-        project_modules = Project_Module.objects.filter(project=project)
-        for module in project_modules:
-            elements.append(Paragraph(module.module_name, styles['Heading4']))
-            elements.append(Paragraph(module.module_description, styles['Normal']))
-            elements.append(Spacer(1, 0.25*inch))
+    # Generate the PDF file and return it as an attachment
+    pdf_file = HttpResponse(content_type='application/pdf')
+    pdf_file['Content-Disposition'] = 'attachment; filename="monthly_report.pdf"'
+    pisa.CreatePDF(html, dest=pdf_file)
 
-    # Add the elements to the doc
-    doc.build(elements)
-
-    # Set the response content type to 'application/pdf'
-    response = HttpResponse(content_type='application/pdf')
-
-    # Set the filename for the PDF
-    response['Content-Disposition'] = 'attachment; filename="my_pdf_report.pdf"'
-
-    # Write the PDF buffer to the response
-    response.write(buffer.getvalue())
-
-    # Close the buffer and return the response
-    buffer.close()
-    return response
+    return pdf_file

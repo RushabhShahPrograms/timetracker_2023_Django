@@ -1,0 +1,119 @@
+{% extends "../base.html" %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Report</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 0 auto;
+            border: 2px solid black;
+          }
+          
+          th {
+            background-color: #ADA2FF;
+            font-family: Calibri;
+            font-size: 14px;
+            text-align: left;
+            padding: 6px;
+            text-align: left;
+            border-bottom: 2px solid black;
+          }
+          
+          td {
+            font-family: Calibri;
+            font-size: 10px;
+            text-align: left;
+            padding: 4px;
+            border-bottom: 1px solid #C0DEFF;
+          }
+      </style>
+</head>
+<body>
+    <header>
+        <img src="{% static "images/logo.svg" %}" style="width: 200px; height: auto; position: absolute; top: 0; left: 0;" alt="logo"/>
+    </header>
+    <main> 
+        <p style="font-size: 30px;">Overall Report</p>
+        <h1>Projects List</h1>
+        <table class="table bordered-table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for task in projects %}
+                <tr>
+                <td>{{ task.project_title }}</td>
+                <td>{{ task.project_decription|safe }}</td>
+                <td>{{ task.project_start_date }}</td>
+                <td>{{ task.project_completion_date }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <h1>Modules List</h1>
+        <table class="table bordered-table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Project</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Assigned To</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for task in modules %}
+                <tr>
+                <td>{{ task.module_name }}</td>
+                <td>{{ task.module_description|safe }}</td>
+                <td>{{task.project}}</td>
+                <td>{{ task.module_start_date }}</td>
+                <td>{{ task.module_completion_date }}</td>
+                <td>{{task.user.username}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <h1>Task List</h1>
+        <table class="table bordered-table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Project</th>
+                <th>Module</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Assigned To</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for task in tasks %}
+                <tr>
+                <td>{{ task.task_title }}</td>
+                <td>{{ task.task_description|safe }}</td>
+                <td>{{task.project}}</td>
+                <td>{{task.module}}</td>
+                <td>{{ task.start_time }}</td>
+                <td>{{ task.end_time }}</td>
+                <td>{{task.user.username}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
+{% endblock %}

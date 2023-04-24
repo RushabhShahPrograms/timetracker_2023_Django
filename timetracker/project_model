@@ -1,0 +1,20 @@
+// Project Model
+digraph {
+	Project [fillcolor=gray shape=box style=filled]
+	Title
+	Description
+	Start_Date
+	End_Date
+	Tasks [fillcolor=lightgray shape=box style=filled]
+	Dependencies
+	Members [fillcolor=lightgray shape=box style=filled]
+	Roles
+	Project -> Title
+	Project -> Description
+	Project -> Start_Date
+	Project -> End_Date
+	Project -> Tasks
+	Project -> Dependencies
+	Project -> Members
+	Project -> Roles
+}
