@@ -39,7 +39,7 @@ class Project(models.Model):
     project_start_date = models.DateField()
     project_completion_date = models.DateField()
     project_file = models.FileField(upload_to='project_files/',null=True,blank=True)
-    status = models.CharField(choices=status_choice,max_length=100)
+    status = models.CharField(choices=status_choice,max_length=100, default='Pending')
 
     class Meta:
         db_table='project'
@@ -58,10 +58,11 @@ class Project_Module(models.Model):
     module_name = models.CharField(max_length=100)
     module_description = RichTextField(null=True,blank=True)
     module_estimated_hours = models.IntegerField()
+    timer_duration = models.DurationField(blank=True, null=True, default=0)
     module_start_date = models.DateTimeField()
     module_completion_date = models.DateTimeField()
     user= models.ForeignKey(User,on_delete=models.CASCADE,default=True)
-    status = models.CharField(choices=status_choice,max_length=100)
+    status = models.CharField(choices=status_choice,max_length=100,default='Pending')
 
     class Meta:
         db_table='project_module'
@@ -87,7 +88,7 @@ class Project_Task(models.Model):
    priority = models.CharField(choices=priorityChoice,max_length=30)
    user= models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
    task_estimated_hours = models.IntegerField()
-   timer_duration = models.DurationField(blank=True, null=True)
+   timer_duration = models.DurationField(blank=True, null=True,default=0)
    status = models.CharField(choices=status_choice,max_length=100, default='Pending')
    start_time = models.DateTimeField(null=True, blank=True)
    end_time = models.DateTimeField(null=True, blank=True)
@@ -225,3 +226,18 @@ class TaskTimer(models.Model):
     
     def __str__(self):
         return self.start_time
+    
+class TaskTime(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    task = models.ForeignKey(Project_Task, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    duration = models.DurationField()
+
+    class Meta:
+        db_table = 'TaskTime'
+
+    def save(self, *args, **kwargs):
+        if self.start_time is not None and self.end_time is not None:
+            self.duration = self.end_time - self.start_time
+        super(TaskTime, self).save(*args, **kwargs)

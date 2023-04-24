@@ -9,6 +9,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Developer Dashboard</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script>
     // get the notification button
     const notificationButton = document.querySelector("#notification-button");
@@ -241,12 +242,11 @@
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <p class="card-title">Your Day-to-Day Work Hours</p>
+                  <p class="card-title">Your Day-to-Day Task Hours</p>
                   <p class="font-weight-500">Check Your Dedication to Work!</p>
                   {% comment %} <canvas id="order-chart"></canvas> {% endcomment %}
-                  <div id="timer-chart">
-                    {{ chart|safe }}
-                  </div>
+                  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                  {{ chart_div|safe }}
                 </div>
               </div>
             </div>
@@ -623,7 +623,7 @@
                   </div>
                 </div>
               </div>
-            </div>          
+            </div>       
           </div>
         </div>
           <!-- content-wrapper ends -->

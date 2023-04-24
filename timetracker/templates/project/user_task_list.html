@@ -148,7 +148,7 @@
                                     <form method="post" action="{% url 'task_start' task.id %}">
                                       {% csrf_token %}
                                       <input type="submit" value="Start" class="btn btn-primary">
-                                  </form>
+                                    </form>
                                   </div>
                                 </div>
                               </div>
@@ -215,9 +215,10 @@
                                     </p>
                                   </div>
                                   <div class="modal-footer">
-                                    {% comment %} {% if module.status == "Pending" %}
-                                      <a class="btn btn-primary" href="{% url 'start_module' module.pk %}">Start</a>
-                                    {% endif %} {% endcomment %}
+                                    {% if module.status == "In Progress" %}
+                                      <a class="btn btn-warning" href="{% url 'complete_module' module.pk %}">Complete</a>
+                                    {% endif %}
+                                      <button type="button" class="btn btn-dark" data-dismiss="modal">Submit Task</button>
                                   </div>
                                 </div>
                               </div>
@@ -291,10 +292,11 @@
     
                                   </div>
                                   <div class="modal-footer">
-                                    {% comment %} <form method="post" action="{% url 'task_start' task.id %}">
+                                    <form method="post" action="{% url 'task_complete' task.id %}">
                                       {% csrf_token %}
-                                      <input type="submit" value="Start" class="btn btn-primary">
-                                  </form> {% endcomment %}
+                                      <input type="submit" value="Complete" class="btn btn-warning">
+                                    </form>
+                                    <a href="{% url 'developersubmit' %}" type="button" class="btn btn-dark">Submit Task</a>
                                   </div>
                                 </div>
                               </div>

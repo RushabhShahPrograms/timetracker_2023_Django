@@ -27,4 +27,9 @@ urlpatterns = [
  path('developersubmit/',DeveloperSubmitView.as_view(),name='developersubmit'),
  path('generate-pdf/', views.generate_pdf, name='generate-pdf'),
  path('generate-monthly-pdf/', views.generate_monthly_pdf, name='generate-monthly-pdf'),
+
+path('<int:task_id>/start/', TaskStartView.as_view(), name='task_start'),
+path('start_module/<int:pk>/', views.start_module, name='start_module'),
+path('<int:task_id>/complete/', TaskCompleteView.as_view(), name='task_complete'),
+path('complete_module/<int:pk>/', views.complete_module, name='complete_module'),
 ]

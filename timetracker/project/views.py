@@ -15,7 +15,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from datetime import date, timedelta
 from django.conf import settings
-
+import plotly.graph_objs as go
 
 class IndexView(TemplateView):
     template_name = "project/index.html"
@@ -322,124 +322,35 @@ class ProjectModuleGanttView(DetailView):
         return context
     
 
-# from django.http import HttpResponse
-# from reportlab.pdfgen import canvas
-# from reportlab.lib.pagesizes import A4
-# from reportlab.platypus import Table
-# from .models import Project, Project_Module, Project_Task
-# from reportlab.graphics.shapes import Drawing
-# from reportlab.graphics.charts.linecharts import HorizontalLineChart
-# from reportlab.lib import colors
-# from reportlab.graphics import renderPDF
-# from reportlab.graphics.charts.textlabels import Label
-# from reportlab.graphics.shapes import Drawing
-# import graphviz
+class TaskStartView(View):
+    def post(self, request, task_id):
+        task = get_object_or_404(Project_Task, id=task_id, user=request.user)
+        task.status = 'In Progress'
+        task.start_time = timezone.now()
+        task.save()
+        return redirect('developerpage')
 
-# def generate_pdf(request):
-#     # Create a file-like object to store the PDF data
-#     buffer = io.BytesIO()
+class TaskCompleteView(View):
+    def post(self, request, task_id):
+        task = get_object_or_404(Project_Task, id=task_id, user=request.user)
+        task.status = 'Completed'
+        task.end_time = timezone.now()
+        task.timer_duration = task.end_time - task.start_time
+        print(task.timer_duration)
+        task.save()
+        return redirect('developerpage')
 
-#     # Create a canvas object with the file-like object and the page size
-#     c = canvas.Canvas(buffer, pagesize=A4)
+def start_module(request, pk):
+    module = get_object_or_404(Project_Module, pk=pk, user=request.user)
+    module.status = "In Progress"
+    module.save()
+    return redirect('developerpage')
 
-#     # Draw the title on the canvas
-#     c.setFont("Helvetica-Bold", 18)
-#     c.drawString(50, 770, "Report")
-
-#     # Get the data from the models
-#     projects = Project.objects.all()
-#     modules = Project_Module.objects.all()
-#     tasks = Project_Task.objects.all()
-
-#     # Create tables for each model and its fields
-#     project_table_data = [["Project Title", "Project Technology", "Project Start Date", "Project Completion Date", "Project File"]]
-#     for project in projects:
-#         project_table_data.append([project.project_title, project.project_technology, project.project_start_date, project.project_completion_date, project.project_file])
-
-#     module_table_data = [["Project", "Module Name", "Module Start Date", "Module Completion Date", "User"]]
-#     for module in modules:
-#         module_table_data.append([module.project, module.module_name, module.module_start_date, module.module_completion_date, module.user])
-
-#     task_table_data = [["Project", "Module", "Task Title", "Priority", "User", "Start Time", "End Time"]]
-#     for task in tasks:
-#         task_table_data.append([task.project, task.module, task.task_title, task.priority, task.user, task.start_time, task.end_time])
-
-#     # Create table objects with the data and some style options
-#     project_table = Table(project_table_data, colWidths=[doc.width / len(project_table_data[0])] * len(project_table_data[0]))
-#     project_table = Table(project_table_data)
-#     project_table.setStyle([
-#     ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
-#     ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
-#     ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-#     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-#     ("FONTSIZE", (0, 0), (-1, 0), 14),
-#     ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
-#     ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
-#     ("TEXTCOLOR", (0, 1), (-1, -1), colors.black),
-#     ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
-#     ("FONTSIZE", (0, 1), (-1, -1), 12),
-#     ("VALIGN", (0, 1), (-1, -1), "MIDDLE"),
-#     ("BOTTOMPADDING", (0, 1), (-1, -1), 6),
-#     ("GRID", (0, 0), (-1, -1), 1, colors.black),
-# ])
-
-#     module_table = Table(module_table_data)
-#     module_table.setStyle([
-#     ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
-#     ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
-#     ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-#     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-#     ("FONTSIZE", (0, 0), (-1, 0), 14),
-#     ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
-#     ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
-#     ("TEXTCOLOR", (0, 1), (-1, -1), colors.black),
-#     ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
-#     ("FONTSIZE", (0, 1), (-1, -1), 12),
-#     ("VALIGN", (0, 1), (-1, -1), "MIDDLE"),
-#     ("BOTTOMPADDING", (0, 1), (-1, -1), 6),
-#     ("GRID", (0, 0), (-1, -1), 1, colors.black),
-# ])
-
-#     task_table = Table(task_table_data)
-#     task_table.setStyle([
-#     ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
-#     ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
-#     ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-#     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-#     ("FONTSIZE", (0, 0), (-1, 0), 14),
-#     ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
-#     ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
-#     ("TEXTCOLOR", (0, 1), (-1, -1), colors.black),
-#     ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
-#     ("FONTSIZE", (0, 1), (-1, -1), 12),
-#     ("VALIGN", (0, 1), (-1, -1), "MIDDLE"),
-#     ("BOTTOMPADDING", (0, 1), (-1, -1), 6),
-#     ("GRID", (0, 0), (-1, -1), 1, colors.black),
-# ])
-
-#     # Draw the tables on the canvas at the center
-#     table_width = 500  # Set the table width
-#     table_x = (table_width) / 2  # Calculate the x position to center the table
-#     project_table.wrapOn(c, 50, 50)
-#     project_table.drawOn(c, table_x, 700)
-
-#     module_table.wrapOn(c, 50, 50)
-#     module_table.drawOn(c, table_x, 500)
-
-#     task_table.wrapOn(c, 50, 50)
-#     task_table.drawOn(c, table_x, 300)
-
-#     # Save the canvas and get the PDF data from the file-like object
-#     c.save()
-#     pdf = buffer.getvalue()
-#     buffer.close()
-
-#     # Create an HttpResponse object with the PDF data and the appropriate headers
-#     response = HttpResponse(pdf, content_type="application/pdf")
-#     response["Content-Disposition"] = 'filename="report.pdf"'
-
-#     # Return the response
-#     return response
+def complete_module(request, pk):
+    module = get_object_or_404(Project_Module, pk=pk, user=request.user)
+    module.status = "Completed"
+    module.save()
+    return redirect('developerpage')
 
 
 from django.shortcuts import render

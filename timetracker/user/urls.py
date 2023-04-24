@@ -49,9 +49,9 @@ path('scheduledetail/<int:pk>',ScheduleDetailView.as_view(),name='scheduledetail
 path('get-meeting-details/<int:meeting_id>/', get_meeting_details, name='get_meeting_details'),
 
 # other URL mappings
-path('<int:task_id>/start/', TaskStartView.as_view(), name='task_start'),
-path('start_module/<int:pk>/', views.start_module, name='start_module'),
-path('<int:task_id>/complete/', TaskStartView.as_view(), name='task_complete'),
-path('complete_module/<int:pk>/', views.start_module, name='complete_module'),
+# path('<int:task_id>/start/', TaskStartView.as_view(), name='task_start'),
+# path('start_module/<int:pk>/', views.start_module, name='start_module'),
+# path('<int:task_id>/complete/', TaskCompleteView.as_view(), name='task_complete'),
+# path('complete_module/<int:pk>/', views.complete_module, name='complete_module'),
 
 ]

@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
+import requests
 from .models import User,Schedule,WorkTime
 from .forms import *
 from django.contrib.auth import login
@@ -217,6 +218,26 @@ class ManagerPage(ListView):
             html = f'<a class="calendar-meeting-link" data-toggle="modal" data-target="#meeting-details-modal" data-meeting-id="{schedule.pk}">{day}</a>'
             cal = cal.replace(f'>{day}<', f' style="background-color: skyblue">{html}<')
 
+        today = datetime.now()
+        if today.year == year and today.month == month_number:
+            day = today.day
+            cal = cal.replace(f'>{day}<', f' style="background-color: yellow">{day}<')
+
+        # Add Indian holidays with green color
+        holidays = []
+        response = requests.get(f'https://calendarific.com/api/v2/holidays?api_key=<your_api_key>&country=IN&year={year}')
+        if response.status_code == 200:
+            data = response.json()
+            for holiday in data['response']['holidays']:
+                holiday_date = datetime.strptime(holiday['date']['iso'], '%Y-%m-%d').date()
+                holiday_name = holiday['name']
+                holidays.append({'date': holiday_date, 'name': holiday_name})
+
+        for holiday in holidays:
+            day = holiday['date'].day
+            html = f'<span class="calendar-holiday">{holiday["name"]}</span>'
+            cal = cal.replace(f'>{day}<', f' style="background-color: green">{html}<')
+
         return render(request, 'user/manager_page.html',
                       {'projects':project,
                        'teams':team,
@@ -280,12 +301,57 @@ class DeveloperPage(ListView):
         month_number = list(calendar.month_name).index(month.capitalize())
         cal = MyHTMLCalendar(year=year).formatmonth(year, month_number)
         
-        # Highlight the meeting date in the calendar
+        # Highlight the meeting date and current date in the calendar
         schedules = Schedule.objects.filter(users__username=self.request.user.username,schedule_meeting_date__year=year, schedule_meeting_date__month=month_number).order_by(F('schedule_meeting_date').desc(nulls_last=True))
         for schedule in schedules:
             day = schedule.schedule_meeting_date.day
-            html = f'<a class="calendar-meeting-link" data-toggle="modal" data-target="#meeting-details-modal" data-meeting-id="{schedule.pk}">{day}</a>'
-            cal = cal.replace(f'>{day}<', f' style="background-color: skyblue">{html}<')
+            cal = cal.replace(f'>{day}<', f' style="background-color: skyblue">{day}<')
+
+        today = datetime.now()
+        if today.year == year and today.month == month_number:
+            day = today.day
+            cal = cal.replace(f'>{day}<', f' style="background-color: yellow">{day}<')
+
+        # Add Indian holidays with green color
+        holidays = []
+        response = requests.get(f'https://calendarific.com/api/v2/holidays?api_key=<your_api_key>&country=IN&year={year}')
+        if response.status_code == 200:
+            data = response.json()
+            for holiday in data['response']['holidays']:
+                holiday_date = datetime.strptime(holiday['date']['iso'], '%Y-%m-%d').date()
+                holiday_name = holiday['name']
+                holidays.append({'date': holiday_date, 'name': holiday_name})
+
+        for holiday in holidays:
+            day = holiday['date'].day
+            html = f'<span class="calendar-holiday">{holiday["name"]}</span>'
+            cal = cal.replace(f'>{day}<', f' style="background-color: green">{html}<')
+
+        #Task Line Chart
+        # Query the data
+        tasks = Project_Task.objects.filter(user=request.user, status='Completed')
+        task_titles = [task.task_title for task in tasks]
+        timer_durations = [task.timer_duration.total_seconds() / 60 for task in tasks] # convert to minutes
+
+        # Create the Scatter trace
+        trace = go.Scatter(
+            x=task_titles,
+            y=timer_durations,
+            mode='lines+markers'
+        )
+
+        # Create the Layout object
+        layout = go.Layout(
+            title='Time Taken to Complete Tasks',
+            xaxis=dict(title='Task Title'),
+            yaxis=dict(title='Timer Duration (minutes)')
+        )
+
+        # Create the Figure object
+        fig = go.Figure(data=[trace], layout=layout)
+
+        # Generate the HTML code to display the chart
+        chart_div = plot(fig, output_type='div', include_plotlyjs=False)
         
         return render(request, 'user/developer_page.html',
                       {'modules':modules,
@@ -303,40 +369,55 @@ class DeveloperPage(ListView):
                         'current_year': datetime.now().year,
                         'time': datetime.now().strftime('%I:%M:%S %p'),
                         'schedules':schedules,
-                        # 'user_timers': user_timers,
+                        'chart_div':chart_div,
                        })
 
     template_name="user/developer_page.html"
 
-class TaskStartView(View):
-    def post(self, request, task_id):
-        task = get_object_or_404(Project_Task, id=task_id, user=request.user)
-        task.status = 'In Progress'
-        task.start_time = datetime.now()
-        task.save()
-        return redirect('developerpage')
+# class TaskStartView(View):
+#     def post(self, request, task_id):
+#         task = get_object_or_404(Project_Task, id=task_id, user=request.user)
+#         task.status = 'In Progress'
+#         task.save()
+#         TaskTime.objects.create(user=request.user, task=task, start_time=timezone.now())
+#         return redirect('developerpage')
 
-class TaskCompleteView(View):
-    def post(self, request, task_id):
-        task = get_object_or_404(Project_Task, id=task_id, user=request.user)
-        task.status = 'Completed'
-        task.end_time = datetime.now()
-        task.save()
-        return redirect('developerpage')
+# class TaskCompleteView(View):
+#     def post(self, request, task_id):
+#         task = get_object_or_404(Project_Task, id=task_id, user=request.user)
+#         task.status = 'Completed'
+#         task.save()
+#         task_time = TaskTime.objects.get(user=request.user, task=task, end_time=None)
+#         task_time.end_time = timezone.now()
+#         return redirect('developerpage')
+    
+# def dashboard(request):
+#     task_times = TaskTime.objects.filter(user=request.user, end_time__isnull=False)
+#     task_durations = [tt.duration for tt in task_times]
 
-def start_module(request, pk):
-    module = get_object_or_404(Project_Module, pk=pk, user=request.user)
-    module.status = "In Progress"
-    module.module_start_date = datetime.now()
-    module.save()
-    return redirect('developerpage')
+#     module_times = TaskTime.objects.filter(user=request.user, task__module__isnull=False, end_time__isnull=False)
+#     module_durations = [tt.duration for tt in module_times]
 
-def complete_module(request, pk):
-    module = get_object_or_404(Project_Module, pk=pk, user=request.user)
-    module.status = "Completed"
-    module.module_completion_date = datetime.now()
-    module.save()
-    return redirect('developerpage')
+#     fig = go.Figure()
+#     fig.add_trace(go.Scatter(x=[i+1 for i in range(len(task_durations))], y=[td.total_seconds()/3600 for td in task_durations], name='Task'))
+#     fig.add_trace(go.Scatter(x=[i+1 for i in range(len(module_durations))], y=[md.total_seconds()/3600 for md in module_durations], name='Module'))
+#     fig.update_layout(title='Task and Module Durations', xaxis_title='Task/Module', yaxis_title='Duration (hours)')
+
+#     graph_div = fig.to_html(full_html=False)
+
+#     return render(request, 'user/developerpage.html', {'graph_div': graph_div})
+
+# def start_module(request, pk):
+#     module = get_object_or_404(Project_Module, pk=pk, user=request.user)
+#     module.status = "In Progress"
+#     module.save()
+#     return redirect('developerpage')
+
+# def complete_module(request, pk):
+#     module = get_object_or_404(Project_Module, pk=pk, user=request.user)
+#     module.status = "Completed"
+#     module.save()
+#     return redirect('developerpage')
 
     
 class ShowProfilePageView(DetailView):
