@@ -1,5 +1,4 @@
 {% extends '../base.html' %}
-
 {% block content %}
 {% load static %}
 <!DOCTYPE html>
@@ -192,11 +191,11 @@
                               <p>
                                 <strong>Invited Developers: </strong>
                                 {% for user in meeting.users.all %}
-                                        {{ user.username }}
-                                        {% if not forloop.last %}, {% endif %}
-                                      {% empty %}
-                                        No users invited yet.
-                                      {% endfor %}
+                                  {{ user.username }}
+                                    {% if not forloop.last %}, {% endif %}
+                                  {% empty %}
+                                    No users invited yet.
+                                {% endfor %}
                               </p>
                             </div>
                           </div>
@@ -205,6 +204,52 @@
                       {% endfor %}
                     </ul>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Project Achievement</p>
+                  <p class="font-weight-500">Achievement of the total hours achieved by completed the projects</p>
+                  {{ chart|safe }}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                 <div class="d-flex justify-content-between">
+                  <p class="card-title">Projects Assigned</p>
+                  <a href="{% url 'generate-pdf' %}" class="text-info" target="_blank">Generate PDF</a>
+                  <a href="{% url 'generate-monthly-pdf' %}" class="text-info" target="_blank">Generate Montly PDF</a>
+                 </div>
+                  <p class="font-weight-500">Projects Assigned to us by this year and this chart represents the hardwork done by our company to complete the project on time.</p>
+                  <div id="project-chart"></div>
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                    <script>
+                      var data = [{
+                        x: [{% for project in chs %}"{{ project.month }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
+                        y: [{% for project in chs %}{{ project.total_projects }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                        type: 'bar',
+                        marker: {
+                          color: '#B0DAFF',
+                          },
+                      }];
+
+                      var layout = {
+                        xaxis: {title: 'Month'},
+                        yaxis: {title: 'Total Projects'},
+                        title: 'Total Projects by Month'
+                      };
+
+                      Plotly.newPlot('project-chart', data, layout);
+                      window.addEventListener('responsive', function() {
+                        Plotly.Plots.resize('project-chart');
+                      });
+                    </script>
                 </div>
               </div>
             </div>
@@ -299,47 +344,12 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6 grid-margin">
+            <div class="col-md-12 grid-margin">
               <div class="card">
                 <div class="card-body">
-                  <p class="card-title">Project Achievement</p>
-                  <p class="font-weight-500">Achievement of the total hours achieved by completed the projects</p>
-                  {{ chart|safe }}
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 grid-margin">
-              <div class="card">
-                <div class="card-body">
-                 <div class="d-flex justify-content-between">
-                  <p class="card-title">Projects Assigned</p>
-                  <a href="{% url 'generate-pdf' %}" class="text-info" target="_blank">Generate PDF</a>
-                  <a href="{% url 'generate-monthly-pdf' %}" class="text-info" target="_blank">Generate Montly PDF</a>
-                 </div>
-                  <p class="font-weight-500">Projects Assigned to us by this year and this chart represents the hardwork done by our company to complete the project on time.</p>
-                  <div id="project-chart"></div>
-                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-                    <script>
-                      var data = [{
-                        x: [{% for project in chs %}"{{ project.month }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
-                        y: [{% for project in chs %}{{ project.total_projects }}{% if not forloop.last %}, {% endif %}{% endfor %}],
-                        type: 'bar',
-                        marker: {
-                          color: '#B0DAFF',
-                          },
-                      }];
-
-                      var layout = {
-                        xaxis: {title: 'Month'},
-                        yaxis: {title: 'Total Projects'},
-                        title: 'Total Projects by Month'
-                      };
-
-                      Plotly.newPlot('project-chart', data, layout);
-                      window.addEventListener('responsive', function() {
-                        Plotly.Plots.resize('project-chart');
-                      });
-                    </script>
+                  <p class="card-title">Track Developers</p>
+                  <p class="font-weight-500">Track time of all developers separated by different tasks and modules.</p>
+                  {{chart_div|safe}}
                 </div>
               </div>
             </div>

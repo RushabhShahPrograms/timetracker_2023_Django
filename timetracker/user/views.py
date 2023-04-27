@@ -223,20 +223,52 @@ class ManagerPage(ListView):
             day = today.day
             cal = cal.replace(f'>{day}<', f' style="background-color: yellow">{day}<')
 
-        # Add Indian holidays with green color
-        holidays = []
-        response = requests.get(f'https://calendarific.com/api/v2/holidays?api_key=<your_api_key>&country=IN&year={year}')
-        if response.status_code == 200:
-            data = response.json()
-            for holiday in data['response']['holidays']:
-                holiday_date = datetime.strptime(holiday['date']['iso'], '%Y-%m-%d').date()
-                holiday_name = holiday['name']
-                holidays.append({'date': holiday_date, 'name': holiday_name})
+        # Retrieve all developers
+        developers = User.objects.filter(is_developer=True)
 
-        for holiday in holidays:
-            day = holiday['date'].day
-            html = f'<span class="calendar-holiday">{holiday["name"]}</span>'
-            cal = cal.replace(f'>{day}<', f' style="background-color: green">{html}<')
+        # Create a list of traces for each developer
+        data = []
+        for developer in developers:
+            # Query task data for the developer
+            tasks = Project_Task.objects.filter(user=developer, status='Completed')
+            task_titles = [task.task_title for task in tasks]
+            task_timer_durations = [task.timer_duration.total_seconds() / 60 for task in tasks]
+
+            # Query module data for the developer
+            modules = Project_Module.objects.filter(user=developer, status='Completed')
+            module_titles = [module.module_name for module in modules]
+            module_timer_durations = [module.timer_duration.total_seconds() / 60 for module in modules]
+
+            # Create traces for the developer
+            task_trace = go.Scatter(
+                x=task_titles,
+                y=task_timer_durations,
+                mode='lines+markers',
+                name=developer.username + ' - Tasks'
+            )
+            module_trace = go.Scatter(
+                x=module_titles,
+                y=module_timer_durations,
+                mode='lines+markers',
+                name=developer.username + ' - Modules'
+            )
+
+            # Add the traces to the data list
+            data.append(task_trace)
+            data.append(module_trace)
+
+        # Create the layout for the plot
+        layout = go.Layout(
+            title='Total Time Taken to Complete Tasks and Modules by Developers',
+            xaxis=dict(title='Task/Module Title'),
+            yaxis=dict(title='Timer Duration (minutes)')
+        )
+
+        # Create the Figure object with data and layout
+        fig = go.Figure(data=data, layout=layout)
+
+        # Generate the HTML code to display the chart
+        chart_div = plot(fig, output_type='div', include_plotlyjs=False)
 
         return render(request, 'user/manager_page.html',
                       {'projects':project,
@@ -264,6 +296,7 @@ class ManagerPage(ListView):
                         'InProgressproject':InProgressProject,
                         'InProgressmodule':InProgressmodule,
                         'InProgresstask':InProgresstask,
+                        'chart_div':chart_div,
                        })
 
 
@@ -311,21 +344,6 @@ class DeveloperPage(ListView):
         if today.year == year and today.month == month_number:
             day = today.day
             cal = cal.replace(f'>{day}<', f' style="background-color: yellow">{day}<')
-
-        # Add Indian holidays with green color
-        holidays = []
-        response = requests.get(f'https://calendarific.com/api/v2/holidays?api_key=<your_api_key>&country=IN&year={year}')
-        if response.status_code == 200:
-            data = response.json()
-            for holiday in data['response']['holidays']:
-                holiday_date = datetime.strptime(holiday['date']['iso'], '%Y-%m-%d').date()
-                holiday_name = holiday['name']
-                holidays.append({'date': holiday_date, 'name': holiday_name})
-
-        for holiday in holidays:
-            day = holiday['date'].day
-            html = f'<span class="calendar-holiday">{holiday["name"]}</span>'
-            cal = cal.replace(f'>{day}<', f' style="background-color: green">{html}<')
 
         #Task Line Chart
         # Query the data
@@ -382,12 +400,17 @@ class DeveloperPage(ListView):
         # Total Hours
         user = request.user
         # calculate total hours for tasks
-        task_hours = Project_Task.objects.filter(user=user, status='Completed').aggregate(Sum('timer_duration'))['timer_duration__sum'] or 0
+        task_hours = Project_Task.objects.filter(user=user, status='Completed').aggregate(Sum('timer_duration'))['timer_duration__sum'] or timedelta()
         # calculate total hours for modules
-        module_hours = Project_Module.objects.filter(user=user, status='Completed').aggregate(Sum('timer_duration'))['timer_duration__sum'] or 0
+        module_hours = Project_Module.objects.filter(user=user, status='Completed').aggregate(Sum('timer_duration'))['timer_duration__sum'] or timedelta()
+
         # calculate total hours for all tasks and modules
-        total_hours = (task_hours or 0) + (module_hours or 0)
+        total_hours = task_hours + module_hours
+        # if total_hours:
         total_hours_formatted = '{:.2f}'.format(total_hours.total_seconds() / 3600)
+        # else:
+            # total_hours_formatted = '0.00'
+
         
         return render(request, 'user/developer_page.html',
                       {'modules':tmodules,
