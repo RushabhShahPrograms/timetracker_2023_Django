@@ -28,6 +28,9 @@ import calendar
 from calendar import HTMLCalendar
 from datetime import date, datetime
 from django.db.models import Sum
+import plotly.graph_objs as go
+import plotly.offline
+from plotly.subplots import make_subplots
 
 class AdminRegisterView(CreateView):
     model = User
@@ -148,6 +151,13 @@ class MyHTMLCalendar(HTMLCalendar):
         else:
             return '<td class="day">%d</td>' % day
 
+
+
+def get_status_count(items, status):
+    count = items.filter(status=status).count()
+    return count
+    
+
 # @method_decorator(login_required(login_url='/user/login'), name='dispatch')
 @method_decorator([login_required(login_url="/user/login"),manager_required],name='dispatch')
 class ManagerPage(ListView):
@@ -170,25 +180,53 @@ class ManagerPage(ListView):
         completedproject = Project.objects.filter(status="Completed")
         pendingproject = Project.objects.filter(status="Pending")
         chs = Project.objects.annotate(month=ExtractMonth('project_start_date')) \
-                                  .values('month') \
-                                  .annotate(total_projects=Count('id')) \
-                                  .order_by('month')
+                            .values('month') \
+                            .annotate(total_projects=Count('id')) \
+                            .order_by('month')
+        month_names = [calendar.month_name[i['month']] for i in chs]
+
+        # Create the bar trace with custom colors
+        bar_trace = go.Bar(
+            x=month_names,
+            y=[x['total_projects'] for x in chs],
+            name='Total Projects',
+            marker=dict(
+                color=['#FEFF86','#B0DAFF','#B9E9FC','#DAF5FF','#B2A4FF','#FFB4B4','#FFDEB4','#FDF7C3','#7286D3','#8EA7E9','#E5E0FF','#FFF2F2'],  # Set the colors here
+                line=dict(color='#000000', width=1)
+            )
+        )
+
+        # Create the data list with the bar trace
+        data = [bar_trace]
+
+        # Create the layout for the plot
+        layout = go.Layout(
+            title='Total Projects per Month',
+            xaxis=dict(title='Month'),
+            yaxis=dict(title='Total Projects')
+        )
+
+        # Create the Figure object with data and layout
+        fig = go.Figure(data=data, layout=layout)
+
+        # Generate the HTML code to display the chart
+        bar_chart = plot(fig, output_type='div', include_plotlyjs=False)
         
 
         # Pie Chart
         completed_projects = Project.objects.filter(status="Completed")
         pending_projects = Project.objects.filter(status="Pending")
-        cancelled_projects = Project.objects.filter(status="Cancelled")
+        cancelled_projects = Project.objects.filter(status="In Progress")
         total_projects = Project.objects.aggregate(
             completed=Coalesce(Count('id', filter=Q(status="Completed")), 0),
             pending=Coalesce(Count('id', filter=Q(status="Pending")), 0),
-            cancelled=Coalesce(Count('id', filter=Q(status="Cancelled")), 0)
+            inprogress=Coalesce(Count('id', filter=Q(status="In Progress")), 0)
         )
 
         
-        labels = ['Completed', 'Pending', 'Cancelled']
-        values = [total_projects['completed'], total_projects['pending'], total_projects['cancelled']]
-        colors = ['#B2A4FF', '#57C5B6', '#D864A9']
+        labels = ['Completed', 'Pending', 'In Progress']
+        values = [total_projects['completed'], total_projects['pending'], total_projects['inprogress']]
+        colors = ['#B8B5FF', '#E4FBFF', '#7868E6']
 
         trace = go.Pie(labels=labels, values=values,
                        hoverinfo='label+percent', textinfo='value',
@@ -201,6 +239,8 @@ class ManagerPage(ListView):
                            autosize=True,)
 
         chart = plot(go.Figure(data=data, layout=layout), output_type='div')
+
+
 
         #Calendar
         # Get the year and month from the request parameters
@@ -223,6 +263,137 @@ class ManagerPage(ListView):
             day = today.day
             cal = cal.replace(f'>{day}<', f' style="background-color: yellow">{day}<')
 
+
+
+
+
+        # Donut Chart for modules and tasks by status 
+        # Count the number of modules by status
+        module_counts = {
+            'Pending': Project_Module.objects.filter(status='Pending').count(),
+            'In Progress': Project_Module.objects.filter(status='In Progress').count(),
+            'Completed': Project_Module.objects.filter(status='Completed').count(),
+        }
+
+        # Define the colors for each status
+        colors = ['#FD841F', '#77D970', '#08D9D6']
+
+        # Create the pie chart for modules by status
+        module_data = go.Pie(labels=list(module_counts.keys()),
+                            values=list(module_counts.values()),
+                            hole=.4,
+                            name="Modules",
+                            marker=dict(colors=colors))
+
+        # Set the layout for the pie chart
+        layout = go.Layout(title="Modules by Status")
+
+        # Set the data for the plot
+        data = [module_data]
+
+        # Create the figure for the plot
+        fig = go.Figure(data=data, layout=layout)
+
+        # Convert the figure to HTML
+        module_plot = plotly.offline.plot(fig, output_type='div')
+
+
+        # Count the number of tasks by status
+        task_counts = {
+            'Pending': Project_Task.objects.filter(status='Pending').count(),
+            'In Progress': Project_Task.objects.filter(status='In Progress').count(),
+            'Completed': Project_Task.objects.filter(status='Completed').count(),
+        }
+
+        # Define the colors for each status
+        colors = ['#FD841F', '#77D970', '#08D9D6']
+
+        # Create the pie chart for tasks by status
+        task_data = go.Pie(labels=list(task_counts.keys()),
+                        values=list(task_counts.values()),
+                        hole=.4,
+                        name="Tasks",
+                        marker=dict(colors=colors))
+
+        # Set the layout for the pie chart
+        layout = go.Layout(title="Tasks by Status")
+
+        # Set the data for the plot
+        data = [task_data]
+
+        # Create the figure for the plot
+        fig = go.Figure(data=data, layout=layout)
+
+        # Convert the figure to HTML
+        task_plot = plotly.offline.plot(fig, output_type='div')
+
+        # Combine the plots into a single HTML div
+        chart_plot = '<div class="row"><div class="col-md-6">{}</div><div class="col-md-6">{}</div></div>'.format(module_plot, task_plot)
+
+
+
+
+
+        #Line chart of Developer Time and Completion
+        # Retrieve all developers
+        developers = User.objects.filter(is_developer=True)
+
+        # Create a dictionary to store developer data
+        developer_data = {}
+
+        # Iterate over each developer
+        for developer in developers:
+            # Query task data for the developer
+            tasks = Project_Task.objects.filter(user=developer, status='Completed')
+            task_timer_durations = [task.timer_duration.total_seconds() / 3600 for task in tasks]
+
+            # Query module data for the developer
+            modules = Project_Module.objects.filter(user=developer, status='Completed')
+            module_timer_durations = [module.timer_duration.total_seconds() / 3600 for module in modules]
+
+            # Calculate total time for the developer
+            total_time = sum(task_timer_durations) + sum(module_timer_durations)
+
+            # Add developer data to dictionary
+            developer_data[developer.username] = total_time
+
+        # Create a list of tuples from the dictionary, sorted by total time
+        sorted_data = sorted(developer_data.items(), key=lambda x: x[1], reverse=True)
+
+        # Create a list of traces for the developers
+        data = []
+        x_values = []
+        y_values = []
+        for developer, total_time in sorted_data:
+            # Add the developer and total time to the x and y value lists
+            x_values.append(developer)
+            y_values.append(total_time)
+
+        # Create a trace for the data
+        trace = go.Scatter(
+            x=x_values,
+            y=y_values,
+            name='Total Time Taken',
+            line=dict(color='#62CDFF')
+        )
+
+        # Add the trace to the data list
+        data.append(trace)
+
+        # Create the layout for the plot
+        layout = go.Layout(
+            title='Total Time Taken by Developers',
+            xaxis=dict(title='Developer'),
+            yaxis=dict(title='Total Time (hours)')
+        )
+
+        # Create the Figure object with data and layout
+        fig = go.Figure(data=data, layout=layout)
+
+        # Generate the HTML code to display the chart
+        chart_div = plot(fig, output_type='div', include_plotlyjs=False)
+
+
         # Retrieve all developers
         developers = User.objects.filter(is_developer=True)
 
@@ -232,12 +403,12 @@ class ManagerPage(ListView):
             # Query task data for the developer
             tasks = Project_Task.objects.filter(user=developer, status='Completed')
             task_titles = [task.task_title for task in tasks]
-            task_timer_durations = [task.timer_duration.total_seconds() / 60 for task in tasks]
+            task_timer_durations = [task.timer_duration.total_seconds() / 3600 for task in tasks]
 
             # Query module data for the developer
             modules = Project_Module.objects.filter(user=developer, status='Completed')
             module_titles = [module.module_name for module in modules]
-            module_timer_durations = [module.timer_duration.total_seconds() / 60 for module in modules]
+            module_timer_durations = [module.timer_duration.total_seconds() / 3600 for module in modules]
 
             # Create traces for the developer
             task_trace = go.Scatter(
@@ -250,7 +421,7 @@ class ManagerPage(ListView):
                 x=module_titles,
                 y=module_timer_durations,
                 mode='lines+markers',
-                name=developer.username + ' - Modules'
+                name=developer.username + ' - Modules',
             )
 
             # Add the traces to the data list
@@ -259,16 +430,21 @@ class ManagerPage(ListView):
 
         # Create the layout for the plot
         layout = go.Layout(
-            title='Total Time Taken to Complete Tasks and Modules by Developers',
+            title='Track Duration to Complete Tasks and Modules by Developers',
             xaxis=dict(title='Task/Module Title'),
-            yaxis=dict(title='Timer Duration (minutes)')
+            yaxis=dict(title='Timer Duration (hours)')
         )
 
         # Create the Figure object with data and layout
         fig = go.Figure(data=data, layout=layout)
 
         # Generate the HTML code to display the chart
-        chart_div = plot(fig, output_type='div', include_plotlyjs=False)
+        chart_detail = plot(fig, output_type='div', include_plotlyjs=False)
+
+        chart_developer = '<div class="row"><div class="col-md-4">{}</div><div class="col-md-8">{}</div></div>'.format(chart_div, chart_detail)
+
+
+
 
         return render(request, 'user/manager_page.html',
                       {'projects':project,
@@ -296,7 +472,9 @@ class ManagerPage(ListView):
                         'InProgressproject':InProgressProject,
                         'InProgressmodule':InProgressmodule,
                         'InProgresstask':InProgresstask,
-                        'chart_div':chart_div,
+                        'chart_developer':chart_developer,
+                        'chart_plot':chart_plot,
+                        'bar_chart':bar_chart,
                        })
 
 

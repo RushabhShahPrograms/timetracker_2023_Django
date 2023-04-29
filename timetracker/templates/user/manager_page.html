@@ -226,8 +226,9 @@
                   <a href="{% url 'generate-pdf' %}" class="text-info" target="_blank">Generate PDF</a>
                   <a href="{% url 'generate-monthly-pdf' %}" class="text-info" target="_blank">Generate Montly PDF</a>
                  </div>
-                  <p class="font-weight-500">Projects Assigned to us by this year and this chart represents the hardwork done by our company to complete the project on time.</p>
-                  <div id="project-chart"></div>
+                  <p class="font-weight-500">Month Wise divsion of the projects.</p>
+                  {{bar_chart|safe}}
+                  {% comment %} <div id="project-chart"></div>
                     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
                     <script>
                       var data = [{
@@ -249,7 +250,7 @@
                       window.addEventListener('responsive', function() {
                         Plotly.Plots.resize('project-chart');
                       });
-                    </script>
+                    </script> {% endcomment %}
                 </div>
               </div>
             </div>
@@ -349,7 +350,25 @@
                 <div class="card-body">
                   <p class="card-title">Track Developers</p>
                   <p class="font-weight-500">Track time of all developers separated by different tasks and modules.</p>
-                  {{chart_div|safe}}
+                  {{chart_developer|safe}}
+                </div>
+              </div>
+            </div>
+            {% comment %} <div class="col-md-6 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Track Modules and Tasks</p>
+                  <p class="font-weight-500">Track tasks and modules by their status.</p>
+                  {{chart_detail|safe}}
+                </div>
+              </div>
+            </div> {% endcomment %}
+            <div class="col-md-12 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Track Modules and Tasks</p>
+                  <p class="font-weight-500">Track tasks and modules by their status.</p>
+                  {{chart_plot|safe}}
                 </div>
               </div>
             </div>
