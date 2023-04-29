@@ -276,7 +276,7 @@ class ManagerPage(ListView):
         }
 
         # Define the colors for each status
-        colors = ['#FD841F', '#77D970', '#08D9D6']
+        colors = ['#FD841F', '#00FFCA', '#08D9D6']
 
         # Create the pie chart for modules by status
         module_data = go.Pie(labels=list(module_counts.keys()),
@@ -306,7 +306,7 @@ class ManagerPage(ListView):
         }
 
         # Define the colors for each status
-        colors = ['#FD841F', '#77D970', '#08D9D6']
+        colors = ['#FD841F', '#00FFCA', '#08D9D6']
 
         # Create the pie chart for tasks by status
         task_data = go.Pie(labels=list(task_counts.keys()),
