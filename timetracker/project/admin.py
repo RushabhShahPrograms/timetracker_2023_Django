@@ -51,9 +51,9 @@ class User_TaskAdmin(admin.ModelAdmin):
 
 class Developer_SubmitAdmin(admin.ModelAdmin):
     save_on_top = True
-    list_display=('submit_title','task','module','project','submit_developer_name','submit_submit_date','status')
-    list_display_links=('submit_title','task','module','project','submit_developer_name')
-    search_fields=['submit_title','submit_developer_name','project','module','task','status','submit_file','submit_screenshots','submit_submit_date']
+    list_display=('submit_title','submit_developer_name','submit_submit_date','status')
+    list_display_links=('submit_title','submit_developer_name')
+    search_fields=['submit_title','submit_developer_name','status','submit_file','submit_screenshots','submit_submit_date']
     list_filter=('submit_submit_date','status')
 
 admin.site.register(Project,ProjectAdmin)

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Developer Submission</title>
+</head>
+<body>
+    <h2>Developer Submission Details</h2>
+    <p><strong>Developer Name:</strong> {{ form.submit_developer_name.value }}</p>
+    <p><strong>Developer Email:</strong> {{ form.submit_developer_email.value }}</p>
+    <p><strong>Title:</strong> {{ form.submit_title.value }}</p>
+    <p><strong>Description:</strong> {{ form.submit_description.value|safe }}</p>
+    <p><strong>Code Snippets:</strong> {{ form.code_snippets.value|safe }}</p>
+
+    <p><strong>Status:</strong> {{ form.status.value }}</p>
+    <p><strong>Time Spent:</strong> {{ form.submit_time_spent.value }}</p>
+    <p><strong>Submission Date:</strong> {{ form.submit_submit_date.value }}</p>
+    <p><strong>Manager Name:</strong> {{ form.submit_manager_name.value }}</p>
+    <p><strong>Comments:</strong> {{ form.comments.value|safe }}</p>
+
+    {% if form.submit_url.value %}
+        <p><strong>URL:</strong> <a href="{{ form.submit_url.value }}">{{ form.submit_url.value }}</a></p>
+    {% endif %}
+</body>
+</html>

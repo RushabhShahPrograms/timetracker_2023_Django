@@ -289,6 +289,7 @@ class DeveloperSubmitView(CreateView):
             submit = form.save(commit=False)
             submit.submit_developer_name = request.user.username
             submit.save()
+            form.send_email_to_manager()
             return redirect('developerpage')
         else:
             return render(request, self.template_name, {'form': form})

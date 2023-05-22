@@ -191,9 +191,6 @@ status_choice = (("Completed","Completed"),
                  ("Pending","Pending"),
                  ("Cancelled","Cancelled"))
 class Developer_Submit(models.Model):
-    task = models.ForeignKey(Project_Task, on_delete=models.CASCADE,null=True,blank=True)
-    module = models.ForeignKey(Project_Module, on_delete=models.CASCADE,null=True,blank=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE,null=True,blank=True)
     submit_title = models.CharField(max_length=200)
     submit_description = RichTextField(null=True,blank=True)
     code_snippets = RichTextField(null=True,blank=True)
@@ -203,6 +200,7 @@ class Developer_Submit(models.Model):
     submit_time_spent = models.DurationField(blank=True, null=True)
     submit_submit_date = models.DateTimeField(auto_now_add=True)
     submit_developer_name = models.CharField(max_length=100)
+    submit_developer_email = models.EmailField(null=True,blank=True)
     submit_manager_name = models.CharField(max_length=100)
     comments = RichTextField(null=True,blank=True)
     submit_url = models.URLField(blank=True, null=True)

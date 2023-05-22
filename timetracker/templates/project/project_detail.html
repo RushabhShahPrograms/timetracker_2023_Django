@@ -74,6 +74,8 @@
                           <div class="badge badge-success">Completed</div>
                         {% elif projectdetail.status == 'Pending' %}
                           <div class="badge badge-warning">Pending</div>
+                        {% elif projectdetail.status == 'In Progress' %}
+                          <div class="badge badge-primary">In Progress</div>
                         {% else %}
                           <div class="badge badge-danger">Danger</div>
                         {% endif %}
@@ -106,6 +108,8 @@
                                     <div class="badge badge-success">Completed</div>
                                   {% elif t.status == 'Pending' %}
                                     <dv class="badge badge-warning">Pending</div>
+                                  {% elif t.status == 'In Progress' %}
+                                    <div class="badge badge-primary">In Progress</div>
                                   {% else %}
                                     <div class="badge badge-danger">Cancelled</div>
                                   {% endif %}
@@ -118,7 +122,6 @@
                           </table>
                         </div>
                       </div>
-                        <button class="btn btn-primary" href="#"><i class="ti-bar-chart"></i> View Modules</button>
                   </div>
                 </div>
               </div>

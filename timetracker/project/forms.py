@@ -8,6 +8,11 @@ from crispy_forms.layout import Submit
 from django.forms import CheckboxSelectMultiple
 from crispy_forms.bootstrap import PrependedText
 from crispy_forms.layout import Submit, Layout
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.core.mail import EmailMessage
+from django.template.defaultfilters import linebreaks
 
 class AddProjectsForm(form.ModelForm):
 
@@ -75,6 +80,9 @@ class DeveloperSubmitForm(forms.ModelForm):
     helper.form_method = 'POST'
     helper.add_input(Submit('submit', 'Submit'))
 
+    submit_developer_email = forms.EmailField(label='Developer Email', required=True)
+
+
     class Meta:
         model = Developer_Submit
         fields = '__all__'
@@ -85,8 +93,39 @@ class DeveloperSubmitForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
         super(DeveloperSubmitForm, self).__init__(*args, **kwargs)
         self.fields['submit_developer_name'].initial = user.username
-        self.fields['task'].queryset = Project_Task.objects.filter(user=user)
-        self.fields['module'].queryset = Project_Module.objects.filter(user=user)
-        self.fields['project'].queryset = Project_Team.objects.filter(user=user)
+        self.fields['submit_developer_email'].initial = user.email
         manager = User.objects.filter(is_manager=True).first()
         self.fields['submit_manager_name'].initial = manager.username
+        self.fields['submit_submit_date'].initial = timezone.now()
+
+    def send_email_to_manager(self):
+        subject = 'Developer Submission'
+        message = render_to_string('project/developer_submission_email.html', {'form': self})
+        plain_message = strip_tags(message)
+        manager = User.objects.filter(is_manager=True).first()
+        to_email = manager.email
+        sender_email = self.cleaned_data.get('submit_developer_email')
+
+        # Apply linebreaks filter to the message content
+        message_with_linebreaks = linebreaks(plain_message)
+
+        # Create EmailMessage object
+        email = EmailMessage(subject, message_with_linebreaks, sender_email, [to_email])
+        email.content_subtype = 'html'  # Set content type as HTML
+
+        # Attach submit_file if present
+        submit_file = self.cleaned_data.get('submit_file')
+        if submit_file:
+            file_name = submit_file.name
+            file_content = submit_file.read()
+            email.attach(file_name, file_content)
+
+        # Attach submit_screenshot if present
+        submit_screenshot = self.cleaned_data.get('submit_screenshots')
+        if submit_screenshot:
+            screenshot_name = submit_screenshot.name
+            screenshot_content = submit_screenshot.read()
+            email.attach(screenshot_name, screenshot_content)
+
+        # Send the email
+        email.send(fail_silently=False)
