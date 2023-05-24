@@ -19,6 +19,7 @@ Project manager can add projects in time tracking app , they can create multiple
 4) If developer didn't completed the given tasks or modules then the remainder mail will be sent to him\her if last three days are remaining for the completion.
 5) Meetings can be arranged by the project manager and automatic Mail will be sent to invited users/developers.
 6) Report Generation is added in the project which shows monthly report of total project,modules and tasks in the tabular form. And also overall total number of projects,tasks and modules in the modular form.
+7) If developer find any difficulty in the project or tasks or in any other issue they can contact to manager directly by filling up the developer submission form. Which will be directly mailed to the project manager.
 
 ## Overview of my project.
 
