@@ -1,13 +1,24 @@
 # Django_TimeTracker_2023
 
-Steps to do after downloading repo: ->
-1) Open terminal and install virtual environment `pip install virtualenv`
-2) Then create the virtual environment by typing `virtualenv venv` **venv** hidden folder will be created
-3) Now download and install django `pip install django`
-4) Install Crispy forms `pip install django-crispy-forms` & `pip install crispy-bootstrap5`
-5) For image uploading do `pip install Pillow`
-6) For connecting with PostgreSQL do `pip install psycopg2`
-7) And at the last `python manage.py makemigrations` & `python manage.py migrate`
+A time tracking app is an essential time management tool that can help you and your team become more organized, efficient, and get more things done. Simply put, a time tracking app will save you and your company precious time - and money. Time tracking app will generate almost all the reports that make organizations men power in most productive.
+
+Main goal of the application is to complete the project / product in time or before time , track the team / developer who needs more help / low productive.
+
+### Users:-
+
+project manager, developer
+
+Project manager can add projects in time tracking app , they can create multiple modules and task in projects. All task - modules are assigned by project manager to developer. Developer needs to perform all the task and submit once they are done with the task Time tracing will track the time taken by the developer to complete that task. Project Manager is the main user who need time tracking more over the other users. Project manager can generate reports project wise , they have the various charts that indicates time line and critical dead line with projects.
+
+
+### Functionality Added:-
+
+1) Welcome Mail to the user who register for the first time.
+2) Page Restriction is added.
+3) Plotly Charts are added to visualize the data in more enhance way.
+4) If developer didn't completed the given tasks or modules then the remainder mail will be sent to him\her if last three days are remaining for the completion.
+5) Meetings can be arranged by the project manager and automatic Mail will be sent to invited users/developers.
+6) Report Generation is added in the project which shows monthly report of total project,modules and tasks in the tabular form. And also overall total number of projects,tasks and modules in the modular form.
 
 ## Overview of my project.
 
