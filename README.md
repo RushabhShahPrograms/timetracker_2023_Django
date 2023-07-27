@@ -21,6 +21,15 @@ Project manager can add projects in time tracking app , they can create multiple
 6) Report Generation is added in the project which shows monthly report of total project,modules and tasks in the tabular form. And also overall total number of projects,tasks and modules in the modular form.
 7) If developer find any difficulty in the project or tasks or in any other issue they can contact to manager directly by filling up the developer submission form. Which will be directly mailed to the project manager.
 
+### Installation
+```txt
+Install python on the system.
+Create a virtual environment.
+pip install django
+pip install psycopg2
+
+```
+
 ## Overview of my project.
 
 First Page
@@ -38,4 +47,4 @@ User Profile Page
 Project List
 ![project-list](https://user-images.githubusercontent.com/90546286/229265607-5f144abf-e4c0-4e74-9212-b9299de57513.jpeg)
 
-**Note: This project was made as a final-year project for the Internship at Arth Infosoft Pvt. Ltd.**
+**(Note: This project was made as a final-year project for the Internship at Arth Infosoft Pvt. Ltd.)**
