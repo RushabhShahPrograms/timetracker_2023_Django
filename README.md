@@ -37,3 +37,5 @@ User Profile Page
 ![userprofilepage](https://user-images.githubusercontent.com/90546286/230821281-ed1dde2d-1784-4d17-aa0c-64da7ae21c56.jpeg)
 Project List
 ![project-list](https://user-images.githubusercontent.com/90546286/229265607-5f144abf-e4c0-4e74-9212-b9299de57513.jpeg)
+
+**Note: This project was made as a final-year project for the Internship at Arth Infosoft Pvt. Ltd.**
