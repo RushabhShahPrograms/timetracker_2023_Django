@@ -23,19 +23,9 @@ Project manager can add projects in time tracking app , they can create multiple
 
 ### Installation
 Install python on the system and Create a virtual environment.
-Install the following libraries using the terminal in the vscode. Just copy and paste this lines one by one.
+Install the requirements.txt file using the terminal. Just copy and paste this line.
 ```python
-pip install django
-pip install psycopg2                  #for connecting the postgresql
-pip install Pillow                    #used for image upload,download and view purpose
-pip install django-crispy-forms       #used for creating the forms with certain security levels.
-pip install django-crispy-bootstrap5
-pip install crispy-bootstrap5
-pip install django-phonenumber-field  #used for adding restriction on the phone number field box
-pip install django-tempus-dominus
-pip install django-ckeditor           #changing the textbox field to multi use textbox field
-pip install django-widget-tweaks
-pip install django-admin-interface    #used for customizing the admin panel
+pip install -r requirements.txt
 ```
 After installing all the required libraries just add the emailid and password at the last lines of settings.py page for sending the emails during the signup and deadline and then do migration.
 ```python
